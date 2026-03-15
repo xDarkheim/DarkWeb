@@ -1,0 +1,56 @@
+/*!
+ * DarkWeb CMS — Component Styles
+ * Template-independent. Loaded by every template via __PATH_ASSETS_CSS__.
+ * Covers: auth, ucp, ma (myaccount), pf (profiles), info, downloads,
+ *         news, rankings, paypal, tos, toast, general page components.
+ */
+
+/* ============================================================
+   CSS VARIABLES
+   ============================================================ */
+:root {
+    --dh-accent:        #3f6588;
+    --dh-accent-hover:  #2e4f6a;
+    --dh-gold:          #c4a030;
+    --dh-gold-light:    #e8c96a;
+    --dh-text:          #333333;
+    --dh-text-muted:    #777777;
+    --dh-bg:            #ffffff;
+    --dh-bg-secondary:  #f8f9fa;
+    --dh-bg-card:       #f1f1f1;
+    --dh-border:        #e3e3e3;
+    --dh-red:           #e53935;
+    --dh-green:         #43a047;
+    --dh-blue:          #3f6588;
+    --dh-purple:        #7b1fa2;
+    --dh-orange:        #f57c00;
+    /* UCP aliases (used directly in module PHP files) */
+    --ucp-text:         #333333;
+    --ucp-text-muted:   #777777;
+    --ucp-bg:           #f8f9fa;
+    --ucp-border:       #e3e3e3;
+    --ucp-accent:       #3f6588;
+}
+
+html.dark-mode {
+    --dh-accent:        #4a7aaa;
+    --dh-accent-hover:  #5d8fbf;
+    --dh-gold:          #d4aa50;
+    --dh-gold-light:    #f0cc80;
+    --dh-text:          #d7dde5;
+    --dh-text-muted:    #8a95a3;
+    --dh-bg:            #161d27;
+    --dh-bg-secondary:  #10161e;
+    --dh-bg-card:       #1a2230;
+    --dh-border:        #253140;
+    --dh-red:           #ef5350;
+    --dh-green:         #66bb6a;
+    --dh-blue:          #4a7aaa;
+    --dh-purple:        #ab47bc;
+    --dh-orange:        #ffa726;
+    --ucp-text:         #d7dde5;
+    --ucp-text-muted:   #8a95a3;
+    --ucp-bg:           #161d27;
+    --ucp-border:       #253140;
+    --ucp-accent:       #4a7aaa;
+}

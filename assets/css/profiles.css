@@ -1,0 +1,240 @@
+/* ============================================================
+   PROFILE — PLAYER & GUILD (pf-*)
+   ============================================================ */
+.pf-layout-wrap {
+    width: 100%;
+    overflow: hidden;
+}
+
+.pf-banner {
+    position: relative;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a2230 0%, #0f141c 100%);
+    min-height: 160px;
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 0;
+}
+.pf-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+}
+.pf-banner-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    padding: 20px 24px;
+    width: 100%;
+}
+.pf-avatar {
+    position: relative;
+    flex-shrink: 0;
+}
+.pf-avatar img {
+    width: 90px;
+    height: auto;
+    border-radius: 8px;
+    border: 3px solid rgba(255,255,255,0.2);
+    display: block;
+}
+.pf-identity { flex: 1; }
+.pf-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff !important;
+    margin: 0 0 4px 0;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+.pf-class {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+}
+
+.profile-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+.profile-badge.online  { background: var(--dh-green); color: #fff; }
+.profile-badge.offline { background: #666; color: #fff; }
+
+.pf-layout {
+    display: flex;
+    gap: 0;
+    background: var(--dh-bg);
+    border: 1px solid var(--dh-border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+}
+html.dark-mode .pf-layout {
+    background: #161d27;
+    border-color: #253140;
+}
+
+.pf-panel-left {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--dh-bg-card);
+    border-right: 1px solid var(--dh-border);
+    padding: 16px;
+}
+html.dark-mode .pf-panel-left {
+    background: #10161e;
+    border-right-color: #253140;
+}
+
+.pf-panel-right {
+    flex: 1;
+    padding: 20px;
+    min-width: 0;
+}
+
+.pf-panel-section { margin-bottom: 18px; }
+.pf-panel-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--dh-accent);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--dh-border);
+}
+html.dark-mode .pf-panel-title { border-color: #253140; }
+
+.pf-stat-list { display: flex; flex-direction: column; gap: 6px; }
+.pf-stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+.pf-stat-key { color: var(--dh-text-muted); }
+.pf-stat-val { font-weight: 600; color: var(--dh-text); }
+
+.pf-val-gold   { color: var(--dh-gold) !important; }
+.pf-val-red    { color: var(--dh-red) !important; }
+.pf-val-blue   { color: var(--dh-blue) !important; }
+.pf-icon-gold  { color: var(--dh-gold) !important; }
+.pf-icon-red   { color: var(--dh-red) !important; }
+
+/* PF section titles */
+.pf-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dh-accent);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--dh-border);
+}
+html.dark-mode .pf-section-title { border-bottom-color: #253140; }
+.pf-section-title-sub { font-size: 13px; margin-top: 20px; }
+
+/* PF Info Cards Grid */
+.pf-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.pf-info-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 8px;
+}
+html.dark-mode .pf-info-card { background: #1a2230; border-color: #253140; }
+.pf-info-card-icon {
+    font-size: 22px;
+    color: var(--dh-accent);
+    flex-shrink: 0;
+}
+.pf-info-card-label { font-size: 11px; color: var(--dh-text-muted); }
+.pf-info-card-val { font-size: 15px; font-weight: 700; color: var(--dh-text); }
+
+/* PF Stats Table (with bars) */
+.pf-stats-table { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.pf-stats-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.pf-stats-name {
+    width: 120px;
+    flex-shrink: 0;
+    font-size: 13px;
+    color: var(--dh-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.pf-stats-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--dh-bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--dh-border);
+}
+html.dark-mode .pf-stats-bar-wrap { background: #0f141c; border-color: #253140; }
+.pf-stats-bar {
+    height: 100%;
+    background: var(--dh-accent);
+    border-radius: 4px;
+    transition: width .4s ease;
+}
+.pf-bar-red    { background: var(--dh-red); }
+.pf-bar-blue   { background: var(--dh-blue); }
+.pf-bar-purple { background: var(--dh-purple); }
+.pf-stats-num {
+    width: 60px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dh-text);
+    flex-shrink: 0;
+}
+
+/* PF stub / not found */
+.pf-stub-notice {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--dh-text-muted);
+    font-size: 14px;
+}
+.pf-stub-tag {
+    display: inline-block;
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    color: var(--dh-text-muted);
+    margin-top: 6px;
+}
+
+@media (max-width: 767px) {
+    .pf-layout { flex-direction: column; }
+    .pf-panel-left { width: 100%; border-right: none; border-bottom: 1px solid var(--dh-border); }
+    .pf-info-grid { grid-template-columns: repeat(2, 1fr); }
+    .pf-banner-content { flex-direction: column; align-items: flex-start; }
+}

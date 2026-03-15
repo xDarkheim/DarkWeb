@@ -1,0 +1,151 @@
+/* ============================================================
+   TOS — TERMS OF SERVICE (tos-*)
+   ============================================================ */
+.tos-toc {
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+}
+html.dark-mode .tos-toc { background: #161d27; border-color: #253140; }
+.tos-toc-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dh-text-muted);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 12px;
+}
+.tos-toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 6px;
+}
+.tos-toc-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--dh-text) !important;
+    text-decoration: none !important;
+    transition: background .2s;
+}
+.tos-toc-item:hover { background: var(--dh-bg-secondary); color: var(--dh-accent) !important; }
+html.dark-mode .tos-toc-item:hover { background: #1a2230; }
+.tos-toc-item span {
+    font-size: 11px;
+    color: var(--dh-text-muted);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.tos-section {
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+html.dark-mode .tos-section { background: #161d27; border-color: #253140; }
+.tos-section-danger { border-left: 4px solid var(--dh-red); }
+
+.tos-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--dh-bg-secondary);
+    border-bottom: 1px solid var(--dh-border);
+}
+html.dark-mode .tos-section-header { background: #10161e; border-color: #253140; }
+.tos-section-num {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--dh-accent);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+.tos-section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dh-text);
+}
+.tos-section-badge {
+    margin-left: auto;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--dh-bg-card);
+    color: var(--dh-text-muted);
+    border: 1px solid var(--dh-border);
+}
+
+.tos-section-body { padding: 14px 18px; }
+
+.tos-rule {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--dh-border);
+    font-size: 13px;
+    color: var(--dh-text);
+    line-height: 1.6;
+}
+html.dark-mode .tos-rule { border-color: #1e2a3a; }
+.tos-rule:last-child { border-bottom: none; }
+.tos-rule-danger span:last-child { color: var(--dh-red); }
+.tos-rule-badge {
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--dh-accent);
+    background: rgba(63,101,136,.1);
+    border-radius: 4px;
+    padding: 2px 6px;
+    height: fit-content;
+    margin-top: 2px;
+}
+html.dark-mode .tos-rule-badge { background: rgba(74,122,170,.15); }
+
+/* Punishment Cards */
+.tos-punish-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+.tos-punish-card {
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+}
+.tos-punish-card-severe { border-color: var(--dh-red); }
+html.dark-mode .tos-punish-card { background: #1a2230; border-color: #253140; }
+.tos-punish-icon { font-size: 24px; margin-bottom: 6px; }
+.tos-punish-name { font-size: 13px; font-weight: 700; color: var(--dh-text); margin-bottom: 4px; }
+.tos-punish-desc { font-size: 12px; color: var(--dh-text-muted); line-height: 1.4; }
+
+.tos-agreement {
+    background: var(--dh-bg-secondary);
+    border: 1px solid var(--dh-border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--dh-text);
+}
+html.dark-mode .tos-agreement { background: #10161e; border-color: #253140; }
+.tos-agreement-icon { font-size: 22px; flex-shrink: 0; }
+
+@media (max-width: 600px) {
+    .tos-toc-grid    { grid-template-columns: 1fr; }
+    .tos-punish-grid { grid-template-columns: 1fr; }
+}

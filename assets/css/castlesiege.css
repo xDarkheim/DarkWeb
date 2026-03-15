@@ -1,0 +1,204 @@
+/*!
+ * DarkWeb CMS — Castle Siege Page Styles (cs-*)
+ */
+
+/* ============================================================
+   CASTLE OWNER BLOCK
+   ============================================================ */
+.cs-owner-block {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+html.dark-mode .cs-owner-block { background: #161d27; border-color: #253140; }
+
+.cs-owner-logo img { border-radius: 6px; box-shadow: 0 0 10px rgba(0,0,0,0.4); }
+
+.cs-owner-info     { flex: 1; min-width: 160px; }
+.cs-owner-name     { font-size: 22px; font-weight: 700; color: var(--dh-text); margin-bottom: 6px; }
+.cs-owner-name a   { color: var(--dh-text); }
+.cs-owner-master-label { font-size: 12px; color: var(--dh-text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+.cs-owner-master   { font-size: 15px; font-weight: 600; color: var(--dh-accent); }
+.cs-owner-master a { color: var(--dh-accent); }
+
+/* Alliance sub-table */
+.cs-alliance-block  { width: 100%; margin-top: 16px; border-top: 1px solid var(--dh-border); padding-top: 14px; }
+html.dark-mode .cs-alliance-block { border-color: #253140; }
+.cs-alliance-title  { font-size: 12px; font-weight: 700; color: var(--dh-text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+.cs-alliance-table  { width: 100%; }
+.cs-alliance-head,
+.cs-alliance-row    { display: grid; grid-template-columns: 32px 1fr 1fr; gap: 8px; align-items: center; padding: 5px 0; font-size: 13px; }
+.cs-alliance-head   { font-weight: 700; color: var(--dh-text-muted); border-bottom: 1px solid var(--dh-border); }
+html.dark-mode .cs-alliance-head { border-color: #253140; }
+.cs-alliance-row    { border-bottom: 1px solid var(--dh-border); color: var(--dh-text); }
+html.dark-mode .cs-alliance-row  { border-color: #1e2a3a; }
+.cs-alliance-row:last-child { border-bottom: none; }
+.cs-alliance-logo img { border-radius: 3px; }
+
+/* ============================================================
+   SIEGE TIMER BLOCK
+   ============================================================ */
+.cs-timer-block {
+    text-align: center;
+    background: linear-gradient(135deg, #0f141c 0%, #1a2844 100%);
+    border-radius: 10px;
+    padding: 36px 24px;
+    margin-bottom: 24px;
+}
+.cs-timer-icon  { font-size: 36px; color: rgba(255,255,255,0.4); margin-bottom: 10px; }
+.cs-timer-value {
+    font-size: 52px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+.cs-timer-value span { color: rgba(255,255,255,0.5); font-size: 28px; }
+.cs-timer-label { font-size: 13px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; }
+
+/* ============================================================
+   CASTLE INFO GRID
+   ============================================================ */
+.cs-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.cs-info-card {
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    transition: border-color .2s, transform .15s;
+}
+.cs-info-card:hover { border-color: var(--dh-accent); transform: translateY(-2px); }
+html.dark-mode .cs-info-card { background: #161d27; border-color: #253140; }
+.cs-info-card-label { font-size: 11px; color: var(--dh-text-muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px; }
+.cs-info-card-val   { font-size: 18px; font-weight: 700; color: var(--dh-text); }
+.cs-val-gold        { color: var(--dh-gold); }
+.cs-info-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(63,101,136,.12);
+    color: var(--dh-accent);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+html.dark-mode .cs-info-badge { background: rgba(74,122,170,.2); }
+.cs-info-unit { font-size: 12px; color: var(--dh-text-muted); margin-left: 3px; }
+
+/* ============================================================
+   REGISTERED GUILDS TABLE
+   ============================================================ */
+.cs-guilds-table  { margin-bottom: 24px; border: 1px solid var(--dh-border); border-radius: 8px; overflow: hidden; }
+html.dark-mode .cs-guilds-table { border-color: #253140; }
+
+.cs-guilds-head,
+.cs-guilds-row    {
+    display: grid;
+    grid-template-columns: 36px 28px 1fr 1fr 90px 60px;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 14px;
+    font-size: 13px;
+}
+.cs-guilds-head   { background: var(--dh-bg-secondary); font-weight: 700; color: var(--dh-text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: .4px; }
+html.dark-mode .cs-guilds-head { background: #10161e; }
+.cs-guilds-row    { border-top: 1px solid var(--dh-border); color: var(--dh-text); transition: background .15s; }
+html.dark-mode .cs-guilds-row  { border-color: #1e2a3a; }
+.cs-guilds-row:hover { background: var(--dh-bg-secondary); }
+html.dark-mode .cs-guilds-row:hover { background: rgba(255,255,255,0.03); }
+.cs-guilds-num    { font-weight: 700; color: var(--dh-text-muted); }
+.cs-guilds-logo img { border-radius: 3px; }
+.cs-guilds-score  { font-weight: 700; color: var(--dh-gold); text-align: right; }
+.cs-guilds-members { text-align: right; color: var(--dh-text-muted); }
+
+/* ============================================================
+   SCHEDULE TABLE
+   ============================================================ */
+.cs-schedule-table { margin-bottom: 24px; border: 1px solid var(--dh-border); border-radius: 8px; overflow: hidden; }
+html.dark-mode .cs-schedule-table { border-color: #253140; }
+
+.cs-schedule-head,
+.cs-schedule-row  {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 14px;
+    font-size: 13px;
+}
+.cs-schedule-head    { background: var(--dh-bg-secondary); font-weight: 700; color: var(--dh-text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: .4px; }
+html.dark-mode .cs-schedule-head { background: #10161e; }
+.cs-schedule-row     { border-top: 1px solid var(--dh-border); color: var(--dh-text); transition: background .15s; }
+html.dark-mode .cs-schedule-row  { border-color: #1e2a3a; }
+.cs-schedule-current { background: rgba(63,101,136,.08); border-left: 3px solid var(--dh-accent); }
+html.dark-mode .cs-schedule-current { background: rgba(74,122,170,.12); }
+.cs-schedule-stage   { font-weight: 600; }
+
+/* ============================================================
+   SIDEBAR WIDGET (castle-owner-widget — used in template.functions.php)
+   ============================================================ */
+.castle-owner-widget {
+    background: #000;
+    background-size: cover;
+    color: #cccccc;
+    border-radius: 10px;
+    border: 1px solid #333;
+    box-shadow: 0 0 10px #555;
+    padding: 20px;
+    text-shadow: 1px 1px 1px #000;
+    transition: filter .3s;
+}
+.castle-owner-widget:hover                           { filter: brightness(120%); }
+.castle-owner-widget .panel-heading                  { text-align: center; }
+.castle-owner-widget .panel-heading .panel-title     { font-size: 28px; font-weight: bold; }
+.castle-owner-widget .panel-body span.alt            { color: #cf7957; font-weight: bold; }
+.castle-owner-widget .panel-body a                   { color: #ffffff; }
+
+.btn-castlewidget {
+    color: #ffffff;
+    background-color: transparent;
+    border-color: #ffffff;
+    border-radius: 0;
+    text-shadow: none;
+    transition: all .1s ease-in;
+}
+.btn-castlewidget:active,
+.btn-castlewidget:focus,
+.btn-castlewidget:hover {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 767px) {
+    .cs-timer-value { font-size: 36px; }
+    .cs-info-grid   { grid-template-columns: repeat(2, 1fr); }
+    .cs-guilds-head,
+    .cs-guilds-row  { grid-template-columns: 28px 1fr 1fr; }
+    .cs-guilds-head span:nth-child(1),
+    .cs-guilds-row  span:nth-child(1),
+    .cs-guilds-score,
+    .cs-guilds-members { display: none; }
+    .cs-schedule-head,
+    .cs-schedule-row { grid-template-columns: 1fr 1fr; }
+    .cs-schedule-head span:last-child,
+    .cs-schedule-row  span:last-child { display: none; }
+}

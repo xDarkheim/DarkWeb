@@ -1,0 +1,26 @@
+parameters:
+    phpVersion: 80400
+    level: 5
+
+    paths:
+        - src/
+
+    # Global helper functions and constants are loaded at runtime from
+    # includes/functions.php and includes/config/cms.tables.php — tell PHPStan
+    # about them so they don't produce "function/constant not found" errors.
+    bootstrapFiles:
+        - includes/functions.php
+        - includes/config/cms.tables.php
+        - includes/config/custom.tables.php
+
+    # Ignore errors caused by runtime-defined constants (DB column/table names
+    # from cms.tables.php) and other project-specific patterns.
+    ignoreErrors:
+        # Runtime-defined DB column/table constants (cms.tables.php) may be undefined
+        # in environments without a live DB – suppress at PHPStan level.
+        - '#Constant [A-Za-z0-9_]+ not found\.#'
+
+    excludePaths:
+        - vendor/
+        - install/
+        - docker/

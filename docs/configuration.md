@@ -1,0 +1,150 @@
+# Configuration
+
+This document maps the config files and keys used by the CMS.
+
+All configuration files live in `includes/config/`. The directory is web-blocked by `.htaccess` (`Deny from all`) and created automatically by the Docker entrypoint on first start.
+
+## cms.json — main config
+
+Copy `cms.json.default` to `cms.json` and fill in your values. The installer does this for you.
+
+### System
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `system_active` | bool | `false` → shows maintenance redirect |
+| `maintenance_page` | string | URL to redirect to when system is inactive |
+| `error_reporting` | bool | Enable PHP error output (disable in production) |
+| `website_template` | string | Template directory name under `templates/` (default: `"default"`) |
+| `cms_installed` | bool | Set to `true` by the installer — blocks re-running install |
+
+### Server info (displayed on the site)
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `server_name` | string | Server name shown in header, login modal, meta tags |
+| `server_tagline` | string | Subtitle line in the header |
+| `website_title` | string | `<title>` tag content |
+| `website_meta_description` | string | Meta description |
+| `website_meta_keywords` | string | Meta keywords |
+| `website_forum_link` | string | Forum URL (used in navbar/links) |
+| `server_info_season` | string | Season/version label (e.g. `"Darkheim v1"`) |
+| `server_info_exp` | string | EXP rate label |
+| `server_info_masterexp` | string | Master EXP rate label |
+| `server_info_drop` | string | Drop rate label |
+| `server_info_exp_type` | string | Rate category (e.g. `"High Rates"`) |
+| `server_info_max_level` | string | Max character level |
+| `server_info_max_reset` | string | Max reset count |
+| `maximum_online` | string | Max online count for the progress bar |
+
+### Database
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `SQL_DB_HOST` | string | SQL Server hostname or IP |
+| `SQL_DB_NAME` | string | Database name (default: `"MuOnline"`) |
+| `SQL_DB_USER` | string | Database user |
+| `SQL_DB_PASS` | string | Database password |
+| `SQL_DB_PORT` | string | Port (default: `"1433"`) |
+| `SQL_PASSWORD_ENCRYPTION` | string | Password hashing: `"none"`, `"wzmd5"`, `"phpmd5"`, `"sha256"` |
+| `SQL_SHA256_SALT` | string | Salt used when `SQL_PASSWORD_ENCRYPTION = "sha256"` |
+
+### Language
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `language_default` | string | Default language code. Supported: `"en"`, `"ru"`, `"cn"`, `"es"`, `"pt"`, `"ro"` |
+| `language_switch_active` | bool | Show language switcher in the top bar |
+| `language_debug` | bool | Highlight missing phrases (dev only) |
+
+> **Active languages:** EN, RU, CN, ES, PT, RO.  
+> Language phrase files live in `includes/languages/<code>/language.php`.  
+> To add a new language: create the directory and phrase file, then add the entry to `templateLanguageSelector()` in `templates/default/inc/template.functions.php`.
+
+### Authentication & registration
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `username_min_len` | int | Minimum username length |
+| `username_max_len` | int | Maximum username length |
+| `password_min_len` | int | Minimum password length |
+| `password_max_len` | int | Maximum password length |
+
+### Features
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `player_profiles` | bool | Enable public player profile pages |
+| `guild_profiles` | bool | Enable public guild profile pages |
+| `character_avatars_dir` | string | Sub-directory under `img/` for character avatar images |
+| `plugins_system_enable` | bool | Enable the plugin system |
+| `ip_block_system_enable` | bool | Enable IP blocking |
+| `season_1_support` | bool | Enable Season 1 compatibility mode |
+
+### Cron
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `cron_api` | bool | Enable the `/api/cron.php` endpoint |
+| `cron_api_key` | string | Secret key required in the `?key=` query parameter |
+
+### Social links
+
+| Key | Description |
+|-----|-------------|
+| `social_link_facebook` | Facebook URL |
+| `social_link_instagram` | Instagram URL |
+| `social_link_discord` | Discord invite URL |
+
+### Admin access
+
+```json
+"admins": {
+    "username": 100
+}
+```
+
+Maps admin usernames to their access level. Currently only level `100` (full access) is used.
+
+### Docker
+
+Docker runtime settings live in **`docker/config.env`** — a separate file that is git-ignored and never committed.
+
+Copy the example template and edit for your environment:
+
+```bash
+cp docker/config.env.example docker/config.env
+```
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DOCKER_SERVER_NAME` | `localhost` | Domain name. Injected into Apache `VirtualHost` as `ServerName` and into `PHP_IDE_CONFIG=serverName=<value>` for Xdebug IDE path mapping. |
+| `DOCKER_TIMEZONE` | `UTC` | IANA timezone applied to the container via `/etc/localtime`. |
+| `DOCKER_CRON_URL` | *(empty)* | Full URL for the cron endpoint — written to `/etc/cron.d/cms-cron` (runs every minute). Must include `?key=<cron_api_key>`. Leave empty to disable cron. |
+| `DOCKER_XDEBUG_MODE` | `off` | Xdebug 3 mode. Values: `off`, `debug`, `profile`, `trace`, or comma-separated combos (e.g. `debug,coverage`). |
+
+> **When to rebuild vs restart:**
+> - `docker/config.env` change only → `docker compose restart`
+> - `docker/Dockerfile` or `docker/entrypoint.sh` change → `docker compose up -d --build`
+
+## Other config files
+
+| File | Purpose |
+|------|---------|
+| `cms.tables.php` | Maps CMS internal column names to your actual DB column names. Edit if your MuOnline database has non-standard column names. |
+| `custom.tables.php` | Project-specific column overrides — takes precedence over `cms.tables.php`. |
+| `castlesiege.json` | Castle Siege configuration (guild, schedule, prize). |
+| `usercp.json` | UserCP menu items — controls which pages appear in the sidebar and in what order. |
+| `navbar.json` | Navigation bar items configuration. |
+| `email.xml` | Email template definitions (subject, body templates for registration, password reset, etc.). |
+| `timezone.php` | Sets `date_default_timezone_set()`. Defaults to `Europe/Kiev`. |
+| `writable.paths.json` | List of paths the installer checks for write permissions. |
+
+
+## Security notes
+
+- `includes/config/`, `includes/cache/`, and `includes/logs/` are protected by `.htaccess` (`Deny from all`).
+- Never commit `cms.json` to a public repository — it contains database credentials.
+- `docker-compose.override.yml` is in `.gitignore` and must never be committed.
+- Delete the `install/` directory after running the web installer.
+

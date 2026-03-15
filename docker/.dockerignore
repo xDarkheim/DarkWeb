@@ -1,0 +1,17 @@
+.git
+.gitignore
+.env
+.env.example
+*.md
+!README.md
+docker-compose.yml
+docker/
+.dockerignore
+.idea
+.vscode
+*.log
+.DS_Store
+Thumbs.db
+node_modules
+ssl-darkheim/
+

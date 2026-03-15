@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<settings>
+	<active>1</active>
+	<rankings_results>50</rankings_results>
+	<rankings_show_date>1</rankings_show_date>
+	<rankings_show_default>resets</rankings_show_default>
+	<rankings_show_place_number>1</rankings_show_place_number>
+	<rankings_enable_level>1</rankings_enable_level>
+	<rankings_enable_resets>1</rankings_enable_resets>
+	<rankings_enable_pk>1</rankings_enable_pk>
+	<rankings_enable_gr>0</rankings_enable_gr>
+	<rankings_enable_online>0</rankings_enable_online>
+	<rankings_enable_guilds>1</rankings_enable_guilds>
+	<rankings_enable_master>0</rankings_enable_master>
+	<rankings_enable_gens>1</rankings_enable_gens>
+	<rankings_enable_votes>0</rankings_enable_votes>
+	<rankings_excluded_characters/>
+	<combine_level_masterlevel>0</combine_level_masterlevel>
+	<show_country_flags>1</show_country_flags>
+	<show_location>1</show_location>
+	<show_online_status>1</show_online_status>
+	<guild_score_formula>1</guild_score_formula>
+	<guild_score_multiplier>0.001</guild_score_multiplier>
+	<rankings_excluded_guilds/>
+	<rankings_class_filter>1</rankings_class_filter>
+</settings>

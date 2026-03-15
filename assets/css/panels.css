@@ -1,0 +1,41 @@
+/* ============================================================
+   GENERAL TABLE / PANELS
+   ============================================================ */
+.general-table-ui {
+    width: 100%; table-layout: fixed;
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    padding: 10px; margin: 10px 0;
+}
+.general-table-ui tr td { padding: 5px; vertical-align: middle !important; }
+.general-table-ui tr:first-child td { color: var(--dh-accent); }
+.general-table-ui tr:nth-child(2n+2) td { background: var(--dh-bg-secondary); }
+.general-table-ui tr td { text-align: center; }
+.general-table-ui img { width: 50px; height: auto; box-shadow: 0 0 5px #666; border-radius: 0; }
+html.dark-mode .general-table-ui { background: #161d27; border-color: #253140; }
+html.dark-mode .general-table-ui tr:nth-child(2n+2) td { background: #10161e; }
+
+.panel-general {
+    margin-bottom: 30px;
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 0; color: var(--dh-text);
+}
+html.dark-mode .panel-general { background: #161d27; border-color: #253140; }
+
+.panel-addstats {
+    margin-bottom: 30px;
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 0; color: var(--dh-text);
+}
+.panel-addstats .character-avatar img { width: 100px; height: auto; box-shadow: 0 0 5px #666; }
+.panel-addstats .character-name {
+    color: var(--dh-text-muted); font-size: 18px;
+    border-bottom: 1px solid var(--dh-border);
+    padding: 20px 0; margin-bottom: 20px !important; font-weight: 700;
+}
+html.dark-mode .panel-addstats { background: #161d27; border-color: #253140; }
+
+.module-requirements { font-size: 12px; margin-top: 20px; }
+.online-status-indicator { margin-left: 5px; }

@@ -1,0 +1,112 @@
+#!/bin/bash
+set -e
+
+CMS_JSON="/var/www/html/includes/config/cms.json"
+
+# ── Helper: read a key from cms.json via PHP (safe, no jq dependency) ─────────
+cms_get() {
+    php -r "
+        \$f = '${CMS_JSON}';
+        if(!file_exists(\$f)) { echo ''; exit; }
+        \$c = json_decode(file_get_contents(\$f), true);
+        echo (is_array(\$c) && isset(\$c['$1'])) ? \$c['$1'] : '';
+    " 2>/dev/null
+}
+
+# ── 1. Create required directories if they don't exist (fresh clone) ──────────
+echo "[startup] Creating required directories..."
+mkdir -p /var/www/html/includes/cache/news/translations \
+         /var/www/html/includes/cache/profiles/guilds \
+         /var/www/html/includes/cache/profiles/players \
+         /var/www/html/includes/logs \
+         /var/www/html/includes/config
+
+# ── 1a. Touch required cache & log files ──────────────────────────────────────
+echo "[startup] Creating required cache and log files..."
+for f in \
+    blocked_ip.cache \
+    castle_siege.cache \
+    character_country.cache \
+    downloads.cache \
+    news.cache \
+    online_characters.cache \
+    plugins.cache \
+    rankings_gens.cache \
+    rankings_gr.cache \
+    rankings_guilds.cache \
+    rankings_level.cache \
+    rankings_master.cache \
+    rankings_online.cache \
+    rankings_pk.cache \
+    rankings_resets.cache \
+    rankings_votes.cache \
+    server_info.cache
+do
+    touch "/var/www/html/includes/cache/${f}"
+done
+
+touch /var/www/html/includes/logs/database_errors.log \
+      /var/www/html/includes/logs/php_errors.log
+
+# ── 2. Protect sensitive directories with .htaccess (if not already present) ──
+echo "[startup] Securing directories..."
+for dir in cache logs config; do
+    htfile="/var/www/html/includes/${dir}/.htaccess"
+    if [ ! -f "$htfile" ]; then
+        echo "Deny from all" > "$htfile"
+        echo "[startup] Created .htaccess in includes/${dir}"
+    fi
+done
+
+# ── 3. Fix permissions ────────────────────────────────────────────────────────
+echo "[startup] Setting up permissions..."
+chown -R www-data:www-data \
+    /var/www/html/includes/cache \
+    /var/www/html/includes/logs \
+    /var/www/html/includes/config 2>/dev/null || true
+chmod -R 775 \
+    /var/www/html/includes/cache \
+    /var/www/html/includes/logs \
+    /var/www/html/includes/config 2>/dev/null || true
+
+# ── 4. Composer — install dependencies and regenerate autoloader ──────────────
+echo "[startup] Running composer install..."
+cd /var/www/html
+COMPOSER_ALLOW_SUPERUSER=1 composer install \
+    --no-interaction \
+    --optimize-autoloader \
+    --quiet \
+    && echo "[startup] Composer: dependencies OK, autoloader optimized." \
+    || echo "[startup] WARNING: composer install failed — site may be broken."
+
+# ── 5. Apply timezone ─────────────────────────────────────────────────────────
+if [ -n "$DOCKER_TIMEZONE" ]; then
+    echo "[startup] Setting timezone: ${DOCKER_TIMEZONE}"
+    ln -snf /usr/share/zoneinfo/${DOCKER_TIMEZONE} /etc/localtime
+    echo "${DOCKER_TIMEZONE}" > /etc/timezone
+fi
+
+# ── 6. Setup cron ─────────────────────────────────────────────────────────────
+if [ -n "$DOCKER_CRON_URL" ]; then
+    echo "[startup] Configuring CMS cron..."
+    echo "* * * * * root curl -s \"${DOCKER_CRON_URL}\" >> /var/log/cron.log 2>&1" > /etc/cron.d/cms-cron
+    chmod 0644 /etc/cron.d/cms-cron
+    echo "[startup] Cron configured: ${DOCKER_CRON_URL}"
+else
+    echo "[startup] WARNING: DOCKER_CRON_URL not set in docker/config.env — cron job skipped."
+fi
+
+# ── 7. Start cron service ─────────────────────────────────────────────────────
+echo "[startup] Starting cron service..."
+service cron start
+
+# ── 8. Xdebug (Xdebug 3 reads XDEBUG_MODE env var natively) ──────────────────
+export XDEBUG_MODE="${DOCKER_XDEBUG_MODE}"
+export PHP_IDE_CONFIG="serverName=${DOCKER_SERVER_NAME}"
+echo "[startup] Xdebug mode: ${XDEBUG_MODE}"
+echo "[startup] Xdebug server name: ${DOCKER_SERVER_NAME}"
+
+# ── 9. Start Apache ──────────────────────────────────────────────────────────
+echo "[startup] Starting Apache on port 8081..."
+exec apache2-foreground
+

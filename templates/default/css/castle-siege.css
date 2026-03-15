@@ -1,0 +1,13 @@
+/*!
+ * DarkWeb Default Template — Castle Siege image overrides only.
+ * Structural CSS lives in assets/css/castlesiege.css
+ */
+.castle-siege-block .castle-owner-panel {
+	background-image: url('../img/castle_owner_bg.jpg');
+	background-repeat: no-repeat;
+}
+.castle-owner-widget {
+	background-image: url('../img/castle_owner_bg.jpg');
+	background-repeat: no-repeat;
+	background-position: top right;
+}

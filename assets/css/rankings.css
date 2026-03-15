@@ -1,0 +1,43 @@
+/* ============================================================
+   RANKINGS MODULE
+   ============================================================ */
+.rankings-table { width: 100%; border-spacing: 0; border-collapse: collapse; }
+.rankings-class-image { width: 30px; height: auto; box-shadow: 0 0 5px #666; border-radius: 0; }
+.rankings-table tr td {
+    border-bottom: 1px solid var(--dh-border);
+    padding: 10px;
+    font-size: 18px;
+    vertical-align: middle !important;
+    text-align: center;
+}
+.rankings-table-place { color: var(--dh-text-muted); font-weight: 700; font-size: 24px; text-align: center; }
+.rankings-table tr:first-child td { color: var(--dh-accent); border-bottom: 3px solid var(--dh-accent); }
+.rankings-update-time { text-align: right; font-size: 11px; color: #ccc; padding: 10px 0; }
+.rankings_menu { width: 100%; overflow: auto; text-align: center; margin-bottom: 10px; }
+.rankings_menu span { width: 100%; display: inline-block; padding: 10px 0; color: #ccc; font-size: 24px; }
+.rankings_menu a {
+    display: inline-block; width: 150px;
+    border: 1px solid var(--dh-border); text-align: center;
+    padding: 2px 0; margin: 2px;
+    background: var(--dh-bg-card); border-radius: 2px; color: #ccc;
+}
+.rankings_menu a.active { color: var(--dh-text); border-color: var(--dh-text); }
+.rankings_guild_logo tr td { border: 0 !important; padding: 0 !important; margin: 0 !important; }
+.rankings-gens-img { width: auto !important; height: 30px !important; border: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
+
+.rankings-class-filter {
+    display: inline-block; list-style-type: none;
+    margin: 20px auto; padding: 10px 20px; border-radius: 10px;
+}
+.rankings-class-filter li { display: inline-block; transition: all .3s; margin-bottom: 10px; }
+.rankings-class-filter-selection {
+    display: inline-block; width: 75px; text-align: center;
+    color: var(--dh-text); font-size: 11px; cursor: pointer;
+}
+.rankings-class-filter-selection:hover img { filter: brightness(120%); }
+.rankings-class-filter-selection img {
+    width: 40px; height: auto; border-radius: 50%;
+    margin-bottom: 5px; transition: all .3s;
+    box-shadow: 0 0 10px rgba(0,0,0,.45);
+}
+.rankings-class-filter-grayscale { filter: grayscale(100%); }

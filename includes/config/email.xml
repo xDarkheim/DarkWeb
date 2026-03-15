@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <active>0</active>
+    <send_from>noreply@example.com</send_from>
+    <send_name>{SERVER_NAME}</send_name>
+    <smtp_active>0</smtp_active>
+    <smtp_host></smtp_host>
+    <smtp_port>587</smtp_port>
+    <smtp_user></smtp_user>
+    <smtp_pass></smtp_pass>
+    <email_templates>
+        <template>
+            <filename>WELCOME_EMAIL</filename>
+            <subject>Welcome to {SERVER_NAME}</subject>
+        </template>
+        <template>
+            <filename>WELCOME_EMAIL_VERIFICATION</filename>
+            <subject>Verify your email - {SERVER_NAME}</subject>
+        </template>
+        <template>
+            <filename>CHANGE_PASSWORD</filename>
+            <subject>Password changed - {SERVER_NAME}</subject>
+        </template>
+        <template>
+            <filename>CHANGE_PASSWORD_EMAIL_VERIFICATION</filename>
+            <subject>Confirm password change - {SERVER_NAME}</subject>
+        </template>
+        <template>
+            <filename>CHANGE_EMAIL_VERIFICATION</filename>
+            <subject>Confirm email change - {SERVER_NAME}</subject>
+        </template>
+        <template>
+            <filename>PASSWORD_RECOVERY_REQUEST</filename>
+            <subject>Password recovery - {SERVER_NAME}</subject>
+        </template>
+        <template>
+            <filename>PASSWORD_RECOVERY_COMPLETED</filename>
+            <subject>Password recovery completed - {SERVER_NAME}</subject>
+        </template>
+        <template>
+            <filename>ADMIN_CHANGE_PASSWORD</filename>
+            <subject>Your password was changed by an admin - {SERVER_NAME}</subject>
+        </template>
+        <template>
+            <filename>ADMIN_CHANGE_EMAIL</filename>
+            <subject>Your email was changed by an admin - {SERVER_NAME}</subject>
+        </template>
+    </email_templates>
+</config>
+

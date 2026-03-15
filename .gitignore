@@ -1,0 +1,87 @@
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+# Darkheim CMS specific
+includes/cache/*
+!includes/cache/.htaccess
+includes/logs/*
+!includes/logs/.htaccess
+# Temporary files
+*.tmp
+*.bak
+*.old
+*.orig
+# System files
+.htaccess.bak
+error_log
+php_errors.log
+# Docker related
+.env
+docker/config.env
+# docker/config.env.example — commit this as a template for others
+docker-compose.override.yml
+# Server infrastructure — not part of the public project
+docker/npm/
+# Old docker files in root (moved to docker/)
+/Dockerfile
+/docker-entrypoint.sh
+/.dockerignore
+# SSL Certificates (важно!)
+ssl/*.crt
+ssl/*.key
+ssl/*.pem
+!ssl/README.md
+# Server-specific SSL folder
+ssl-darkheim/
+# Character avatars (uploaded files)
+templates/*/img/character-avatars/*
+!templates/*/img/character-avatars/.gitkeep
+# Guild marks
+img/guild/*.bmp
+img/guild/*.png
+# User uploads
+uploads/*
+!uploads/.gitkeep
+# Node modules (if using any JS tools)
+node_modules/
+# Composer
+vendor/
+composer.lock
+
+# PHPUnit
+.phpunit.cache/
+.phpunit.result.cache
+coverage/
+
+# PHPStan
+.phpstan-cache/
+# Database dumps
+*.sql
+*.sql.gz
+*.sql.zip
+# Backup files
+backups/
+*.backup
+# OS generated files
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+# Sensitive information
+config.local.php
+*.secret
+.env.local
+.env.*.local
+# Agent-specific files
+AGENTS.md
+# Darkheim CMS configuration files
+cms.json
+# Installation .htaccess files
+install/.htaccess
+install/sql/.htaccess

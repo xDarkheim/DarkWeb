@@ -1,0 +1,251 @@
+/* ============================================================
+   UCP — USER CONTROL PANEL
+   ============================================================ */
+
+/* Dashboard Banner */
+.ucp-dashboard-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+html.dark-mode .ucp-dashboard-banner {
+    background: #161d27;
+    border-color: #253140;
+}
+
+.ucp-db-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.ucp-db-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--dh-bg-secondary);
+    border: 2px solid var(--dh-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.ucp-db-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.ucp-db-avatar .bi { font-size: 32px; color: var(--dh-text-muted); }
+.ucp-db-username {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dh-text);
+}
+.ucp-db-subtitle {
+    font-size: 12px;
+    color: var(--dh-text-muted);
+    margin-top: 2px;
+}
+.ucp-db-pills { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.ucp-db-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.ucp-db-stat {
+    text-align: center;
+    padding: 8px 16px;
+    background: var(--dh-bg-secondary);
+    border: 1px solid var(--dh-border);
+    border-radius: 8px;
+    min-width: 80px;
+}
+html.dark-mode .ucp-db-stat { background: #1a2230; border-color: #253140; }
+.ucp-db-stat-val {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dh-text);
+    line-height: 1.2;
+}
+.ucp-db-stat-lbl {
+    display: block;
+    font-size: 11px;
+    color: var(--dh-text-muted);
+    margin-top: 2px;
+}
+.ucp-db-stat-online .ucp-db-stat-val { color: var(--dh-green); }
+.ucp-db-stat-credits .ucp-db-stat-val { color: var(--dh-gold); }
+
+/* Status / Online Pills */
+.ma-status-pill,
+.ma-online-pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+.ma-pill-active  { background: rgba(67,160,71,.15); color: #43a047; border: 1px solid #43a047; }
+.ma-pill-banned  { background: rgba(229,57,53,.15);  color: #e53935; border: 1px solid #e53935; }
+.ma-pill-online  { background: rgba(67,160,71,.15);  color: #43a047; border: 1px solid #43a047; }
+.ma-pill-offline { background: rgba(120,120,120,.12); color: #888;  border: 1px solid #888; }
+html.dark-mode .ma-pill-active  { background: rgba(102,187,106,.12); color: #66bb6a; border-color: #66bb6a; }
+html.dark-mode .ma-pill-banned  { background: rgba(239,83,80,.12);   color: #ef5350; border-color: #ef5350; }
+html.dark-mode .ma-pill-online  { background: rgba(102,187,106,.12); color: #66bb6a; border-color: #66bb6a; }
+html.dark-mode .ma-pill-offline { background: rgba(120,120,120,.10); color: #7a8694; border-color: #505a6a; }
+
+/* UCP Tiles Grid */
+.ucp-tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.ucp-tile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 8px;
+    text-decoration: none !important;
+    color: var(--dh-text) !important;
+    transition: background .2s ease, border-color .2s ease, transform .15s ease;
+    position: relative;
+}
+.ucp-tile:hover {
+    background: var(--dh-bg-secondary);
+    border-color: var(--dh-accent);
+    transform: translateY(-2px);
+    color: var(--dh-text) !important;
+}
+html.dark-mode .ucp-tile { background: #161d27; border-color: #253140; }
+html.dark-mode .ucp-tile:hover { background: #1e2a3a; border-color: var(--dh-accent); }
+
+.ucp-tile-gold   { border-left: 3px solid var(--dh-gold); }
+.ucp-tile-red    { border-left: 3px solid var(--dh-red); }
+.ucp-tile-blue   { border-left: 3px solid var(--dh-blue); }
+.ucp-tile-purple { border-left: 3px solid var(--dh-purple); }
+.ucp-tile-default{ border-left: 3px solid var(--dh-border); }
+
+.ucp-tile-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--dh-bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+html.dark-mode .ucp-tile-icon-wrap { background: #1a2230; }
+.ucp-tile-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    position: absolute;
+    opacity: .85;
+}
+.ucp-tile-bi {
+    font-size: 20px;
+    color: var(--dh-accent);
+    position: relative;
+    z-index: 1;
+}
+.ucp-tile-title {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dh-text);
+}
+.ucp-tile-arrow {
+    color: var(--dh-text-muted);
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+/* UCP Cards */
+.ucp-card {
+    background: var(--dh-bg-card);
+    border: 1px solid var(--dh-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+html.dark-mode .ucp-card { background: #161d27; border-color: #253140; }
+
+.ucp-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--dh-bg-secondary);
+    border-bottom: 1px solid var(--dh-border);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--dh-accent);
+}
+html.dark-mode .ucp-card-header { background: #10161e; border-bottom-color: #253140; }
+
+.ucp-card-body { padding: 16px; }
+
+/* UCP Forms */
+.ucp-form { display: flex; flex-direction: column; gap: 14px; }
+.ucp-form-group { display: flex; flex-direction: column; gap: 5px; }
+.ucp-form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dh-text);
+}
+.ucp-form-submit { margin-top: 4px; }
+.ucp-stat-current { color: var(--dh-text-muted); font-weight: 400; font-size: 12px; }
+
+/* UCP Stats Grid (addstats) */
+.ucp-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+/* UCP Add Stats */
+.ucp-addstats-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+.ucp-addstats-avatar {
+    flex-shrink: 0;
+}
+.ucp-addstats-avatar img {
+    width: 90px;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--dh-border);
+}
+.ucp-addstats-form { flex: 1; min-width: 200px; }
+
+/* UCP BuyZen Grid */
+.ucp-buyzen-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+}
+.ucp-buyzen-submit { min-width: 100px; }
+
+@media (max-width: 600px) {
+    .ucp-buyzen-grid { grid-template-columns: 1fr; }
+    .ucp-tiles-grid  { grid-template-columns: 1fr 1fr; }
+    .ucp-stats-grid  { grid-template-columns: 1fr; }
+}
