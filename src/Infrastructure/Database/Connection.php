@@ -32,10 +32,9 @@ class Connection
         }
     }
 
-    private static function _config($config)
+    private static function _config(string $config): mixed
     {
         $cmsConfig = cmsConfigs();
-        if (!is_array($cmsConfig)) return null;
         if (!array_key_exists($config, $cmsConfig)) return null;
         return $cmsConfig[$config];
     }
