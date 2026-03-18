@@ -25,6 +25,7 @@ php_errors.log
 docker/config.env
 # docker/config.env.example — commit this as a template for others
 docker-compose.override.yml
+# docker-compose.override.yml.example — commit this as a template for others
 # Server infrastructure — not part of the public project
 docker/npm/
 # Old docker files in root (moved to docker/)

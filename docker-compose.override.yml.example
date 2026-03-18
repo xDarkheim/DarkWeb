@@ -1,0 +1,27 @@
+# docker-compose.override.yml — LOCAL DEVELOPMENT without a reverse proxy
+#
+# Copy this file:  cp docker-compose.override.yml.example docker-compose.override.yml
+# docker-compose.override.yml is git-ignored.
+#
+# This override:
+#   - maps port 8081 to your host so you can open http://localhost:8081
+#   - switches the network from the external `proxy` to a local bridge
+#     (no need to run `docker network create proxy` for local dev)
+
+services:
+  web:
+    ports:
+      - "8081:8081"
+    networks:
+      - local_dev
+
+networks:
+  proxy:
+    # Shadow the external proxy network with a plain local bridge.
+    # Docker Compose merges this file with docker-compose.yml, so the
+    # `proxy` network defined here overrides the external: true one.
+    external: false
+    name: darkcore_local
+  local_dev:
+    driver: bridge
+

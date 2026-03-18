@@ -27,8 +27,11 @@ RUN echo "[global]\n\
     text size = 20971520" > /etc/freetds/freetds.conf
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mysqli mbstring exif pcntl bcmath gd zip \
-    && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
+# pdo_dblib: resolve the multiarch lib dir dynamically so the image builds on
+# both x86_64 (amd64) and ARM64 (Apple Silicon, Raspberry Pi, etc.)
+RUN MULTIARCH="$(dpkg-architecture -qDEB_HOST_MULTIARCH)" \
+    && docker-php-ext-install pdo pdo_mysql mysqli mbstring exif pcntl bcmath gd zip \
+    && docker-php-ext-configure pdo_dblib --with-libdir="lib/${MULTIARCH}" \
     && docker-php-ext-install pdo_dblib
 
 # ── Xdebug (disabled by default — enable via XDEBUG_MODE env var) ─────────────

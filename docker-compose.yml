@@ -7,6 +7,12 @@ services:
     restart: unless-stopped
     expose:
       - "8081"
+    # ── Local development (no reverse proxy) ─────────────────────────────────
+    # Uncomment the block below to access the site at http://localhost:8081
+    # and comment out the `networks` key + the `networks:` section at the bottom.
+    # ports:
+    #   - "8081:8081"
+    # ─────────────────────────────────────────────────────────────────────────
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -26,6 +32,9 @@ services:
       retries: 3
       start_period: 30s
 
+# The `proxy` external network must exist on the Docker host before `docker compose up`.
+# Create it once with:  docker network create proxy
+# See docs/deployment.md for full reverse-proxy setup instructions.
 networks:
   proxy:
     external: true

@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+# ── 0. Sanity check — warn if config.env was never copied ─────────────────────
+if [ -z "$DOCKER_SERVER_NAME" ] && [ -z "$DOCKER_TIMEZONE" ]; then
+    echo "[startup] WARNING: No DOCKER_* environment variables found."
+    echo "[startup]          Did you copy docker/config.env.example → docker/config.env?"
+    echo "[startup]          Continuing with empty defaults — the site may not work correctly."
+fi
+
 CMS_JSON="/var/www/html/includes/config/cms.json"
 
 # ── Helper: read a key from cms.json via PHP (safe, no jq dependency) ─────────

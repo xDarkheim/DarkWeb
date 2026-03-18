@@ -86,11 +86,16 @@ cd DarkCore
 # 2. Copy and configure both files
 cp includes/config/cms.json.default includes/config/cms.json
 cp docker/config.env.example docker/config.env
+# → Edit cms.json with your SQL Server credentials
+# → Edit docker/config.env with your domain and timezone
 
-# 3. Build and start
+# 3. Create the shared proxy network (once per Docker host — skip if it already exists)
+docker network create proxy
+
+# 4. Build and start
 docker compose up -d --build
 
-# 4. Run the web installer (first time only)
+# 5. Run the web installer (first time only)
 # Open https://your-domain/install/ in a browser
 # → Delete the install/ directory after setup is complete
 ```
@@ -156,19 +161,19 @@ SSL → **Request a new SSL Certificate** (Let's Encrypt).
 
 ## Local development
 
-Temporarily expose the port instead of using the proxy network:
-
-```yaml
-services:
-  web:
-    ports:
-      - "8081:8081"
-```
+For local development without a reverse proxy, use the provided override example:
 
 ```bash
+cp docker-compose.override.yml.example docker-compose.override.yml
 docker compose up -d --build
 # Site available at http://localhost:8081
 ```
+
+The override file:
+- Maps port `8081` to your host
+- Replaces the external `proxy` network with a plain local bridge — no need to run `docker network create proxy`
+
+`docker-compose.override.yml` is git-ignored so it never pollutes the repository.
 
 ## Useful commands
 
