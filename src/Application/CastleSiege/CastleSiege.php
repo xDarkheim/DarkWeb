@@ -146,6 +146,7 @@ class CastleSiege
     public function showRegisteredGuilds(): bool      { return $this->_showRegisteredGuilds; }
     public function showBattleDuration(): bool        { return $this->_showBattleDuration; }
     public function showSchedule(): bool              { return $this->_showSchedule; }
+    public function showWidget(): bool                { return $this->_showWidget; }
 
     public function moduleEnabled(): bool             { return $this->_active; }
 

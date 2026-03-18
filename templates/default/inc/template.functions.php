@@ -11,6 +11,8 @@
  * http://opensource.org/licenses/MIT
  */
 
+use Darkheim\Application\CastleSiege\CastleSiege;
+
 function templateBuildNavbar() {
 	$cfg = loadConfig('navbar');
 	if(!is_array($cfg)) return;
