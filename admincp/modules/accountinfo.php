@@ -225,10 +225,21 @@ if(isset($_GET['id'])) {
 			echo '<div class="col-md-6">';
 				
 				if($accountInfoConfig['showIpInfo']) {
+					$hasMuLogEx = defined('_TBL_LOGEX_') && defined('_CLMN_LOGEX_IP_');
+					$hasConnectionHistory = defined('_TBL_CH_')
+						&& defined('_CLMN_CH_IP_')
+						&& defined('_CLMN_CH_ACCID_')
+						&& defined('_CLMN_CH_STATE_')
+						&& defined('_CLMN_CH_ID_')
+						&& defined('_CLMN_CH_DATE_')
+						&& defined('_CLMN_CH_SRVNM_')
+						&& defined('_CLMN_CH_HWID_');
 					
-					if(defined('_TBL_LOGEX_')) {
+					if($hasMuLogEx) {
+						$tblLogEx = constant('_TBL_LOGEX_');
+						$clmnLogExIp = constant('_CLMN_LOGEX_IP_');
 						// ACCOUNTS IP ADDRESS (MuEngine - MuLogEx tbl)
-						$checkMuLogEx = $dB->query_fetch_single("SELECT * FROM sysobjects WHERE xtype = 'U' AND name = ?", array(_TBL_LOGEX_));
+						$checkMuLogEx = $dB->query_fetch_single("SELECT * FROM sysobjects WHERE xtype = 'U' AND name = ?", array($tblLogEx));
 						echo '<div class="panel panel-default">';
 						echo '<div class="panel-heading">Account\'s IP Address (MuEngine)</div>';
 						echo '<div class="panel-body">';
@@ -239,7 +250,7 @@ if(isset($_GET['id'])) {
 										foreach($accountIpAddress as $accountIp) {
 											echo '<tr>';
 												echo '<td><a href="https://whatismyipaddress.com/ip/'
-													.urlencode($accountIp[_CLMN_LOGEX_IP_]).'" target="_blank">'.$accountIp[_CLMN_LOGEX_IP_].'</a></td>';
+																	.urlencode($accountIp[$clmnLogExIp]).'" target="_blank">'.$accountIp[$clmnLogExIp].'</a></td>';
 											echo '</tr>';
 										}
 									echo '</table>';
@@ -247,13 +258,21 @@ if(isset($_GET['id'])) {
 									inline_message('info', 'No IP address found.');
 								}
 							} else {
-								inline_message('warning', 'Could not find table '._TBL_LOGEX_.' in the database.');
+								inline_message('warning', 'Could not find table '.$tblLogEx.' in the database.');
 							}
 						echo '</div>';
 						echo '</div>';
 					}
 					
-					if(defined('_TBL_CH_')) {
+					if($hasConnectionHistory) {
+						$tblCh = constant('_TBL_CH_');
+						$clmnChIp = constant('_CLMN_CH_IP_');
+						$clmnChAccid = constant('_CLMN_CH_ACCID_');
+						$clmnChState = constant('_CLMN_CH_STATE_');
+						$clmnChId = constant('_CLMN_CH_ID_');
+						$clmnChDate = constant('_CLMN_CH_DATE_');
+						$clmnChServer = constant('_CLMN_CH_SRVNM_');
+						$clmnChHwid = constant('_CLMN_CH_HWID_');
 						$accountDB = $dB;
 
 						// ACCOUNT IP LIST
@@ -261,13 +280,13 @@ if(isset($_GET['id'])) {
 						echo '<div class="panel-heading">Account\'s IP Address</div>';
 						echo '<div class="panel-body">';
 							
-							$accountIpHistory = $accountDB->query_fetch("SELECT DISTINCT("._CLMN_CH_IP_.") FROM "._TBL_CH_." WHERE "._CLMN_CH_ACCID_." = ?", array($accountInfo[_CLMN_USERNM_]));
+							$accountIpHistory = $accountDB->query_fetch("SELECT DISTINCT(".$clmnChIp.") FROM ".$tblCh." WHERE ".$clmnChAccid." = ?", array($accountInfo[_CLMN_USERNM_]));
 							if(is_array($accountIpHistory)) {
 								echo '<table class="table table-no-border table-hover">';
 									foreach($accountIpHistory as $accountIp) {
 										echo '<tr>';
 											echo '<td><a href="https://whatismyipaddress.com/ip/'
-												.urlencode($accountIp[_CLMN_CH_IP_]).'" target="_blank">'.$accountIp[_CLMN_CH_IP_].'</a></td>';
+													.urlencode($accountIp[$clmnChIp]).'" target="_blank">'.$accountIp[$clmnChIp].'</a></td>';
 										echo '</tr>';
 									}
 								echo '</table>';
@@ -283,7 +302,7 @@ if(isset($_GET['id'])) {
 						echo '<div class="panel-heading">Account Connection History (last 25)</div>';
 						echo '<div class="panel-body">';
 							
-							$accountConHistory = $accountDB->query_fetch("SELECT TOP 25 * FROM "._TBL_CH_." WHERE "._CLMN_CH_ACCID_." = ? AND "._CLMN_CH_STATE_." = ? ORDER BY "._CLMN_CH_ID_." DESC", array($accountInfo[_CLMN_USERNM_], 'Connect'));
+							$accountConHistory = $accountDB->query_fetch("SELECT TOP 25 * FROM ".$tblCh." WHERE ".$clmnChAccid." = ? AND ".$clmnChState." = ? ORDER BY ".$clmnChId." DESC", array($accountInfo[_CLMN_USERNM_], 'Connect'));
 							if(is_array($accountConHistory)) {
 								echo '<table class="table table-no-border table-hover">';
 									echo '<tr>';
@@ -294,10 +313,10 @@ if(isset($_GET['id'])) {
 									echo '</tr>';
 									foreach($accountConHistory as $connection) {
 										echo '<tr>';
-											echo '<td>'.$connection[_CLMN_CH_DATE_].'</td>';
-											echo '<td class="hidden-xs">'.$connection[_CLMN_CH_SRVNM_].'</td>';
-											echo '<td>'.$connection[_CLMN_CH_IP_].'</td>';
-											echo '<td>'.$connection[_CLMN_CH_HWID_].'</td>';
+											echo '<td>'.$connection[$clmnChDate].'</td>';
+											echo '<td class="hidden-xs">'.$connection[$clmnChServer].'</td>';
+											echo '<td>'.$connection[$clmnChIp].'</td>';
+											echo '<td>'.$connection[$clmnChHwid].'</td>';
 										echo '</tr>';
 									}
 								echo '</table>';

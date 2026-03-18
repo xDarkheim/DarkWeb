@@ -193,6 +193,9 @@ img {
         text-align: center !important;
         margin-bottom: 4px;
     }
+    .global-top-bar-separator {
+        display: none;
+    }
     .dh-lang-switcher,
     .dh-lang-switcher:hover {
         width: auto;
@@ -239,14 +242,13 @@ img {
     #content .myaccount-table {
         display: table;
         width: 100%;
-        min-width: 0;
-        white-space: normal;
+        min-width: 560px;
+        white-space: nowrap;
     }
     .rankings-table tr td,
     .general-table-ui tr td,
     .myaccount-table tr td {
-        white-space: normal;
-        word-break: break-word;
+        white-space: nowrap;
     }
 
     /* Rankings */
@@ -322,6 +324,12 @@ img {
         font-size: 18px;
         width: 50px;
     }
+
+    /* Mobile nav wrapper added in template index */
+    #main-nav {
+        width: 100%;
+        min-width: 0;
+    }
 }
 
 /* ── 480px (small phones) ───────────────────────────────────── */
@@ -357,6 +365,31 @@ img {
     }
     .auth-security {
         flex: 0 0 100%;
+    }
+
+    #content .table,
+    #content .rankings-table,
+    #content .general-table-ui,
+    #content .myaccount-table {
+        min-width: 500px;
+    }
+}
+
+@media (max-width: 420px) {
+    #container,
+    .footer {
+        width: calc(100% - 12px);
+    }
+
+    #content {
+        padding: 8px 8px 0;
+    }
+
+    .panel-body,
+    .panel-heading,
+    .panel-footer {
+        padding-left: 10px;
+        padding-right: 10px;
     }
 }
 

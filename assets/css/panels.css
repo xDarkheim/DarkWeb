@@ -39,3 +39,21 @@ html.dark-mode .panel-addstats { background: #161d27; border-color: #253140; }
 
 .module-requirements { font-size: 12px; margin-top: 20px; }
 .online-status-indicator { margin-left: 5px; }
+
+@media (max-width: 767px) {
+    .general-table-ui {
+        table-layout: auto;
+        min-width: 560px;
+    }
+
+    .panel-addstats .character-avatar img {
+        width: 80px;
+    }
+
+    .panel-addstats .character-name {
+        font-size: 16px;
+        padding: 12px 0;
+        margin-bottom: 12px !important;
+    }
+}
+

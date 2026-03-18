@@ -348,8 +348,10 @@ class Character
 
         $skillEnhancementTreeEnabled = false;
         $skillEnhancementPoints      = 0;
+        $skillEnhancementColumn      = null;
         if (defined('_CLMN_ML_I4SP_')) {
-            $skillEnhancementTreeEnabled = array_key_exists(_CLMN_ML_I4SP_, $characterMasterLvlData);
+            $skillEnhancementColumn = (string) constant('_CLMN_ML_I4SP_');
+            $skillEnhancementTreeEnabled = array_key_exists($skillEnhancementColumn, $characterMasterLvlData);
         }
         if ($skillEnhancementTreeEnabled && $characterLevel > $this->_skilEnhanceTreeLevel) {
             $skillEnhancementPoints = $characterLevel - $this->_skilEnhanceTreeLevel;
@@ -377,8 +379,15 @@ class Character
 
         $query = "UPDATE " . _TBL_MASTERLVL_ . " SET " . _CLMN_ML_POINT_ . " = :masterpoints";
         if (defined('_CLMN_ML_EXP_') && array_key_exists(_CLMN_ML_EXP_, $characterMasterLvlData))  $query .= ", " . _CLMN_ML_EXP_ . " = 0";
-        if (defined('_CLMN_ML_NEXP_') && array_key_exists(_CLMN_ML_NEXP_, $characterMasterLvlData)) $query .= ", " . _CLMN_ML_NEXP_ . " = 0";
-        if ($skillEnhancementTreeEnabled && $skillEnhancementPoints > 0) $query .= ", " . _CLMN_ML_I4SP_ . " = :skillenhancementpoints";
+        if (defined('_CLMN_ML_NEXP_')) {
+            $masterNextExpColumn = (string) constant('_CLMN_ML_NEXP_');
+            if (array_key_exists($masterNextExpColumn, $characterMasterLvlData)) {
+                $query .= ", " . $masterNextExpColumn . " = 0";
+            }
+        }
+        if ($skillEnhancementTreeEnabled && $skillEnhancementPoints > 0 && is_string($skillEnhancementColumn)) {
+            $query .= ", " . $skillEnhancementColumn . " = :skillenhancementpoints";
+        }
         $query .= " WHERE " . _CLMN_ML_NAME_ . " = :player";
 
         if (!$this->_resetMagicList($this->_character)) throw new \Exception(lang('error_21'));

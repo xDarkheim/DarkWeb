@@ -238,3 +238,32 @@ html.dark-mode .pf-stats-bar-wrap { background: #0f141c; border-color: #253140; 
     .pf-info-grid { grid-template-columns: repeat(2, 1fr); }
     .pf-banner-content { flex-direction: column; align-items: flex-start; }
 }
+
+@media (max-width: 480px) {
+    .pf-banner-content {
+        padding: 14px;
+    }
+
+    .pf-name {
+        font-size: 20px;
+    }
+
+    .pf-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pf-stats-row {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .pf-stats-name {
+        width: 100%;
+    }
+
+    .pf-stats-num {
+        width: auto;
+        text-align: left;
+    }
+}
+

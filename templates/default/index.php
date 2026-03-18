@@ -35,7 +35,7 @@ if(!isset($_REQUEST['subpage'])) {
 <html>
 	<head>
 		<meta charset="utf-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<?php
 		$_seo_title       = htmlspecialchars(config('website_title', true),            ENT_QUOTES, 'UTF-8');
 		$_seo_description = htmlspecialchars(config('website_meta_description', true), ENT_QUOTES, 'UTF-8');
@@ -131,10 +131,12 @@ if(!isset($_REQUEST['subpage'])) {
 			</div>
 		</div>
 		<div id="navbar">
-			<button id="menu-toggle">
+			<button id="menu-toggle" type="button" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation menu">
         		<i class="bi bi-list"></i>
     		</button>
+			<div id="main-nav">
 			<?php templateBuildNavbar(); ?>
+			</div>
 		</div>
 		<div id="header">
 			<a href="<?php echo __BASE_URL__; ?>">
@@ -207,27 +209,49 @@ if(!isset($_REQUEST['subpage'])) {
 			(function() {
 				var toggle = document.getElementById("menu-toggle");
 				var navbar = document.getElementById("navbar");
+				var MOBILE_BP = 768;
 				if (!toggle || !navbar) return;
+
+				function setMenuState(open) {
+					navbar.classList.toggle("active", open);
+					toggle.setAttribute("aria-expanded", open ? "true" : "false");
+					var icon = toggle.querySelector("i");
+					if (icon) icon.className = open ? "bi bi-x-lg" : "bi bi-list";
+				}
+
+				function closeMenu() {
+					setMenuState(false);
+				}
 
 				toggle.addEventListener("click", function (e) {
 					e.stopPropagation();
-					navbar.classList.toggle("active");
-					var icon = toggle.querySelector("i");
-					if (icon) {
-						if (navbar.classList.contains("active")) {
-							icon.className = "bi bi-x-lg";
-						} else {
-							icon.className = "bi bi-list";
-						}
-					}
+					setMenuState(!navbar.classList.contains("active"));
 				});
 
 				document.addEventListener("click", function (e) {
 					if (navbar.classList.contains("active") && !navbar.contains(e.target)) {
-						navbar.classList.remove("active");
-						var icon = toggle.querySelector("i");
-						if (icon) icon.className = "bi bi-list";
+						closeMenu();
 					}
+				});
+
+				document.addEventListener("keydown", function (e) {
+					if (e.key === "Escape") {
+						closeMenu();
+					}
+				});
+
+				window.addEventListener("resize", function () {
+					if (window.innerWidth > MOBILE_BP) {
+						closeMenu();
+					}
+				});
+
+				navbar.querySelectorAll("a").forEach(function (link) {
+					link.addEventListener("click", function () {
+						if (window.innerWidth <= MOBILE_BP) {
+							closeMenu();
+						}
+					});
 				});
 			})();
 		</script>

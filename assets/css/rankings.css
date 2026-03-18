@@ -41,3 +41,37 @@
     box-shadow: 0 0 10px rgba(0,0,0,.45);
 }
 .rankings-class-filter-grayscale { filter: grayscale(100%); }
+
+@media (max-width: 767px) {
+    .rankings-table {
+        min-width: 620px;
+    }
+
+    .rankings-table tr td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .rankings-table-place {
+        font-size: 18px;
+    }
+
+    .rankings_menu {
+        text-align: left;
+        white-space: nowrap;
+        padding-bottom: 6px;
+    }
+
+    .rankings_menu a {
+        width: auto;
+        min-width: 120px;
+        padding: 4px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .rankings-table {
+        min-width: 560px;
+    }
+}
+

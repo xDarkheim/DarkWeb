@@ -98,6 +98,36 @@ html.dark-mode .dl-not-ready { background: #161d27; border-color: #253140; }
 .panel-sidebar-events .smalltext { font-size: 11px; position: relative; top: -5px; }
 
 /* Responsive */
+@media (max-width: 767px) {
+    .panel-downloads .table,
+    .panel-downloads .table tbody,
+    .panel-downloads .table tr,
+    .panel-downloads .table td {
+        display: block;
+        width: 100% !important;
+    }
+
+    .panel-downloads .table tr {
+        border: 1px solid var(--dh-border);
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    html.dark-mode .panel-downloads .table tr {
+        border-color: #253140;
+    }
+
+    .panel-downloads .table > tbody > tr > td {
+        border: 0;
+        padding: 4px 0;
+        text-align: left !important;
+    }
+
+    .panel-downloads .table .btn {
+        width: 100%;
+    }
+}
+
 @media (max-width: 600px) {
     .dl-req-grid     { grid-template-columns: 1fr; }
     .dl-drivers-grid { grid-template-columns: repeat(2, 1fr); }

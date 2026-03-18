@@ -142,13 +142,29 @@ if(is_array($AccountCharacters)) {
 }
 
 // ── 4. CONNECTION HISTORY ─────────────────────────────────────────
-if(defined('_TBL_CH_')) {
+$hasConnectionHistory = defined('_TBL_CH_')
+	&& defined('_CLMN_CH_ACCID_')
+	&& defined('_CLMN_CH_ID_')
+	&& defined('_CLMN_CH_DATE_')
+	&& defined('_CLMN_CH_SRVNM_')
+	&& defined('_CLMN_CH_IP_')
+	&& defined('_CLMN_CH_STATE_');
+
+if($hasConnectionHistory) {
+	$tblCh = constant('_TBL_CH_');
+	$clmnChAccid = constant('_CLMN_CH_ACCID_');
+	$clmnChId = constant('_CLMN_CH_ID_');
+	$clmnChDate = constant('_CLMN_CH_DATE_');
+	$clmnChServer = constant('_CLMN_CH_SRVNM_');
+	$clmnChIp = constant('_CLMN_CH_IP_');
+	$clmnChState = constant('_CLMN_CH_STATE_');
+
 	echo '<div class="ma-section-title" style="margin-top:24px;"><i class="bi bi-clock-history"></i>'.lang('myaccount_txt_16').'</div>';
 	echo '<div class="ucp-card">';
 		echo '<div class="ucp-card-body" style="padding:0;">';
 			$me = Connection::Database('MuOnline');
 			$connectionHistory = $me->query_fetch(
-				"SELECT TOP 10 * FROM "._TBL_CH_." WHERE "._CLMN_CH_ACCID_." = ? ORDER BY "._CLMN_CH_ID_." DESC",
+				"SELECT TOP 10 * FROM ".$tblCh." WHERE ".$clmnChAccid." = ? ORDER BY ".$clmnChId." DESC",
 				array($_SESSION['username'])
 			);
 			if(is_array($connectionHistory)) {
@@ -161,10 +177,10 @@ if(defined('_TBL_CH_')) {
 					echo '</tr></thead><tbody>';
 					foreach($connectionHistory as $row) {
 						echo '<tr>';
-							echo '<td>'.$row[_CLMN_CH_DATE_].'</td>';
-							echo '<td>'.$row[_CLMN_CH_SRVNM_].'</td>';
-							echo '<td>'.$row[_CLMN_CH_IP_].'</td>';
-							echo '<td>'.$row[_CLMN_CH_STATE_].'</td>';
+							echo '<td>'.$row[$clmnChDate].'</td>';
+							echo '<td>'.$row[$clmnChServer].'</td>';
+							echo '<td>'.$row[$clmnChIp].'</td>';
+							echo '<td>'.$row[$clmnChState].'</td>';
 						echo '</tr>';
 					}
 					echo '</tbody>';

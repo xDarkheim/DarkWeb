@@ -15,7 +15,7 @@ use Darkheim\Domain\Validator;
  */
 class Account extends Common
 {
-    private $_defaultAccountSerial = '1111111111111';
+    private string $_defaultAccountSerial = '1111111111111';
     private ?ServerContext $serverContext = null;
 
     public $_account {

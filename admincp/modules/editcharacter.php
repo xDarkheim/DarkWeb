@@ -179,8 +179,8 @@ if(isset($_GET['name'])) {
 				$mlQuery = "UPDATE "._TBL_MASTERLVL_." SET ";
 					$mlQuery .= _CLMN_ML_LVL_ . " = :level,";
 					$mlQuery .= _CLMN_ML_EXP_ . " = :exp,";
-					if(check_value($updateMlData['nextexp'])) {
-						$mlQuery .= _CLMN_ML_NEXP_." = :nextexp,";
+					if(defined('_CLMN_ML_NEXP_') && isset($updateMlData['nextexp']) && check_value($updateMlData['nextexp'])) {
+						$mlQuery .= constant('_CLMN_ML_NEXP_')." = :nextexp,";
 					}
 					$mlQuery .= _CLMN_ML_POINT_ . " = :points";
 					$mlQuery .= " WHERE "._CLMN_ML_NAME_." = :name";
@@ -320,9 +320,10 @@ if(isset($_GET['name'])) {
 									echo '<td><input class="form-control" type="number" name="characteredit_mlexp" value="'.$mLinfo[_CLMN_ML_EXP_].'"/></td>';
 								echo '</tr>';
 								if(defined('_CLMN_ML_NEXP_')) {
+									$masterNextExpColumn = constant('_CLMN_ML_NEXP_');
 									echo '<tr>';
 										echo '<th>Next Experience:</th>';
-										echo '<td><input class="form-control" type="number" name="characteredit_mlnextexp" value="'.$mLinfo[_CLMN_ML_NEXP_].'"/></td>';
+										echo '<td><input class="form-control" type="number" name="characteredit_mlnextexp" value="'.$mLinfo[$masterNextExpColumn].'"/></td>';
 									echo '</tr>';
 								}
 								echo '<tr>';

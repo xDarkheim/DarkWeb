@@ -248,6 +248,7 @@ $(document).ready(function() {
 	if ($('#paypal_donations').length)         $('#paypal_donations').DataTable($.extend({}, dtOpts, { searching: true, info: true }));
 	if ($('#superrewards_donations').length)   $('#superrewards_donations').DataTable($.extend({}, dtOpts, { searching: true, info: true }));
 	if ($('#credits_logs').length)             $('#credits_logs').DataTable($.extend({}, dtOpts, { searching: true, info: true }));
+});
 // Page transition — intercept internal AdminCP links
 (function() {
 	var overlay  = document.getElementById('acp-page-transition');

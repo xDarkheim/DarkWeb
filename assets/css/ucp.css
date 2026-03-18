@@ -244,8 +244,38 @@ html.dark-mode .ucp-card-header { background: #10161e; border-bottom-color: #253
 }
 .ucp-buyzen-submit { min-width: 100px; }
 
+@media (max-width: 767px) {
+    .ucp-dashboard-banner {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .ucp-db-left,
+    .ucp-db-stats {
+        width: 100%;
+    }
+
+    .ucp-db-stats {
+        gap: 10px;
+    }
+
+    .ucp-db-stat {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 0;
+        padding: 8px 10px;
+    }
+
+    .ucp-tiles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ucp-addstats-row {
+        gap: 12px;
+    }
+}
+
 @media (max-width: 600px) {
     .ucp-buyzen-grid { grid-template-columns: 1fr; }
-    .ucp-tiles-grid  { grid-template-columns: 1fr 1fr; }
+    .ucp-tiles-grid  { grid-template-columns: 1fr; }
     .ucp-stats-grid  { grid-template-columns: 1fr; }
 }

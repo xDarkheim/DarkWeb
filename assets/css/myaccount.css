@@ -166,6 +166,21 @@ html.dark-mode .ma-char-card { background: #161d27; border-color: #253140; }
     gap: 3px;
 }
 
+@media (max-width: 767px) {
+    .ma-banner-inner {
+        padding: 16px;
+    }
+
+    .ma-banner-actions {
+        width: 100%;
+    }
+
+    .ma-action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 @media (max-width: 600px) {
     .ma-banner-inner { flex-direction: column; text-align: center; }
     .ma-banner-actions { justify-content: center; }
@@ -173,3 +188,10 @@ html.dark-mode .ma-char-card { background: #161d27; border-color: #253140; }
     .ma-info-cell { border-right: none; border-bottom: 1px solid var(--dh-border); }
     .ma-chars-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+@media (max-width: 420px) {
+    .ma-chars-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
