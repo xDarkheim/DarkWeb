@@ -4,7 +4,7 @@
  *
  * @version     0.0.1
  * @author      Dmytro Hovenko <dmytro.hovenko@gmail.com>
- * @copyright   2024-2026 Dmytro Hovenko (Darkheim)
+ * @copyright   2026 Dmytro Hovenko (Darkheim)
  * @license     MIT
  *
  * Compatible emulators: X-Team, MuEmu, Louis
@@ -332,3 +332,4 @@ $custom['pk_level'] = array(
 	5 => 'Murder',
 	6 => 'Outlaw',
 );
+

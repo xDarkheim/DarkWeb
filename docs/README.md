@@ -30,4 +30,4 @@
 | Write a new test | [PHPUnit → Writing tests](phpunit.md#writing-tests) |
 | Enable Xdebug | [PHPUnit → Xdebug](phpunit.md#xdebug) |
 
-*MIT License 2024–2026 Dmytro Hovenko (Darkheim)*
+*MIT License 2026 Dmytro Hovenko (Darkheim)*

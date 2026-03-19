@@ -11,7 +11,7 @@
  *
  * @package     DarkCore
  * @author      Dmytro Hovenko <dmytro.hovenko@gmail.com>
- * @copyright   2024-2026 Dmytro Hovenko (Darkheim)
+ * @copyright   2026 Dmytro Hovenko (Darkheim)
  * @license     MIT
  * @link        https://darkheim.net
  */

@@ -102,4 +102,4 @@ vendor/bin/php-cs-fixer fix  # code style
 
 ## License
 
-MIT License © 2024–2026 [Dmytro Hovenko](https://darkheim.net)
+MIT License © 2026 [Dmytro Hovenko](https://darkheim.net)

@@ -5,7 +5,7 @@
  * 
  * @version 0.0.1
  * @author Dmytro Hovenko <dmytro.hovenko@gmail.com>
- * @copyright (c) 2024-2026 DarkCore CMS. All Rights Reserved.
+ * @copyright (c) 2026 DarkCore CMS. All Rights Reserved.
  * 
  * Licensed under the MIT license
  * http://opensource.org/licenses/MIT
