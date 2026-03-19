@@ -481,7 +481,12 @@ function base64url_decode($data, $strict = false): ?string
 
 function debug($value): void
 {
+    // Intentional legacy helper for manual local diagnostics.
+    $output = is_scalar($value) || $value === null
+        ? (string) $value
+        : var_export($value, true);
+
     echo '<pre>';
-    print_r($value);
+    echo htmlspecialchars($output, ENT_QUOTES, 'UTF-8');
     echo '</pre>';
 }
