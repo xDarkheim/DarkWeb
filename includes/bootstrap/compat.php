@@ -6,7 +6,7 @@
  * Every function here is a one-to-three-line wrapper that delegates to a
  * proper namespaced class in src/.  No business logic lives here.
  *
- * Legacy modules/templates may continue using the global functions unchanged;
+ * Legacy modules/themes may continue using the global functions unchanged;
  * new code should call the underlying classes directly.
  *
  * @package     DarkCore

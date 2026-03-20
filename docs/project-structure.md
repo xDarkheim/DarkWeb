@@ -118,7 +118,7 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   │   ├── servertime.php
 │   │   └── version.php
 │   ├── install/                    # Web-based installer (remove after setup)
-│   └── themes/                  # ★ Theme templates (web-accessible CSS/JS/img)
+│   └── themes/                  # ★ Theme files (web-accessible CSS/JS/img)
 │       └── default/                # Default dark-fantasy theme (Bootstrap 3)
 │           ├── index.php           # Template entry point — injects CSS/JS, renders layout
 │           ├── css/                # Template-level CSS

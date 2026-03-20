@@ -327,7 +327,7 @@ if(!is_array($cfg)) {
 			</td>
 		</tr>
 		<tr>
-			<th>Show Widget<br/><span>Displays the castle siege information in your template's sidebar/header.</span></th>
+			<th>Show Widget<br/><span>Displays the castle siege information in your theme's sidebar/header.</span></th>
 			<td>
 				<?php enabledisableCheckboxes('setting_14', $cfg['show_widget'], 'Enabled', 'Disabled'); ?>
 			</td>

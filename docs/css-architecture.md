@@ -7,7 +7,7 @@ This file documents how frontend styles are layered and where layout responsibil
 | Location | Purpose |
 | :--- | :--- |
 | `public/themes/default/css/` | Template-level layout: structure, navbar, header, footer |
-| `public/assets/css/` | Page/component styles — loaded by every template |
+| `public/assets/css/` | Page/component styles — loaded by every theme |
 
 Both sets are injected individually via `<link>` tags in `public/themes/default/index.php`. No bundler or `@import` entry point is used. Cache busting is automatic via `filemtime()` query strings.
 
@@ -42,7 +42,7 @@ Order is critical — `override.css` must always be last.
 
 All DarkCore-owned utility classes use the `dh-` prefix.
 
-### Global template classes (`style.css`)
+### Global theme classes (`style.css`)
 
 | Class | Purpose |
 | :--- | :--- |
