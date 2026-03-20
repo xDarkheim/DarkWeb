@@ -96,27 +96,42 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── google/recaptcha/
 │   └── phpmailer/phpmailer/
 │
-├── admincp/                        # Admin control panel (Bootstrap 5, separate auth)
-│   ├── index.php                   # Admin entry point
-│   ├── css/                        # Admin-specific styles
-│   ├── js/                         # Admin-specific scripts
-│   ├── inc/                        # Auth check + admin helpers
-│   └── modules/                    # Admin feature modules
+├── public/                         # ★ DocumentRoot — only this directory is web-accessible
+│   ├── index.php                   # Web entry point → ../includes/bootstrap/boot.php
+│   ├── .htaccess                   # mod_rewrite routing rules
+│   ├── robots.txt
+│   ├── assets/                     # Global CSS / JS bundles
+│   ├── img/                        # Public static images
+│   │   └── flags/                  # Country flag GIFs (ISO 3166-1 alpha-2)
+│   ├── admincp/                    # Admin control panel (Bootstrap 5, separate auth)
+│   │   ├── index.php               # Admin entry point
+│   │   ├── css/                    # Admin-specific styles
+│   │   ├── js/                     # Admin-specific scripts
+│   │   ├── inc/                    # Auth check + admin helpers
+│   │   └── modules/                # Admin feature modules
+│   ├── api/                        # Public REST-like endpoints
+│   │   ├── castlesiege.php
+│   │   ├── cron.php                # Cron trigger (Docker cron or external)
+│   │   ├── events.php              # Standalone — does NOT bootstrap boot.php
+│   │   ├── guildmark.php
+│   │   ├── paypal.php              # PayPal IPN receiver
+│   │   ├── servertime.php
+│   │   └── version.php
+│   ├── install/                    # Web-based installer (remove after setup)
+│   └── templates/                  # ★ Theme templates (web-accessible CSS/JS/img)
+│       └── default/                # Default dark-fantasy theme (Bootstrap 3)
+│           ├── index.php           # Template entry point — injects CSS/JS, renders layout
+│           ├── css/                # Template-level CSS
+│           ├── js/                 # Template JS
+│           ├── img/                # Template images
+│           ├── fonts/              # Local webfonts
+│           └── inc/                # Server-side partials (PHP includes)
+│               ├── template.functions.php
+│               └── modules/
+│                   ├── footer.php
+│                   └── sidebar.php
 │
-├── api/                            # Public REST-like endpoints
-│   ├── castlesiege.php
-│   ├── cron.php                    # Cron trigger (Docker cron or external)
-│   ├── events.php                  # Standalone — does NOT bootstrap boot.php
-│   ├── guildmark.php
-│   ├── paypal.php                  # PayPal IPN receiver
-│   ├── servertime.php
-│   └── version.php
-│
-├── img/                            # Public static images
-│   ├── flags/                      # Country flag GIFs (ISO 3166-1 alpha-2)
-│   └── brand.jpg
-│
-├── includes/                       # CMS bootstrap layer (not web-accessible)
+├── includes/                       # CMS bootstrap layer (NOT web-accessible)
 │   ├── bootstrap/
 │   │   ├── boot.php                # Entry point: loads autoloader + boots AppKernel
 │   │   └── compat.php              # Global function shim — thin wrappers over src/ classes
@@ -133,13 +148,13 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   │   ├── modules/                # Per-module XML configs (feature toggles)
 │   │   └── writable.paths.json     # Paths checked for write permissions on install
 │   ├── languages/                  # Phrase files — one PHP file per language code
-│   ├── cache/                      # Runtime cache (auto-created, web-blocked)
-│   ├── logs/                       # Runtime logs  (auto-created, web-blocked)
+│   ├── cache/                      # Runtime cache (auto-created, NOT web-accessible)
+│   ├── logs/                       # Runtime logs  (auto-created, NOT web-accessible)
 │   ├── emails/                     # Email template helpers
 │   ├── cron/                       # Cron job scripts
 │   └── plugins/                    # Runtime plugin files
 │
-├── modules/                        # Frontend page modules (Bootstrap 3 + jQuery 2)
+├── modules/                        # Frontend page modules (NOT web-accessible directly)
 │   ├── home.php
 │   ├── login.php
 │   ├── register.php
@@ -155,49 +170,51 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── tos.php / privacy.php / refunds.php
 │   └── usercp/                     # UserCP sub-page modules
 │
-├── templates/
-│   └── default/                    # Default dark-fantasy theme (Bootstrap 3)
-│       ├── index.php               # Template entry point — injects all CSS/JS, renders layout
-│       ├── css/                    # Template-level CSS (style.css, override.css, profiles.css, castle-siege.css)
-│       ├── js/                     # Template JS (main.js, events.js)
-│       ├── img/                    # Template images (logo, backgrounds, social icons, profiles)
-│       ├── fonts/                  # Local webfonts
-│       └── inc/                    # Partials
-│           ├── template.functions.php  # templateBuildNavbar(), templateLanguageSelector(), etc.
-│           └── modules/
-│               ├── footer.php      # Footer HTML
-│               └── sidebar.php     # Sidebar (login form or UserCP menu)
-│
-├── install/                        # Web-based installer (remove after setup)
-│
 ├── docker/
 │   ├── Dockerfile                  # PHP 8.4 + Apache + FreeTDS + pdo_dblib
 │   ├── entrypoint.sh               # Container startup: dirs, permissions, cron
-│   └── npm/                        # Optional server-level proxy helper stack
+│   └── xdebug.ini
 │
+├── .htaccess                       # Root-level safety guard (redirects to public/ on misconfiguration)
 ├── composer.json                   # Declares dependencies + PSR-4 autoload map
-├── composer.lock                   # Locked dependency tree (commit this)
+├── composer.lock
 ├── docker-compose.yml
-├── docker-compose.override.yml     # Server-only (not committed)
-├── index.php                       # Web entry point → includes/bootstrap/boot.php
-└── .htaccess                       # mod_rewrite routing rules
+└── phpstan.neon / phpunit.xml
 ```
 
 ## Bootstrap path
 
 ```
-index.php
-  └── includes/bootstrap/boot.php    ← composition root
-        ├── vendor/autoload.php     ← Composer PSR-4 autoloader
-        └── AppKernel::boot()       ← Darkheim\Infrastructure\Bootstrap\AppKernel
-              ├── ConfigProvider    ← reads includes/config/cms.json + XML configs
-              ├── RuntimeState      ← legacy compatibility state container
+public/index.php
+  └── ../includes/bootstrap/boot.php    ← composition root
+        ├── vendor/autoload.php         ← Composer PSR-4 autoloader
+        └── AppKernel::boot()           ← Darkheim\Infrastructure\Bootstrap\AppKernel
+              ├── ConfigProvider        ← reads includes/config/cms.json + XML configs
+              ├── RuntimeState          ← in-memory bag: language phrases, module config
               ├── includes/config/cms.tables.php
               ├── includes/config/timezone.php
               ├── includes/bootstrap/compat.php
-              ├── plugin files      ← from includes/cache/plugins.cache
-              └── Handler::loadPage() ← Darkheim\Infrastructure\Routing\Handler
+              ├── plugin files          ← from includes/cache/plugins.cache
+              └── Handler::loadPage()  ← Darkheim\Infrastructure\Routing\Handler
 ```
+
+## Path constants defined by AppKernel
+
+| Constant | Points to |
+| :--- | :--- |
+| `__ROOT_DIR__` | Project root filesystem path |
+| `__PUBLIC_DIR__` | `public/` filesystem path (DocumentRoot) |
+| `__PATH_INCLUDES__` | `includes/` filesystem path |
+| `__PATH_MODULES__` | `modules/` filesystem path |
+| `__PATH_TEMPLATES__` | `public/templates/` filesystem path |
+| `__PATH_CONFIGS__` | `includes/config/` filesystem path |
+| `__PATH_CACHE__` | `includes/cache/` filesystem path |
+| `__PATH_LOGS__` | `includes/logs/` filesystem path |
+| `__BASE_URL__` | Site URL (e.g. `https://example.com/`) |
+| `__PATH_IMG__` | `__BASE_URL__ . 'img/'` |
+| `__PATH_ASSETS__` | `__BASE_URL__ . 'assets/'` |
+| `__PATH_API__` | `__BASE_URL__ . 'api/'` |
+| `__PATH_ADMINCP__` | `public/admincp/` filesystem path |
 
 ## Runtime boundary
 
@@ -286,14 +303,12 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 | `includes/bootstrap/compat.php` | ⚠️ | Add wrappers only; no logic — logic goes in `src/` |
 | `includes/bootstrap/boot.php` | ❌ | Entry point — do not add logic here |
 | `includes/config/cms.json` | ✅ | Main config: DB credentials, server name, feature toggles |
-| `assets/css/*.css` | ✅ | Page/component styles — add filename to `$_cssFiles` in `templates/default/index.php` |
-| `templates/default/css/*.css` | ✅ | Template layout styles — add `<link>` before `override.css` |
-| `templates/default/js/*.js` | ✅ | Template JS — add `<script>` tag in `templates/default/index.php` |
+| `public/assets/css/*.css` | ✅ | Global page/component styles |
+| `public/templates/default/css/*.css` | ✅ | Template layout styles |
+| `public/templates/default/js/*.js` | ✅ | Template JS |
 | `modules/usercp/*.php` | ✅ | Individual UserCP sub-pages |
 | `includes/languages/*/language.php` | ✅ | Translation phrases |
 | `vendor/` | ❌ | Managed by Composer — run `composer install` / `composer update` |
 | `includes/cache/` | ❌ | Runtime cache managed by CMS |
 | `includes/logs/` | ❌ | Runtime logs managed by CMS |
 
-```
-| `includes/logs/` | No | Runtime logs managed by CMS |

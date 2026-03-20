@@ -447,11 +447,7 @@ function custom($index)
 
 function customData(): array
 {
-    $custom = BootstrapContext::runtimeState()?->customConfig() ?? [];
-    if ($custom !== []) {
-        return $custom;
-    }
-    return is_array($GLOBALS['custom'] ?? null) ? $GLOBALS['custom'] : [];
+    return BootstrapContext::runtimeState()?->customConfig() ?? [];
 }
 
 function getRankingMenuLinks(): ?array

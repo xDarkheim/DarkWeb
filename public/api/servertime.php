@@ -1,7 +1,7 @@
 <?php
 define('access', 'api');
 
-include('../includes/bootstrap/boot.php');
+include('../../includes/bootstrap/boot.php');
 
 echo json_encode(array(
 	'ServerTime' => date("Y/m/d H:i:s")

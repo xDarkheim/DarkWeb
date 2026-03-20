@@ -85,7 +85,7 @@ final class AppKernel
     private function defineVersion(): void
     {
         if (!defined('__CMS_VERSION__')) {
-            define('__CMS_VERSION__', '1.0.0');
+            define('__CMS_VERSION__', '1.1.0');
         }
     }
 
@@ -123,33 +123,35 @@ final class AppKernel
         $httpHost = $_SERVER['HTTP_HOST'] ?? 'CLI';
         $serverProtocol = (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) === 'on') ? 'https://' : 'https://';
         $rootDir = str_replace('\\', '/', dirname($this->includesDir)) . '/';
-        $relativeRoot = (!empty($_SERVER['SCRIPT_NAME']))
-            ? str_ireplace(
-                rtrim(str_replace('\\', '/', (string) realpath(str_replace((string) $_SERVER['SCRIPT_NAME'], '', (string) ($_SERVER['SCRIPT_FILENAME'] ?? '')))), '/'),
-                '',
-                $rootDir,
-            )
+
+        // Derive the URL base path from SCRIPT_NAME (e.g. '/index.php' → '/', '/cms/index.php' → '/cms/')
+        // This works correctly whether DocumentRoot is the project root or public/.
+        $relativeRoot = !empty($_SERVER['SCRIPT_NAME'])
+            ? rtrim(str_replace('\\', '/', dirname((string) $_SERVER['SCRIPT_NAME'])), '/') . '/'
             : '/';
+
         $baseUrl = $serverProtocol . $httpHost . $relativeRoot;
+
+        // Filesystem path to the web-accessible public/ directory.
+        $publicDir = is_dir($rootDir . 'public') ? $rootDir . 'public/' : $rootDir;
 
         $constants = [
             'HTTP_HOST' => $httpHost,
             'SERVER_PROTOCOL' => $serverProtocol,
             '__ROOT_DIR__' => $rootDir,
+            '__PUBLIC_DIR__' => $publicDir,
             '__RELATIVE_ROOT__' => $relativeRoot,
             '__BASE_URL__' => $baseUrl,
             '__PATH_INCLUDES__' => $rootDir . 'includes/',
-            '__PATH_TEMPLATES__' => $rootDir . 'templates/',
+            '__PATH_TEMPLATES__' => $publicDir . 'templates/',
             '__PATH_LANGUAGES__' => $rootDir . 'includes/languages/',
-            '__PATH_CLASSES__' => $rootDir . 'includes/classes/',
-            '__PATH_FUNCTIONS__' => $rootDir . 'includes/functions/',
             '__PATH_MODULES__' => $rootDir . 'modules/',
             '__PATH_MODULES_USERCP__' => $rootDir . 'modules/usercp/',
             '__PATH_EMAILS__' => $rootDir . 'includes/emails/',
             '__PATH_CACHE__' => $rootDir . 'includes/cache/',
-            '__PATH_ADMINCP__' => $rootDir . 'admincp/',
-            '__PATH_ADMINCP_INC__' => $rootDir . 'admincp/inc/',
-            '__PATH_ADMINCP_MODULES__' => $rootDir . 'admincp/modules/',
+            '__PATH_ADMINCP__' => $publicDir . 'admincp/',
+            '__PATH_ADMINCP_INC__' => $publicDir . 'admincp/inc/',
+            '__PATH_ADMINCP_MODULES__' => $publicDir . 'admincp/modules/',
             '__PATH_NEWS_CACHE__' => $rootDir . 'includes/cache/news/',
             '__PATH_NEWS_TRANSLATIONS_CACHE__' => $rootDir . 'includes/cache/news/translations/',
             '__PATH_PLUGINS__' => $rootDir . 'includes/plugins/',
@@ -198,7 +200,6 @@ final class AppKernel
         }
 
         $this->runtimeState->setCustomConfig($custom);
-        $GLOBALS['custom'] = $custom;
     }
 
     /**

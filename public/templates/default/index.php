@@ -78,7 +78,7 @@ if(!isset($_REQUEST['subpage'])) {
 		<link href="<?php echo __PATH_TEMPLATE_CSS__; ?>profiles.css?v=<?php echo filemtime(__PATH_TEMPLATE_ROOT__.'css/profiles.css'); ?>" rel="stylesheet" media="screen">
 		<link href="<?php echo __PATH_TEMPLATE_CSS__; ?>castle-siege.css?v=<?php echo filemtime(__PATH_TEMPLATE_ROOT__.'css/castle-siege.css'); ?>" rel="stylesheet" media="screen">
 		<?php
-		$_assetsCss = __ROOT_DIR__.'assets/css/';
+		$_assetsCss = __PUBLIC_DIR__.'assets/css/';
 		$_assetsUrl = __PATH_ASSETS_CSS__;
 		$_cssFiles  = ['variables','toast','auth','ucp','myaccount','profiles','info','tos','news','rankings','panels','paypal','downloads','castlesiege'];
 		foreach($_cssFiles as $_f):
@@ -259,6 +259,6 @@ if(!isset($_REQUEST['subpage'])) {
 		<script src="<?php echo __PATH_TEMPLATE_JS__; ?>main.js?v=<?php echo filemtime(__PATH_TEMPLATE_ROOT__.'js/main.js'); ?>"></script>
 		<script src="<?php echo __PATH_TEMPLATE_JS__; ?>events.js?v=<?php echo filemtime(__PATH_TEMPLATE_ROOT__.'js/events.js'); ?>"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
-		<script src="<?php echo __PATH_ASSETS_JS__; ?>components.js?v=<?php echo file_exists(__ROOT_DIR__.'assets/js/components.js') ? filemtime(__ROOT_DIR__.'assets/js/components.js') : 1; ?>"></script>
+		<script src="<?php echo __PATH_ASSETS_JS__; ?>components.js?v=<?php echo file_exists(__PUBLIC_DIR__.'assets/js/components.js') ? filemtime(__PUBLIC_DIR__.'assets/js/components.js') : 1; ?>"></script>
 	</body>
 </html>

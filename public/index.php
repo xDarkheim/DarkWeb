@@ -5,7 +5,7 @@ define('access', 'index');
 try {
 	
 	// Load CMS
-	if(!@include('includes/bootstrap/boot.php')) {
+	if(!@include('../includes/bootstrap/boot.php')) {
 		throw new RuntimeException('Could not load CMS.');
 	}
 

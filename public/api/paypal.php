@@ -8,7 +8,7 @@ use Darkheim\Domain\Validator;
 define('access', 'api');
 
 // Load CMS
-if(!@include(rtrim(str_replace('\\','/', dirname(__DIR__)), '/') . '/includes/bootstrap/boot.php')) {
+if(!@include(rtrim(str_replace('\\','/', dirname(__DIR__, 2)), '/') . '/includes/bootstrap/boot.php')) {
 	throw new RuntimeException('Could not load CMS.');
 }
 

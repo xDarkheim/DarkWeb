@@ -16,7 +16,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./:/var/www/html          # full project mounted into Apache root
+      - ./:/var/www/html          # project root — Apache DocumentRoot is /var/www/html/public
     env_file:
       - ./docker/config.env
     environment:

@@ -11,7 +11,7 @@ if(!defined('access') or !access or access != 'install') die();
 /**
  * INSTALLER_VERSION
  */
-define('INSTALLER_VERSION', '0.0.1');
+define('INSTALLER_VERSION', '1.1.0');
 
 /**
  * CMS_CONFIGURATION_FILE

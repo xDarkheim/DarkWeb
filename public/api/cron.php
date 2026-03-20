@@ -6,7 +6,7 @@ define('access', 'api');
 try {
 	
 	// Darkheim CMS
-	if(!@include(rtrim(str_replace('\\','/', dirname(__DIR__)), '/') . '/includes/bootstrap/boot.php')) {
+	if(!@include(rtrim(str_replace('\\','/', dirname(__DIR__, 2)), '/') . '/includes/bootstrap/boot.php')) {
 		throw new RuntimeException('Could not load Darkheim CMS.');
 	}
 	

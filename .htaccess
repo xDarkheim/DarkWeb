@@ -1,41 +1,19 @@
-Options +FollowSymLinks -Indexes
-DirectoryIndex index.php index.html
-RewriteEngine On
-# Static asset caching
-# CSS/JS versioned via ?v= query string - allow short cache
-<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresByType image/jpeg           "access plus 30 days"
-    ExpiresByType image/png            "access plus 30 days"
-    ExpiresByType image/gif            "access plus 30 days"
-    ExpiresByType image/webp           "access plus 30 days"
-    ExpiresByType image/svg+xml        "access plus 30 days"
-    ExpiresByType font/woff2           "access plus 30 days"
-    ExpiresByType font/woff            "access plus 30 days"
+# DarkCore — Root .htaccess
+# This file protects the project root when Apache DocumentRoot is NOT set to public/.
+# In a correctly configured environment (Docker / production), DocumentRoot points
+# to the public/ directory and this file is never served.
+
+# Block direct access to sensitive directories and files outside public/.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # If DocumentRoot is the project root (dev misconfiguration), redirect to public/.
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ /public/$1 [L,R=301]
 </IfModule>
-<IfModule mod_headers.c>
-    <FilesMatch "\.(css|js)$">
-        Header set Cache-Control "no-cache, must-revalidate"
-    </FilesMatch>
-    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|woff|woff2)$">
-        Header set Cache-Control "public, max-age=2592000, immutable"
-    </FilesMatch>
+
+# Deny access to everything by default as a safety net.
+<IfModule mod_authz_core.c>
+    Require all denied
 </IfModule>
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/admincp/ [NC]
-RewriteCond %{REQUEST_URI} !^/install/ [NC]
-RewriteCond %{REQUEST_URI} !^/api/ [NC]
-RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9-_/]+)/?$ index.php?page=$1&subpage=$2&request=$3 [QSA,L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/admincp/ [NC]
-RewriteCond %{REQUEST_URI} !^/install/ [NC]
-RewriteCond %{REQUEST_URI} !^/api/ [NC]
-RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/?$ index.php?page=$1&subpage=$2 [QSA,L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/admincp/ [NC]
-RewriteCond %{REQUEST_URI} !^/install/ [NC]
-RewriteCond %{REQUEST_URI} !^/api/ [NC]
-RewriteRule ^([a-zA-Z0-9]+)/?$ index.php?page=$1 [QSA,L]
+

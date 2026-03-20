@@ -40,11 +40,11 @@ ssl/*.pem
 # Server-specific SSL folder
 ssl-darkheim/
 # Character avatars (uploaded files)
-templates/*/img/character-avatars/*
-!templates/*/img/character-avatars/.gitkeep
-# Guild marks
-img/guild/*.bmp
-img/guild/*.png
+public/templates/*/img/character-avatars/*
+!public/templates/*/img/character-avatars/.gitkeep
+# Guild marks (generated at runtime)
+public/img/guild/*.bmp
+public/img/guild/*.png
 # User uploads
 uploads/*
 !uploads/.gitkeep
@@ -84,5 +84,5 @@ AGENTS.md
 # Darkheim CMS configuration files
 cms.json
 # Installation .htaccess files
-install/.htaccess
-install/sql/.htaccess
+public/install/.htaccess
+public/install/sql/.htaccess

@@ -12,14 +12,13 @@ if (false) {
     define('SERVER_PROTOCOL', '');
 
     define('__ROOT_DIR__', '');
+    define('__PUBLIC_DIR__', '');
     define('__RELATIVE_ROOT__', '');
     define('__BASE_URL__', '');
 
     define('__PATH_INCLUDES__', '');
     define('__PATH_TEMPLATES__', '');
     define('__PATH_LANGUAGES__', '');
-    define('__PATH_CLASSES__', '');
-    define('__PATH_FUNCTIONS__', '');
     define('__PATH_MODULES__', '');
     define('__PATH_MODULES_USERCP__', '');
     define('__PATH_EMAILS__', '');

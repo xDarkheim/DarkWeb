@@ -3,7 +3,7 @@
 define('access', 'admincp');
 
 try {
-	if(!@include('../includes/bootstrap/boot.php')) {
+	if(!@include('../../includes/bootstrap/boot.php')) {
 		throw new RuntimeException('Could not load CMS.');
 	}
 	if(!isLoggedIn()) { redirect(); }

@@ -73,13 +73,13 @@ RUN sed -i 's/Listen 80/Listen 8081/' /etc/apache2/ports.conf
 RUN echo '<VirtualHost *:8081>\n\
     ServerName ${DOCKER_SERVER_NAME}\n\
     ServerAdmin webmaster@localhost\n\
-    DocumentRoot /var/www/html\n\
+    DocumentRoot /var/www/html/public\n\
     \n\
     # Trust X-Forwarded-For from upstream reverse proxy\n\
     RemoteIPHeader X-Forwarded-For\n\
     RemoteIPInternalProxy 172.16.0.0/12\n\
     \n\
-    <Directory /var/www/html>\n\
+    <Directory /var/www/html/public>\n\
         Options -Indexes +FollowSymLinks\n\
         AllowOverride All\n\
         Require all granted\n\

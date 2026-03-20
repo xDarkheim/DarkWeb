@@ -172,19 +172,13 @@ final class GameHelper
     // -----------------------------------------------------------------------
 
     /**
-     * Returns the current custom-tables config, with a $GLOBALS['custom'] fallback
-     * for contexts where the RuntimeState has not been populated yet.
+     * Returns the current custom-tables config via RuntimeState.
      *
      * @return array<string, mixed>
      */
     private static function custom(): array
     {
-        $custom = BootstrapContext::runtimeState()?->customConfig() ?? [];
-        if (!empty($custom)) {
-            return $custom;
-        }
-
-        return is_array($GLOBALS['custom'] ?? null) ? $GLOBALS['custom'] : [];
+        return BootstrapContext::runtimeState()?->customConfig() ?? [];
     }
 }
 

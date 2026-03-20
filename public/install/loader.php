@@ -16,14 +16,16 @@ ob_start();
 
 define('HTTP_HOST', $_SERVER['HTTP_HOST']);
 define('SERVER_PROTOCOL', (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on' ) ? 'https://' : 'http://');
-define('__ROOT_DIR__', str_replace('\\','/', dirname(__FILE__, 2)).'/');
-define('__RELATIVE_ROOT__', str_ireplace(rtrim(str_replace('\\','/', realpath(str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['SCRIPT_FILENAME']))), '/'), '', __ROOT_DIR__));
+// Project root is 3 levels up from public/install/loader.php
+define('__ROOT_DIR__', str_replace('\\','/', dirname(__FILE__, 3)).'/');
+// Installer lives at /install/install.php → site root is one dirname() above /install/
+define('__RELATIVE_ROOT__', rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '', 2)), '/') . '/');
 define('__BASE_URL__', SERVER_PROTOCOL.HTTP_HOST.__RELATIVE_ROOT__);
 define('__PATH_INCLUDES__', __ROOT_DIR__.'includes/');
-define('__PATH_CLASSES__', __PATH_INCLUDES__.'classes/');
 define('__PATH_CRON__', __PATH_INCLUDES__.'cron/');
 define('__PATH_CONFIGS__', __PATH_INCLUDES__.'config/');
-define('__INSTALL_ROOT__', __ROOT_DIR__ . 'install/');
+// __INSTALL_ROOT__ points to the installer directory itself (public/install/)
+define('__INSTALL_ROOT__', str_replace('\\', '/', __DIR__) . '/');
 define('__INSTALL_URL__', __BASE_URL__ . 'install/');
 
 try {
