@@ -1,3 +1,5 @@
+<div align="center">
+
 # DarkCore CMS
 
 **Open-source CMS for MU Online private servers**
@@ -8,6 +10,8 @@
 [![SQL Server](https://img.shields.io/badge/SQL_Server-MSSQL-CC2927?style=flat-square&logo=microsoftsqlserver&logoColor=white)](https://www.microsoft.com/en-us/sql-server)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+
+</div>
 
 ---
 
