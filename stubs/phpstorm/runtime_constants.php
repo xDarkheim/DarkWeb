@@ -4,7 +4,7 @@
  *
  * Runtime values are defined in AppKernel during bootstrap.
  * This file is not included at runtime; it only helps the IDE
- * resolve constants used in themes and legacy modules.
+ * resolve constants used in themes and view templates.
  */
 
 if (false) {
@@ -17,10 +17,9 @@ if (false) {
     define('__BASE_URL__', '');
 
     define('__PATH_INCLUDES__', '');
+    define('__PATH_VIEWS__', '');
     define('__PATH_THEMES__', '');
     define('__PATH_LANGUAGES__', '');
-    define('__PATH_MODULES__', '');
-    define('__PATH_MODULES_USERCP__', '');
     define('__PATH_EMAILS__', '');
     define('__PATH_CACHE__', '');
     define('__PATH_ADMINCP__', '');

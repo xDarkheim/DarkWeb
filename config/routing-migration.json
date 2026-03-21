@@ -1,9 +1,8 @@
 {
     "version": 1,
     "statuses": [
-        "legacy",
-        "hybrid",
-        "migrated"
+        "migrated",
+        "subpage"
     ],
     "pages": {
         "castlesiege": {
@@ -50,6 +49,11 @@
             "status": "migrated",
             "controller": "Darkheim\\Application\\Page\\LogoutController",
             "module_config": "logout"
+        },
+        "news": {
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\NewsController",
+            "module_config": "news"
         },
         "privacy": {
             "status": "migrated",

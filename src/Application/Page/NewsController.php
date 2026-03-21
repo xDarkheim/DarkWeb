@@ -61,11 +61,14 @@ final class NewsController
 
             if ($showSingle) {
                 $content = $newsRepo->loadContent($singleItem->id, false, $language);
+                $dateLabel = date('l, F jS Y', $singleItem->date);
                 $viewItems[] = [
-                    'item'      => $singleItem,
-                    'newsTitle' => $singleItem->titleForLanguage($language),
-                    'newsUrl'   => $singleItem->url(__BASE_URL__),
-                    'content'   => $content,
+                    'newsTitle'       => $singleItem->titleForLanguage($language),
+                    'newsUrl'         => $singleItem->url(__BASE_URL__),
+                    'content'         => $content,
+                    'author'          => $singleItem->author,
+                    'dateLabel'       => $dateLabel,
+                    'publishedLabel'  => langf('news_txt_1', [$singleItem->author, $dateLabel]),
                 ];
             } else {
                 $cardIndex = 0;
@@ -76,12 +79,13 @@ final class NewsController
                     $isExpanded = $newsExpanded > $cardIndex;
                     $content    = $isExpanded ? $newsRepo->loadContent($item->id, $short, $language) : null;
                     $viewItems[] = [
-                        'item'       => $item,
                         'newsTitle'  => $item->titleForLanguage($language),
                         'newsUrl'    => $item->url(__BASE_URL__),
                         'content'    => $content,
                         'postNum'    => str_pad((string) ($cardIndex + 1), 2, '0', STR_PAD_LEFT),
                         'isExpanded' => $isExpanded,
+                        'author'     => $item->author,
+                        'dateLabel'  => date('F jS Y', $item->date),
                     ];
                     $cardIndex++;
                 }

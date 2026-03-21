@@ -1,5 +1,3 @@
-<div align="center">
-
 # DarkCore CMS
 
 **Open-source CMS for MU Online private servers**
@@ -10,8 +8,6 @@
 [![SQL Server](https://img.shields.io/badge/SQL_Server-MSSQL-CC2927?style=flat-square&logo=microsoftsqlserver&logoColor=white)](https://www.microsoft.com/en-us/sql-server)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-
-</div>
 
 ---
 
@@ -73,9 +69,10 @@ Open `https://your-domain/install/` in the browser, complete the setup wizard, t
 | [`docs/deployment.md`](docs/deployment.md) | Docker setup, reverse proxy, useful commands |
 | [`docs/build.md`](docs/build.md) | Frontend assets, CSS/JS load order, cache busting |
 | [`docs/css-architecture.md`](docs/css-architecture.md) | CSS naming conventions, dark mode, mobile breakpoints |
+| [`docs/routing-migration-matrix.md`](docs/routing-migration-matrix.md) | Route flow, controller-backed subpages, shared templates |
+| [`docs/README.md`](docs/README.md) | Developer docs index and common tasks |
 | [`docs/phpunit.md`](docs/phpunit.md) | Running tests, writing tests, IDE setup, Xdebug |
 | [`docs/phpstan.md`](docs/phpstan.md) | Static analysis, suppression rules, common errors |
-| [`CHANGELOG.md`](CHANGELOG.md) | Version history and change log |
 
 ---
 
@@ -98,6 +95,15 @@ composer test              # PHPUnit
 composer analyse           # PHPStan
 vendor/bin/php-cs-fixer fix  # code style
 ```
+
+Common implementation rules for developers:
+
+- put request handling, config reads, cache reads, and service orchestration in controllers/builders, not in templates
+- keep `views/` and `public/themes/default/` templates limited to prepared data plus simple `echo` / `if` / `foreach`
+- add top-level routes in `config/routes.web.php` and sub-routes in `config/routes.subpages.php`
+- prefer shared templates when multiple routes render the same layout shape
+
+For step-by-step developer instructions, start with [`docs/README.md`](docs/README.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ---
 

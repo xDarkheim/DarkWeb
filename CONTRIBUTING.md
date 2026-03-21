@@ -13,10 +13,31 @@ docker compose up -d --build
 ## Workflow
 
 1. Fork the repository
-2. Create a branch from `main`: `git checkout -b fix/short-description`
+2. Create a feature branch from the active integration branch for the task (not automatically from `main`): `git checkout -b fix/short-description`
 3. Make your changes
 4. Make sure all checks pass (see below)
-5. Open a Pull Request against `main`
+5. Open a Pull Request against the branch currently used for the workstream
+6. After that PR is merged, merge or forward-port the same changes into the `1.1.0` branch
+
+### Branch targets
+
+- Use the branch named in the current task / workstream as the first PR target.
+- Do **not** assume `main` is the correct integration branch for every change.
+- Keep `1.1.0` updated after the task branch PR is merged.
+
+Typical sequence:
+
+```bash
+git checkout <current-work-branch>
+git checkout -b docs/short-description
+
+# ...make changes, run checks, push branch...
+
+# open PR -> <current-work-branch>
+# after merge:
+git checkout 1.1.0
+git merge <current-work-branch>
+```
 
 Branch naming:
 

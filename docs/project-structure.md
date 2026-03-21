@@ -45,6 +45,7 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   │   │   ├── NewsController.php
 │   │   │   ├── PrivacyController.php
 │   │   │   ├── RankingsController.php
+│   │   │   ├── RankingsSectionController.php
 │   │   │   ├── RefundsController.php
 │   │   │   ├── RegisterController.php
 │   │   │   ├── TosController.php
@@ -109,7 +110,7 @@ This map shows where the main CMS components live and which paths are safe to mo
 │       │   ├── PageAccessDispatcher.php     # Enforces the `access` constant and renders the theme shell
 │       │   ├── RequestParameterParser.php   # Populates QueryStore from raw $_GET on each request
 │       │   ├── RouteInputSanitizer.php      # Strips dangerous chars from $page / $subpage tokens
-│       │   ├── SubpageRouteDispatcher.php   # Dispatches sub-page include routes (config/routes.subpages.php)
+│       │   ├── SubpageRouteDispatcher.php   # Dispatches sub-page template routes (config/routes.subpages.php)
 │       │   ├── SubpageRouteRegistry.php     # Loads & caches config/routes.subpages.php route table
 │       │   └── WebRouteRegistry.php         # Loads & caches config/routes.web.php route table
 │       ├── Runtime/
@@ -120,6 +121,8 @@ This map shows where the main CMS components live and which paths are safe to mo
 │       │   └── ServerContext.php   # Server metadata accessor (`REMOTE_ADDR`, etc.)
 │       └── Security/
 │           └── IpBlocker.php       # Checks REMOTE_ADDR against blocked_ip.cache
+│       ├── Theme/
+│       │   └── DefaultThemeLayoutBuilder.php # Prepares default theme layout context (navbar, sidebar, footer, assets)
 │
 ├── vendor/                         # Composer-managed dependencies (do not edit)
 │   ├── autoload.php
@@ -150,13 +153,12 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── install/                    # Web-based installer (remove after setup)
 │   └── themes/                  # ★ Theme files (web-accessible CSS/JS/img)
 │       └── default/                # Default dark-fantasy theme (Bootstrap 3)
-│           ├── index.php           # Template entry point — injects CSS/JS, renders layout
+│           ├── index.php           # Template entry point — consumes prepared theme layout context
 │           ├── css/                # Template-level CSS
 │           ├── js/                 # Template JS
 │           ├── img/                # Template images
 │           ├── fonts/              # Local webfonts
 │           └── inc/                # Server-side partials (PHP includes)
-│               ├── theme.functions.php
 │               └── modules/
 │                   ├── footer.php
 │                   └── sidebar.php
@@ -172,7 +174,7 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── email-templates.xml         # Email templates
 │   ├── timezone-config.php         # date_default_timezone_set()
 │   ├── routes.web.php              # Top-level controller route table (WebRouteRegistry)
-│   ├── routes.subpages.php         # Sub-page include route table (SubpageRouteRegistry)
+│   ├── routes.subpages.php         # Sub-page route table (SubpageRouteRegistry)
 │   ├── routing-migration.json      # Machine-readable migration status per page
 │   ├── writable.json               # Paths checked for write permissions on install
 │   └── modules/                    # Per-module XML configs (feature toggles)
@@ -190,13 +192,17 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── cache/                      # JSON/text caches, ranking caches, news cache, plugins cache
 │   └── logs/                       # PHP and DB error logs
 │
-├── modules/                        # ★ Legacy frontend modules still awaiting MVC split
-│   ├── home.php                    # Pages migrated to Controller+View are removed from here
-│   └── usercp/                     # UserCP sub-page modules
-│
 ├── views/                          # ★ View templates (NOT web-accessible)
-│   └── news.php                    # Permanent, theme-agnostic HTML templates
-│                                   # Themes may override: public/themes/{theme}/views/{name}.php
+│   ├── home.php
+│   ├── news.php
+│   ├── ranking.php                 # Shared rankings table template (used by RankingsSectionController)
+│   ├── login.php / register.php / forgotpassword.php
+│   ├── castlesiege.php / downloads.php / info.php
+│   ├── tos.php / privacy.php / refunds.php
+│   ├── contact.php / donation.php / verifyemail.php / usercp.php
+│   ├── subpages/                   # Sub-page templates (donation/language/profile/usercp)
+│   └── ...                         # Permanent, theme-agnostic templates
+│                                   # Optional override: public/themes/{theme}/views/{name}.php
 │
 ├── docker/
 │   ├── Dockerfile                  # PHP 8.4 + Apache + FreeTDS + pdo_dblib
@@ -233,8 +239,7 @@ public/index.php
 | `__ROOT_DIR__` | Project root filesystem path |
 | `__PUBLIC_DIR__` | `public/` filesystem path (DocumentRoot) |
 | `__PATH_INCLUDES__` | `includes/` filesystem path |
- `__PATH_MODULES__`  `modules/` filesystem path 
- `__PATH_VIEWS__`  `views/` filesystem path — permanent view templates 
+| `__PATH_VIEWS__` | `views/` filesystem path — permanent view templates |
 | `__PATH_THEMES__` | `public/themes/` filesystem path |
 | `__PATH_CONFIGS__` | `config/` filesystem path |
 | `__PATH_CACHE__` | `var/cache/` filesystem path |
@@ -290,8 +295,9 @@ All classes under `src/` are autoloaded via Composer PSR-4 with the root namespa
 | `Darkheim\Infrastructure\Http\*` | `src/Infrastructure/Http/` | Redirector, GeoIpService |
 | `Darkheim\Infrastructure\Payment\*` | `src/Infrastructure/Payment/` | PayPal IPN |
 | `Darkheim\Infrastructure\Plugins\*` | `src/Infrastructure/Plugins/` | Plugin loader |
- `Darkheim\Infrastructure\Routing\*`  `src/Infrastructure/Routing/`  Handler, Controller/Subpage/AdminCP dispatchers, registries, sanitizers 
- `Darkheim\Infrastructure\View\*`  `src/Infrastructure/View/`  ViewRenderer — theme-aware template engine 
+| `Darkheim\Infrastructure\Routing\*` | `src/Infrastructure/Routing/` | Handler, Controller/Subpage/AdminCP dispatchers, registries, sanitizers |
+| `Darkheim\Infrastructure\Theme\*` | `src/Infrastructure/Theme/` | Theme layout context builders (`DefaultThemeLayoutBuilder`) |
+| `Darkheim\Infrastructure\View\*` | `src/Infrastructure/View/` | ViewRenderer — theme-aware template engine |
 | `Darkheim\Infrastructure\Runtime\*` | `src/Infrastructure/Runtime/` | Request/session/server boundary adapters |
 | `Darkheim\Infrastructure\Security\*` | `src/Infrastructure/Security/` | IpBlocker |
 
@@ -330,21 +336,95 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 
 | Path | Edit? | Notes |
 | :--- | :---: | :--- |
- `src/`  ✅  Application / domain / infrastructure classes 
- `views/`  ✅  View templates — write once, works for all themes 
- `public/themes/{theme}/views/`  ✅  Optional per-theme template overrides (only when markup must differ) 
- `includes/bootstrap/compat.php`  ⚠️  Add wrappers only; no logic — logic goes in `src/` 
- `includes/bootstrap/boot.php`  ❌  Entry point — do not add logic here 
- `config/config.json`  ✅  Main config: DB credentials, server name, feature toggles 
- `config/routes.web.php`  ✅  Top-level controller route table — add new page routes here 
- `config/routes.subpages.php`  ✅  Sub-page include route table — add new sub-page routes here 
- `config/routing-migration.json`  ✅  Machine-readable migration status — keep in sync with route tables 
+| `src/` | ✅ | Application / domain / infrastructure classes |
+| `views/` | ✅ | View templates — write once, works for all themes |
+| `views/subpages/` | ✅ | Sub-page templates dispatched by `SubpageRouteDispatcher` |
+| `public/themes/{theme}/views/` | ✅ | Optional per-theme template overrides (only when markup must differ) |
+| `public/themes/default/index.php` | ✅ | Keep logic-light — render prepared layout data only |
+| `public/themes/default/inc/modules/*.php` | ✅ | Pure partials only; no runtime/config/service calls |
+| `includes/bootstrap/compat.php` | ⚠️ | Add wrappers only; no logic — logic goes in `src/` |
+| `includes/bootstrap/boot.php` | ❌ | Entry point — do not add logic here |
+| `config/config.json` | ✅ | Main config: DB credentials, server name, feature toggles |
+| `config/routes.web.php` | ✅ | Top-level controller route table — add new page routes here |
+| `config/routes.subpages.php` | ✅ | Sub-page route table — add new sub-page routes here |
+| `config/routing-migration.json` | ✅ | Machine-readable migration status — keep in sync with route tables |
 | `public/assets/css/*.css` | ✅ | Global page/component styles |
 | `public/themes/default/css/*.css` | ✅ | Template layout styles |
 | `public/themes/default/js/*.js` | ✅ | Template JS |
-| `modules/usercp/*.php` | ✅ | Individual UserCP sub-pages |
 | `includes/languages/*/language.php` | ✅ | Translation phrases |
 | `vendor/` | ❌ | Managed by Composer — run `composer install` / `composer update` |
 | `var/cache/` | ❌ | Runtime cache managed by CMS |
 | `var/logs/` | ❌ | Runtime logs managed by CMS |
+
+## Controller-backed views and pure templates
+
+DarkCore now treats controllers as the only place where request handling, config access, cache reads,
+service orchestration, redirects, and messages are prepared.
+
+**View / theme rule:** templates should contain only markup plus simple `echo`, `if`, and `foreach`
+over already-prepared values.
+
+Do **not** add these directly to `views/` or `public/themes/default/` templates:
+
+- `$_GET`, `$_POST`, `$_REQUEST`, `$_SESSION`
+- `config()`, `mconfig()`, `loadCache()`, `LoadCacheData()`
+- `message()`, `redirect()`, `loadModuleConfigs()`
+- `new ServiceClass(...)`
+
+Examples already following this rule:
+
+- `Darkheim\Application\Page\RankingsSectionController` → `views/ranking.php`
+- `Darkheim\Application\Subpage\Usercp\AbstractCharacterActionTableSubpageController` → `views/subpages/usercp/actiontables.php`
+- `Darkheim\Infrastructure\Theme\DefaultThemeLayoutBuilder` → `public/themes/default/index.php` + `inc/modules/*.php`
+
+## Adding a new controller-backed view
+
+1. Create or update a controller under `src/Application/Page/` or `src/Application/Subpage/...`.
+2. Prepare a complete view-model array in the controller (formatted text, URLs, CSS classes, booleans, row data).
+3. Register the route in `config/routes.web.php` or `config/routes.subpages.php`.
+4. Render a template via `Darkheim\Infrastructure\View\ViewRenderer`.
+5. Keep the template logic-light and add/update routing tests in `tests/Unit/Infrastructure/Routing/`.
+
+For repeated layouts, prefer one shared template over many near-identical files. Current examples:
+
+- `views/ranking.php` for all `rankings/*` sub-routes
+- `views/subpages/usercp/actiontables.php` for repeated UserCP character action tables
+
+### Recipe: add a top-level page
+
+1. Create `src/Application/Page/<Name>Controller.php` with `render(): void`.
+2. Create a final template in `views/<name>.php`.
+3. Register the controller in `config/routes.web.php`.
+4. If the page is tracked, update `config/routing-migration.json`.
+5. Add or update tests in `tests/Unit/Infrastructure/Routing/`.
+
+### Recipe: add a subpage route
+
+1. Decide whether the route needs its own template or can reuse a shared one.
+2. Prepare the full view-model in a controller.
+3. Register the route in `config/routes.subpages.php`.
+4. Render the final template with `ViewRenderer`.
+5. Add route coverage in `SubpageRouteRegistryTest` or a related routing test.
+
+### Recipe: add a shared template
+
+Use a shared template when multiple routes render the same layout shape and differ only by prepared data.
+
+Examples:
+
+- rankings tables → `views/ranking.php`
+- repeated UserCP action tables → `views/subpages/usercp/actiontables.php`
+
+When adding another shared template:
+
+1. Create one final template file.
+2. Keep all formatting, labels, URLs, row classes, and booleans in the controller/builder.
+3. Point all participating routes/controllers to that single template.
+
+### Recipe: change the default theme safely
+
+1. Treat `public/themes/default/index.php` and `inc/modules/*.php` as rendering-only files.
+2. If the theme needs new data, add it to `Darkheim\Infrastructure\Theme\DefaultThemeLayoutBuilder`.
+3. Do not read request/session/config/cache directly from theme templates.
+4. Keep optional per-theme view overrides in `public/themes/{theme}/views/` only when the markup must differ from `views/`.
 

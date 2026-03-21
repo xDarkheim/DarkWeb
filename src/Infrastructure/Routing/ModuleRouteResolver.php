@@ -18,7 +18,7 @@ final class ModuleRouteResolver
             ];
         }
 
-        // Preserve legacy behavior: /news/* still resolves to modules/news.php
+        // Keep /news/* routed to the top-level news page.
         if ($page === 'news') {
             return [
                 'type' => 'module',

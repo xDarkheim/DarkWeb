@@ -4,11 +4,63 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Page;
 
+use Darkheim\Application\Account\Account;
+use Darkheim\Infrastructure\View\ViewRenderer;
+
 final class ForgotPasswordController
 {
+    private ViewRenderer $view;
+
+    public function __construct(?ViewRenderer $view = null)
+    {
+        $this->view = $view ?? new ViewRenderer();
+    }
+
     public function render(): void
     {
-        include __PATH_MODULES__ . 'forgotpassword.php';
+        if (isLoggedIn()) {
+            redirect();
+            return;
+        }
+
+        try {
+            if (!mconfig('active')) {
+                inline_message('error', lang('error_47', true));
+                return;
+            }
+
+            // Email verification link (sent by email): /verifyemail/?op=0&ui=...&ue=...&key=...
+            if (isset($_GET['ui'], $_GET['ue'], $_GET['key'])) {
+                try {
+                    (new Account())->passwordRecoveryVerificationProcess(
+                        $_GET['ui'],
+                        $_GET['ue'],
+                        $_GET['key']
+                    );
+                } catch (\Exception $ex) {
+                    inline_message('error', $ex->getMessage());
+                }
+                return;
+            }
+
+            // Form submission
+            if (isset($_POST['darkheimEmail_submit'])) {
+                try {
+                    (new Account())->passwordRecoveryProcess(
+                        $_POST['darkheimEmail_current'] ?? '',
+                        $_SERVER['REMOTE_ADDR']
+                    );
+                } catch (\Exception $ex) {
+                    message('error', $ex->getMessage());
+                }
+            }
+
+            $this->view->render('forgotpassword', [
+                'baseUrl'  => __BASE_URL__,
+                'loginUrl' => __BASE_URL__ . 'login',
+            ]);
+        } catch (\Exception $ex) {
+            inline_message('error', $ex->getMessage());
+        }
     }
 }
-

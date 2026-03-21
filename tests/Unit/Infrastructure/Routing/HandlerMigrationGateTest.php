@@ -13,17 +13,14 @@ use Tests\Stubs\ArraySessionStore;
 
 final class HandlerMigrationGateTest extends TestCase
 {
-    public function testTopLevelPageDoesNotFallBackToLegacyModuleInclude(): void
+    public function testTopLevelPageDoesNotFallBackToTopLevelFileInclude(): void
     {
         $page = '__migrated_gate_test';
-
-        $modulePath = __PATH_MODULES__ . $page . '.php';
-        file_put_contents($modulePath, "<?php \$GLOBALS['__migrated_legacy_fallback_called'] = true;\n");
 
         $routesPath = sys_get_temp_dir() . '/routes_' . uniqid('', true) . '.php';
         file_put_contents($routesPath, "<?php return [];\n");
 
-        $GLOBALS['__migrated_legacy_fallback_called'] = false;
+        $GLOBALS['__migrated_top_level_fallback_called'] = false;
 
         $handler = new Handler(
             new ArraySessionStore(),
@@ -40,9 +37,8 @@ final class HandlerMigrationGateTest extends TestCase
         // Should hit 404 path before touching legacy include.
         $handler->loadModule($page, null);
 
-        $this->assertFalse((bool) $GLOBALS['__migrated_legacy_fallback_called']);
+        $this->assertFalse((bool) $GLOBALS['__migrated_top_level_fallback_called']);
 
-        @unlink($modulePath);
         @unlink($routesPath);
     }
 }

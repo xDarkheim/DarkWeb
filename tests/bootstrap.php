@@ -34,7 +34,7 @@ define('__PATH_CRON__',              $tmpBase . 'cron/');
 define('__PUBLIC_DIR__',             $tmpBase . 'public/');
 define('__PATH_PLUGINS__',           $tmpBase . 'plugins/');
 define('__PATH_THEMES__',            __PUBLIC_DIR__ . 'themes/');
-define('__PATH_MODULES__',           $tmpBase . 'modules/');
+define('__PATH_VIEWS__',             $tmpBase . 'views/');
 define('__PATH_ADMINCP_MODULES__',   $tmpBase . 'admincp/modules/');
 define('__PATH_PLAYER_PROFILES_CACHE__', $tmpBase . 'cache/profiles/players/');
 define('__PATH_GUILD_PROFILES_CACHE__',  $tmpBase . 'cache/profiles/guilds/');
@@ -63,7 +63,7 @@ foreach ([
     __PATH_PLUGINS__,
     __PUBLIC_DIR__,
     __PATH_THEMES__,
-    __PATH_MODULES__,
+    __PATH_VIEWS__,
     __PATH_ADMINCP_MODULES__,
     __PATH_PLAYER_PROFILES_CACHE__,
     __PATH_GUILD_PROFILES_CACHE__,

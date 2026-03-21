@@ -89,6 +89,29 @@ class RankingsService
         echo '</div>';
     }
 
+    /**
+     * @return array<int, array{label:string,subpage:string,isActive:bool,url:string}>
+     */
+    public function menuItems(string $activeSubpage): array
+    {
+        $items = [];
+        foreach ($this->_rankingsMenu as $item) {
+            if (!$item[2]) {
+                continue;
+            }
+
+            $subpage = (string) $item[1];
+            $items[] = [
+                'label' => (string) $item[0],
+                'subpage' => $subpage,
+                'isActive' => $activeSubpage === $subpage,
+                'url' => __PATH_MODULES_RANKINGS__ . $subpage . '/',
+            ];
+        }
+
+        return $items;
+    }
+
     public function rankingsFilterMenu(): void
     {
         $filterData = $this->_getRankingsFilterData();
@@ -100,12 +123,41 @@ class RankingsService
             . getPlayerClassAvatar(-1, true, false, 'rankings-class-filter-image')
             . '<br />' . lang('rankings_filter_1') . '</a></li>';
         foreach ($filterData as $row) {
-            echo '<li><a onclick="rankingsFilterByClass(' . $row[1] . ')" class="rankings-class-filter-selection rankings-class-filter-grayscale">'
-                . getPlayerClassAvatar($row[0], true, false, 'rankings-class-filter-image')
-                . '<br />' . $row[2] . '</a></li>';
+            $classGroup = (int) ($row[0] ?? 0);
+            $classIds = (string) ($row[1] ?? '');
+            $filterLabel = (string) ($row[2] ?? '');
+            echo '<li><a onclick="rankingsFilterByClass(' . $classIds . ')" class="rankings-class-filter-selection rankings-class-filter-grayscale">'
+                . getPlayerClassAvatar($classGroup, true, false, 'rankings-class-filter-image')
+                . '<br />' . $filterLabel . '</a></li>';
         }
         echo '</ul>';
         echo '</div>';
+    }
+
+    /**
+     * @return array<int, array{classGroup:int, classIds:string, label:string}>
+     */
+    public function filterItems(): array
+    {
+        $filterData = $this->_getRankingsFilterData();
+        if (!is_array($filterData)) {
+            return [];
+        }
+
+        $items = [];
+        foreach ($filterData as $row) {
+            if (!isset($row[0], $row[1], $row[2])) {
+                continue;
+            }
+
+            $items[] = [
+                'classGroup' => (int) $row[0],
+                'classIds' => (string) $row[1],
+                'label' => (string) $row[2],
+            ];
+        }
+
+        return $items;
     }
 
     // ─── Private cache builders ───────────────────────────────────────────────

@@ -157,8 +157,6 @@ final class AppKernel
             '__PATH_INCLUDES__' => $rootDir . 'includes/',
             '__PATH_LANGUAGES__' => $rootDir . 'includes/languages/',
             '__PATH_VIEWS__' => $rootDir . 'views/',
-            '__PATH_MODULES__' => $rootDir . 'modules/',
-            '__PATH_MODULES_USERCP__' => $rootDir . 'modules/usercp/',
             '__PATH_EMAILS__' => $rootDir . 'includes/emails/',
             '__PATH_CACHE__' => $rootDir . 'var/cache/',
             '__PATH_ADMINCP__' => $publicDir . 'admincp/',

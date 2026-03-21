@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Page;
 
+use Darkheim\Application\Auth\AuthService;
+
 final class LogoutController
 {
     public function render(): void
     {
-        include __PATH_MODULES__ . 'logout.php';
+        if (!isLoggedIn()) {
+            redirect();
+            return;
+        }
+        (new AuthService())->logout();
+        redirect();
     }
 }
-

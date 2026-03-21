@@ -12,6 +12,7 @@
 | [Deployment](deployment.md) | Docker setup, reverse proxy (Nginx Proxy Manager), useful commands |
 | [Frontend Assets](build.md) | CSS/JS load order, cache busting, adding new files |
 | [CSS Architecture](css-architecture.md) | `dh-*` class naming, dark mode, mobile breakpoints |
+| [Routing Migration Matrix](routing-migration-matrix.md) | Web/subpage route flow, controller-backed subpages, shared templates |
 | [PHPUnit](phpunit.md) | Running tests, writing tests, IDE setup, Xdebug |
 | [PHPStan](phpstan.md) | Static analysis, suppression rules, common errors |
 
@@ -20,14 +21,19 @@
 | Task | Where |
 | :--- | :--- |
 | Start local environment | [Deployment → Quick start](deployment.md#quick-start) |
-| Edit CMS config | [Configuration → config.json](configuration.md#cmsjson--main-config) |
+| Edit CMS config | [Configuration → config.json](configuration.md#configjson--main-config) |
 | Edit Docker config | [Configuration → Docker](configuration.md#docker) |
 | Add a CSS file | [Frontend Assets → Adding a new CSS file](build.md#adding-a-new-css-file) |
 | Add a JS file | [Frontend Assets → Adding a new JS file](build.md#adding-a-new-js-file) |
+| Add a top-level page | [Project Structure → Recipe: add a top-level page](project-structure.md#recipe-add-a-top-level-page) |
+| Add a subpage route | [Project Structure → Recipe: add a subpage route](project-structure.md#recipe-add-a-subpage-route) |
+| Add a controller-backed route/view | [Project Structure → Adding a new controller-backed view](project-structure.md#adding-a-new-controller-backed-view) |
+| Change the default theme shell | [Frontend Assets → Changing the default theme shell](build.md#changing-the-default-theme-shell) |
 | Add a language | [Configuration → Language](configuration.md#language) |
 | Run tests | [PHPUnit → Quick start](phpunit.md#quick-start) |
 | Run static analysis | [PHPStan → Quick start](phpstan.md#quick-start) |
 | Write a new test | [PHPUnit → Writing tests](phpunit.md#writing-tests) |
 | Enable Xdebug | [PHPUnit → Xdebug](phpunit.md#xdebug) |
+| Open a contribution PR | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) |
 
 *MIT License 2026 Dmytro Hovenko (Darkheim)*

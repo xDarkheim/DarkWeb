@@ -62,6 +62,20 @@ final class ConfigProviderTest extends TestCase
         $this->assertSame('5', $loader->moduleConfig('login')['max_login_attempts'] ?? null);
     }
 
+    public function testUsercpModuleAliasesResolveHyphenatedXmlFiles(): void
+    {
+        mkdir($this->configDir . 'modules/usercp/', 0777, true);
+        file_put_contents($this->configDir . 'modules/usercp/my-account.xml', '<config><active>1</active></config>');
+        file_put_contents($this->configDir . 'modules/usercp/add-stats.xml', '<config><max_stats>32767</max_stats></config>');
+        file_put_contents($this->configDir . 'modules/usercp/buy-zen.xml', '<config><max_zen>2000000000</max_zen></config>');
+
+        $loader = new ConfigProvider($this->configDir);
+
+        $this->assertSame('1', $loader->moduleConfig('usercp.myaccount')['active'] ?? null);
+        $this->assertSame('32767', $loader->moduleConfig('usercp.addstats')['max_stats'] ?? null);
+        $this->assertSame('2000000000', $loader->moduleConfig('usercp.buyzen')['max_zen'] ?? null);
+    }
+
     public function testTimezoneFallsBackToUtcWhenCmsIsMissing(): void
     {
         $loader = new ConfigProvider($this->configDir);

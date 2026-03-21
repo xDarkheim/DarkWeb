@@ -8,7 +8,8 @@ final class RankingsController
 {
     public function render(): void
     {
-        include __PATH_MODULES__ . 'rankings.php';
+        if (empty($_REQUEST['subpage'])) {
+            redirect(1, $_REQUEST['page'] . '/' . mconfig('rankings_show_default') . '/');
+        }
     }
 }
-

@@ -21,9 +21,9 @@ use Darkheim\Application\Page\UsercpController;
 use Darkheim\Application\Page\VerifyEmailController;
 
 /**
- * Web route registry (phase 1).
+ * Web route registry.
  *
- * Key = legacy module page key used by Handler::loadModule($page, $subpage).
+ * Key = top-level page key used by Handler::loadModule($page, $subpage).
  */
 return [
     'castlesiege' => [

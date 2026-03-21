@@ -9,7 +9,7 @@ This file documents how frontend styles are layered and where layout responsibil
 | `public/themes/default/css/` | Template-level layout: structure, navbar, header, footer |
 | `public/assets/css/` | Page/component styles — loaded by every theme |
 
-Both sets are injected individually via `<link>` tags in `public/themes/default/index.php`. No bundler or `@import` entry point is used. Cache busting is automatic via `filemtime()` query strings.
+Both sets are prepared by `Darkheim\Infrastructure\Theme\DefaultThemeLayoutBuilder` and rendered as individual `<link>` tags by `public/themes/default/index.php`. No bundler or `@import` entry point is used. Cache busting is automatic via `filemtime()` query strings.
 
 ## CSS load order
 

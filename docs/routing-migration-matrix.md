@@ -1,18 +1,17 @@
 # Routing Migration Matrix
 
-This matrix tracks frontend top-level module migration from legacy include-based loading to controller-based routing.
+This matrix tracks frontend top-level module routing through controllers and subpage routing through the subpage registry.
 
 ## Status meanings
 
-- `migrated`: module is routed by a `*Controller` registered in `config/routes.web.php`.  No legacy fallback exists — regression is caught by `HandlerMigrationGateTest`.
-- `subpage`: route is an include-based sub-page registered in `config/routes.subpages.php` and dispatched by `SubpageRouteDispatcher`.
-- `hybrid`: module has partial controller routing but still uses some legacy fallback.
+- `migrated`: module is routed by a `*Controller` registered in `config/routes.web.php`. Regression is caught by `HandlerMigrationGateTest`.
+- `subpage`: route is registered in `config/routes.subpages.php` and dispatched by `SubpageRouteDispatcher`; it may render either a dedicated subpage template or a shared controller-backed view.
 
 ## Source of truth
 
 Machine-readable status lives in `config/routing-migration.json`.
 Top-level controller routes are registered in `config/routes.web.php` (`WebRouteRegistry`).
-Sub-page include routes are registered in `config/routes.subpages.php` (`SubpageRouteRegistry`).
+Sub-page routes are registered in `config/routes.subpages.php` (`SubpageRouteRegistry`).
 
 ## Current matrix (v1)
 
@@ -48,5 +47,11 @@ When migrating a top-level page to a controller:
 When adding a sub-page route:
 
 1. Register the route in `config/routes.subpages.php`.
-2. Ensure the include file exists under `modules/<page>/<subpage>.php`.
-3. Mark status `subpage` in `config/routing-migration.json` if tracked.
+2. If the route is controller-backed, prepare the full view-model in the controller and render the final template with `ViewRenderer`.
+3. Use a dedicated template only when the markup is unique; otherwise prefer a shared template.
+4. Mark status `subpage` in `config/routing-migration.json` if tracked.
+
+Current shared-template examples:
+
+- `rankings/*` → `Darkheim\Application\Page\RankingsSectionController` → `views/ranking.php`
+- repeated UserCP character actions → `Darkheim\Application\Subpage\Usercp\AbstractCharacterActionTableSubpageController` → `views/subpages/usercp/actiontables.php`

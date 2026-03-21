@@ -2,17 +2,10 @@
 /**
  * News view template.
  *
- * Variables injected by NewsController via ViewRenderer:
- *   @var bool                                        $showSingle
- *   @var int                                         $totalCount
- *   @var array<int, array<string, mixed>>            $viewItems
- *
- * Each $viewItems entry (single-article mode):
- *   item (NewsItem), newsTitle (string), newsUrl (string), content (string)
- *
- * Each $viewItems entry (list mode):
- *   item (NewsItem), newsTitle (string), newsUrl (string),
- *   content (string|null), postNum (string), isExpanded (bool)
+ * Variables injected by NewsController:
+ * - $showSingle (bool)
+ * - $totalCount (int)
+ * - $viewItems (array<int,array<string,mixed>>) preformatted view model rows
  */
 ?>
 <?php if ($showSingle): ?>
@@ -20,7 +13,6 @@
 <div class="page-title"><span><?php echo lang('news_txt_4', true); ?></span></div>
 
 <?php foreach ($viewItems as $entry): ?>
-<?php $item = $entry['item']; ?>
 <article class="news-single">
     <header class="news-single-header">
         <div class="news-single-badge"><?php echo lang('news_txt_6', true); ?></div>
@@ -32,7 +24,7 @@
                     <path d="M1 6h14" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M5 1v2M11 1v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
-                <?php echo date("l, F jS Y", $item->date); ?>
+                <?php echo htmlspecialchars($entry['dateLabel'], ENT_QUOTES, 'UTF-8'); ?>
             </span>
             <span class="news-meta-sep"></span>
             <span class="news-meta-item news-meta-author">
@@ -40,14 +32,14 @@
                     <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M2 14c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
-                <?php echo htmlspecialchars($item->author, ENT_QUOTES, 'UTF-8'); ?>
+                <?php echo htmlspecialchars($entry['author'], ENT_QUOTES, 'UTF-8'); ?>
             </span>
         </div>
     </header>
     <div class="news-single-body"><?php echo $entry['content']; ?></div>
     <footer class="news-single-footer">
         <div class="news-single-published">
-            <?php echo langf('news_txt_1', [$item->author, date("l, F jS Y", $item->date)]); ?>
+            <?php echo $entry['publishedLabel']; ?>
         </div>
         <a href="<?php echo __BASE_URL__; ?>news/" class="news-back-link">
             <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" width="12" height="12">
@@ -71,7 +63,6 @@
 
 <div class="news-list">
 <?php foreach ($viewItems as $entry): ?>
-<?php $item = $entry['item']; ?>
 <article class="news-card">
     <div class="news-card-inner">
         <div class="news-card-num"><?php echo $entry['postNum']; ?></div>
@@ -87,7 +78,7 @@
                             <path d="M1 6h14" stroke="currentColor" stroke-width="1.5"/>
                             <path d="M5 1v2M11 1v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
-                        <?php echo date("F jS Y", $item->date); ?>
+                        <?php echo htmlspecialchars($entry['dateLabel'], ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                     <span class="news-meta-sep"></span>
                     <span class="news-meta-item news-meta-author">
@@ -95,7 +86,7 @@
                             <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/>
                             <path d="M2 14c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
-                        <?php echo htmlspecialchars($item->author, ENT_QUOTES, 'UTF-8'); ?>
+                        <?php echo htmlspecialchars($entry['author'], ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                 </div>
             </header>

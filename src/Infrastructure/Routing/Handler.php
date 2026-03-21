@@ -10,6 +10,7 @@ use Darkheim\Infrastructure\Runtime\NativeSessionStore;
 use Darkheim\Infrastructure\Runtime\QueryStore;
 use Darkheim\Infrastructure\Runtime\SessionStore;
 use Darkheim\Application\Auth\Common;
+use Darkheim\Infrastructure\Theme\DefaultThemeLayoutBuilder;
 
 /**
  * Request handler — routing, module loading, theme rendering.
@@ -26,6 +27,7 @@ class Handler
     private ModuleRouteResolver $moduleRouteResolver;
     private SubpageRouteDispatcher $subpageRouteDispatcher;
     private PageAccessDispatcher $pageAccessDispatcher;
+    private DefaultThemeLayoutBuilder $themeLayoutBuilder;
 
     public function __construct(
         ?SessionStore $session = null,
@@ -38,6 +40,7 @@ class Handler
         ?ModuleRouteResolver $moduleRouteResolver = null,
         ?SubpageRouteDispatcher $subpageRouteDispatcher = null,
         ?PageAccessDispatcher $pageAccessDispatcher = null,
+        ?DefaultThemeLayoutBuilder $themeLayoutBuilder = null,
     ) {
         $this->session = $session ?? new NativeSessionStore();
         $this->query = $query ?? new NativeQueryStore();
@@ -49,6 +52,7 @@ class Handler
         $this->moduleRouteResolver = $moduleRouteResolver ?? new ModuleRouteResolver();
         $this->subpageRouteDispatcher = $subpageRouteDispatcher ?? new SubpageRouteDispatcher();
         $this->pageAccessDispatcher = $pageAccessDispatcher ?? new PageAccessDispatcher();
+        $this->themeLayoutBuilder = $themeLayoutBuilder ?? new DefaultThemeLayoutBuilder();
     }
 
     public function loadPage(): void
@@ -63,12 +67,28 @@ class Handler
 
         $lang = getLanguagePhrases();
 
+        $currentPage = isset($_REQUEST['page'])
+            ? $this->routeInputSanitizer->sanitize((string) $_REQUEST['page'])
+            : '';
+        $currentSubpage = isset($_REQUEST['subpage'])
+            ? $this->routeInputSanitizer->sanitize((string) $_REQUEST['subpage'])
+            : '';
+        $moduleHtml = $this->renderModuleHtml($currentPage, $currentSubpage);
+        $themeLayout = $this->themeLayoutBuilder->build($currentPage, $currentSubpage);
+
         if (!defined('access')) throw new \Exception('Access forbidden.');
         $this->pageAccessDispatcher->dispatch(
             (string) access,
             (string) $config['website_theme'],
-            compact('config', 'custom', 'lang', 'tSettings', 'handler')
+            compact('config', 'custom', 'lang', 'tSettings', 'handler', 'moduleHtml', 'themeLayout')
         );
+    }
+
+    private function renderModuleHtml(string $page, string $subpage): string
+    {
+        ob_start();
+        $this->loadModule($page, $subpage);
+        return (string) ob_get_clean();
     }
 
     public function loadModule(?string $page = 'news', ?string $subpage = 'home'): void

@@ -4,22 +4,17 @@ CSS and JS source files are served directly. There is no bundler, transpiler, or
 
 ## CSS
 
-All stylesheets are injected with individual `<link>` tags directly in `public/themes/default/index.php`.  
-No `main.css` entry point or `@import` bundling is used.
-
-Assets from `assets/css/` are loaded dynamically:
-
-```php
-$_cssFiles = ['variables','toast','auth','ucp','myaccount','profiles',
-              'info','tos','news','rankings','panels','paypal','downloads','castlesiege'];
-foreach($_cssFiles as $_f) { /* inject <link> if file exists */ }
-```
+The default theme receives a prepared layout context from
+`Darkheim\Infrastructure\Theme\DefaultThemeLayoutBuilder`.
+That builder prepares the final list of stylesheet URLs, and `public/themes/default/index.php`
+only renders the resulting `<link>` tags.
 
 See [CSS Architecture](css-architecture.md) for the full load order and naming conventions.
 
 ## JS
 
-Each JS file is included with its own `<script>` tag at the bottom of `<body>` in `public/themes/default/index.php`.
+Each JS file is prepared in `DefaultThemeLayoutBuilder::build()` and rendered at the bottom of
+`public/themes/default/index.php`.
 
 | # | File | Purpose |
 | :---: | :--- | :--- |
@@ -31,7 +26,8 @@ Each JS file is included with its own `<script>` tag at the bottom of `<body>` i
 
 ## Cache busting
 
-Cache busting is automatic: `filemtime()` is appended as a query string to every local asset URL. No manual version bumping is needed.
+Cache busting is automatic: `DefaultThemeLayoutBuilder` appends `filemtime()` as a query string to
+every local asset URL. No manual version bumping is needed.
 
 ```text
 css/style.css?v=1741819200
@@ -41,10 +37,20 @@ js/main.js?v=1741820000
 ## Adding a new CSS file
 
 1. Create the file in `public/assets/css/` (for page/component styles) or `public/themes/default/css/` (for theme-level layout).
-2. For `public/assets/css/`: add the filename (without `.css`) to the `$_cssFiles` array in `public/themes/default/index.php`.
-3. For `public/themes/default/css/`: add a new `<link>` tag in `public/themes/default/index.php` **before** `override.css`.
+2. For `public/assets/css/`: add the filename (without `.css`) to the asset list in `DefaultThemeLayoutBuilder::stylesheetHrefs()`.
+3. For `public/themes/default/css/`: register the new file in `DefaultThemeLayoutBuilder::stylesheetHrefs()` before `override.css`.
 
 ## Adding a new JS file
 
 1. Create the file in `public/themes/default/js/` or `public/assets/js/`.
-2. Add a `<script>` tag at the bottom of `<body>` in `public/themes/default/index.php`.
+2. Register the final public URL in `DefaultThemeLayoutBuilder::build()`.
+3. Let `public/themes/default/index.php` render the prepared script URL; do not add new runtime logic to the template.
+
+## Changing the default theme shell
+
+When you need to change the default layout (`navbar`, `header`, `sidebar`, `footer`, asset URLs):
+
+1. Add or reshape the data in `Darkheim\Infrastructure\Theme\DefaultThemeLayoutBuilder`.
+2. Render that prepared data in `public/themes/default/index.php` or `inc/modules/*.php`.
+3. Keep request/config/cache/session reads out of the theme templates.
+

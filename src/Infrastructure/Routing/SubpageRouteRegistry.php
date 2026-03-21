@@ -18,7 +18,7 @@ final class SubpageRouteRegistry
     }
 
     /**
-     * @return array<string, string|null>|null
+     * @return array{module_config?: string|null, controller?: string|null}|null
      */
     public function routeFor(string $page, string $subpage): ?array
     {

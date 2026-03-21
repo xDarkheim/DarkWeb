@@ -15,23 +15,22 @@ final class RoutingMigrationGuardTest extends TestCase
         $this->projectRoot = dirname(__DIR__, 4);
     }
 
-    public function testMigrationMatrixTracksAllTopLevelModules(): void
+    public function testMigrationMatrixTracksAllTopLevelWebRoutes(): void
     {
         $matrix = $this->loadMatrix();
         $trackedPages = array_keys($matrix['pages']);
         sort($trackedPages);
 
-        $moduleFiles = glob($this->projectRoot . '/modules/*.php') ?: [];
-        $modulePages = array_map(
-            static fn (string $path): string => basename($path, '.php'),
-            $moduleFiles
-        );
-        sort($modulePages);
+        /** @var mixed $routes */
+        $routes = include $this->projectRoot . '/config/routes.web.php';
+        $this->assertIsArray($routes);
+        $routePages = array_keys($routes);
+        sort($routePages);
 
         $this->assertSame(
-            $modulePages,
+            $routePages,
             $trackedPages,
-            'config/routing-migration.json must track all modules/*.php pages exactly.'
+            'config/routing-migration.json must track all config/routes.web.php pages exactly.'
         );
     }
 
@@ -53,15 +52,7 @@ final class RoutingMigrationGuardTest extends TestCase
 
             $route = $routes[$page] ?? null;
 
-            if ($status === 'legacy') {
-                $this->assertNull(
-                    $route,
-                    'Legacy page has controller route; mark it as hybrid/migrated instead: ' . $page
-                );
-                continue;
-            }
-
-            $this->assertIsArray($route, 'Missing controller route for migrated/hybrid page: ' . $page);
+            $this->assertIsArray($route, 'Missing controller route for migrated/subpage page: ' . $page);
             $this->assertIsString($meta['controller'] ?? null, 'Missing controller in matrix: ' . $page);
             $this->assertIsString($meta['module_config'] ?? null, 'Missing module_config in matrix: ' . $page);
 
