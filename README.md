@@ -83,6 +83,10 @@ Open `https://your-domain/install/` in the browser, complete the setup wizard, t
 - Classes in `src/` depend on these adapters instead of reading PHP superglobals directly.
 - `includes/bootstrap/boot.php` — thin entry point; loads Composer autoloader and boots `AppKernel`.
 - `includes/bootstrap/compat.php` — **global function shim**; every function is a one-liner that delegates to a namespaced class. Legacy modules keep working without change; new code calls the class directly.
+- AdminCP now uses `config/routes.admincp.php` + controller-backed modules under `src/Application/Admincp/`.
+- AdminCP shell metadata lives in `config/admincp-layout.php` and is normalized by `AdmincpLayoutDataProvider` before rendering `views/admincp/layout.php`.
+- `public/admincp/index.php` is a thin front controller; AdminCP no longer uses runtime `public/admincp/modules/*.php` includes.
+- Transitional AdminCP module-config partials live in `views/admincp/mconfig/` until they are promoted to full controller-backed screens.
 - Runtime data now lives in `var/cache/` and `var/logs/`; only `public/` is web-accessible.
 - All business logic that was previously in `includes/bootstrap/functions.php` now lives in proper namespaced classes: `GameHelper`, `MessageRenderer`, `Redirector`, `Translator`, `ProfileRenderer`, `SessionManager`, `AdminGuard`, `IpBlocker`, `GeoIpService`, `CacheBuilder`, `CacheRepository`, `TimeHelper`, `Encoder`, `FileHelper`, `LanguageRepository`, and others.
 

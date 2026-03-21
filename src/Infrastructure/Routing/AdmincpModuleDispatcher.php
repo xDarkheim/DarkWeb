@@ -6,22 +6,41 @@ namespace Darkheim\Infrastructure\Routing;
 
 final class AdmincpModuleDispatcher
 {
+    private AdmincpRouteRegistry $registry;
+
+    public function __construct(?AdmincpRouteRegistry $registry = null)
+    {
+        $this->registry = $registry ?? new AdmincpRouteRegistry();
+    }
+
     /**
-     * @param array<string, mixed> $context Variables to extract into the module's scope.
+     * @param array<string, mixed> $context Reserved for future dispatcher context.
      */
     public function dispatch(string $module, array $context = []): bool
     {
-        $moduleFile = __PATH_ADMINCP_MODULES__ . $module . '.php';
-        if (!is_file($moduleFile)) {
-            return false;
+        $route = $this->registry->routeFor($module);
+        $moduleConfig = is_array($route) ? ($route['module_config'] ?? null) : null;
+        if (is_string($moduleConfig) && $moduleConfig !== '') {
+            @loadModuleConfigs($moduleConfig);
         }
 
-        if ($context !== []) {
-            extract($context, EXTR_SKIP);
+        $controllerClass = is_array($route) ? ($route['controller'] ?? null) : null;
+
+        if (is_string($controllerClass) && $controllerClass !== '') {
+            if (!class_exists($controllerClass)) {
+                return false;
+            }
+
+            $controller = new $controllerClass();
+            if (!method_exists($controller, 'render')) {
+                return false;
+            }
+
+            $controller->render();
+            return true;
         }
 
-        include $moduleFile;
-        return true;
+        return false;
     }
 }
 

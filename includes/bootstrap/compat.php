@@ -17,6 +17,8 @@
  */
 
 use Darkheim\Application\Auth\AdminGuard;
+use Darkheim\Application\Admincp\AdmincpUrlGenerator;
+use Darkheim\Application\Admincp\DownloadLinkService;
 use Darkheim\Application\Auth\SessionManager;
 use Darkheim\Application\Game\GameHelper;
 use Darkheim\Application\Helpers\Encoder;
@@ -88,6 +90,62 @@ function logOutUser(): void
 function canAccessAdminCP($username): bool
 {
     return AdminGuard::canAccess((string) $username);
+}
+
+function admincp_base($module = ''): string
+{
+    return (new AdmincpUrlGenerator())->base((string) $module);
+}
+
+function enabledisableCheckboxes($name, $checked, $e_txt, $d_txt): void
+{
+    $normalized = in_array($checked, [true, 1, '1', 'true'], true) ? '1' : '0';
+    echo '<div class="radio">';
+    echo '<label class="radio">';
+    echo '<input type="radio" name="' . $name . '" value="1" ' . ($normalized === '1' ? 'checked' : '') . '>';
+    echo $e_txt;
+    echo '</label>';
+    echo '<label class="radio">';
+    echo '<input type="radio" name="' . $name . '" value="0" ' . ($normalized === '0' ? 'checked' : '') . '>';
+    echo $d_txt;
+    echo '</label>';
+    echo '</div>';
+}
+
+function getDownloadsList()
+{
+    return (new DownloadLinkService())->all();
+}
+
+function addDownload($title, $description = '', $link = '', $size = 0, $type = 1)
+{
+    return (new DownloadLinkService())->add((string) $title, (string) $link, (string) $description, $size, $type);
+}
+
+function editDownload($id, $title, $description = '', $link = '', $size = 0, $type = 1)
+{
+    return (new DownloadLinkService())->edit($id, (string) $title, (string) $link, (string) $description, $size, $type);
+}
+
+function deleteDownload($id)
+{
+    return (new DownloadLinkService())->delete($id);
+}
+
+function updateDownloadsCache(): bool
+{
+    return (new DownloadLinkService())->updateCache();
+}
+
+function weekDaySelectOptions($selected = 'Monday'): string
+{
+    $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    $result = '';
+    foreach ($days as $day) {
+        $isSelected = ((string) $selected === $day) ? ' selected' : '';
+        $result .= '<option value="' . $day . '"' . $isSelected . '>' . $day . '</option>';
+    }
+    return $result;
 }
 
 // ---------------------------------------------------------------------------

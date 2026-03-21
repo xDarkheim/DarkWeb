@@ -8,6 +8,12 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── Application/                # Use-case / feature layer
 │   │   ├── Account/
 │   │   │   └── Account.php         # Account read/write helpers
+│   │   ├── Admincp/
+│   │   │   ├── *Controller.php     # AdminCP controller-backed modules
+│   │   │   ├── AdmincpConfigurationChecker.php
+│   │   │   ├── AdmincpLayoutDataProvider.php
+│   │   │   ├── AdmincpUrlGenerator.php
+│   │   │   └── DownloadLinkService.php
 │   │   ├── Auth/
 │   │   │   ├── AdminGuard.php      # AdminCP access check (canAccess)
 │   │   │   ├── AuthService.php     # Core authentication logic
@@ -103,7 +109,8 @@ This map shows where the main CMS components live and which paths are safe to mo
 │       │   └── ViewRenderer.php    # Renders view templates — lookup: theme override → views/
 │       ├── Routing/
 │       │   ├── Handler.php                  # Entry point — loadPage() / loadModule() / loadAdminCPModule()
-│       │   ├── AdmincpModuleDispatcher.php  # Locates & includes AdminCP module files, injects context via extract()
+│       │   ├── AdmincpModuleDispatcher.php  # Resolves AdminCP route metadata, loads module_config, calls controller->render()
+│       │   ├── AdmincpRouteRegistry.php     # Loads & caches config/routes.admincp.php route table
 │       │   ├── ControllerRouteDispatcher.php# Resolves page name → Controller via WebRouteRegistry and calls render()
 │       │   ├── LanguageBootstrapper.php     # Applies session language override before rendering
 │       │   ├── ModuleRouteResolver.php      # Normalises (?page=x&subpage=y) into a typed route descriptor
@@ -137,11 +144,10 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── img/                        # Public static images
 │   │   └── flags/                  # Country flag GIFs (ISO 3166-1 alpha-2)
 │   ├── admincp/                    # Admin control panel (Bootstrap 5, separate auth)
-│   │   ├── index.php               # Admin entry point
+│   │   ├── index.php               # Thin AdminCP front controller
 │   │   ├── css/                    # Admin-specific styles
 │   │   ├── js/                     # Admin-specific scripts
-│   │   ├── inc/                    # Auth check + admin helpers
-│   │   └── modules/                # Admin feature modules
+│   │   └── .htaccess
 │   ├── api/                        # Public REST-like endpoints
 │   │   ├── castlesiege.php
 │   │   ├── cron.php                # Cron trigger (Docker cron or external)
@@ -173,6 +179,8 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── navigation.json             # Navigation bar items
 │   ├── email-templates.xml         # Email templates
 │   ├── timezone-config.php         # date_default_timezone_set()
+│   ├── admincp-layout.php          # AdminCP shell/sidebar metadata
+│   ├── routes.admincp.php          # AdminCP controller route table (AdmincpRouteRegistry)
 │   ├── routes.web.php              # Top-level controller route table (WebRouteRegistry)
 │   ├── routes.subpages.php         # Sub-page route table (SubpageRouteRegistry)
 │   ├── routing-migration.json      # Machine-readable migration status per page
@@ -200,6 +208,10 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── castlesiege.php / downloads.php / info.php
 │   ├── tos.php / privacy.php / refunds.php
 │   ├── contact.php / donation.php / verifyemail.php / usercp.php
+│   ├── admincp/                    # AdminCP shell + module templates
+│   │   ├── layout.php              # AdminCP shell (topbar, sidebar, assets, JS init)
+│   │   ├── *.php                   # AdminCP controller-backed module views
+│   │   └── mconfig/                # Transitional module-config partials
 │   ├── subpages/                   # Sub-page templates (donation/language/profile/usercp)
 │   └── ...                         # Permanent, theme-agnostic templates
 │                                   # Optional override: public/themes/{theme}/views/{name}.php
@@ -230,6 +242,23 @@ public/index.php
               ├── includes/bootstrap/compat.php
               ├── plugin files          ← from var/cache/plugins.cache
               └── Handler::loadPage()  ← Darkheim\Infrastructure\Routing\Handler
+```
+
+## AdminCP bootstrap path
+
+```
+public/admincp/index.php
+  └── ../../includes/bootstrap/boot.php
+        └── AppKernel::boot()
+              ├── includes/bootstrap/compat.php
+              ├── AdmincpConfigurationChecker::ensureValid()
+              ├── AdmincpLayoutDataProvider::sidebarGroups()
+              ├── ViewRenderer::render('admincp/layout')
+              └── Handler::loadAdminCPModule($module)
+                    └── AdmincpModuleDispatcher::dispatch()
+                          ├── config/routes.admincp.php
+                          ├── loadModuleConfigs($route['module_config'])
+                          └── <AdminCP controller>::render()
 ```
 
 ## Path constants defined by AppKernel
@@ -271,6 +300,7 @@ All classes under `src/` are autoloaded via Composer PSR-4 with the root namespa
 | Namespace | Directory | Purpose |
 | :--- | :--- | :--- |
 | `Darkheim\Application\Account\*` | `src/Application/Account/` | Account read/write helpers |
+| `Darkheim\Application\Admincp\*` | `src/Application/Admincp/` | AdminCP controllers, layout/check helpers, downloads service |
 | `Darkheim\Application\Auth\*` | `src/Application/Auth/` | Authentication, session, AdminCP guard |
 | `Darkheim\Application\CastleSiege\*` | `src/Application/CastleSiege/` | Castle siege data access |
 | `Darkheim\Application\Character\*` | `src/Application/Character/` | Character read/write helpers |
@@ -316,6 +346,8 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 | `redirect()` | `Redirector::go()` |
 | `isLoggedIn()` / `logOutUser()` | `SessionManager` |
 | `canAccessAdminCP()` | `AdminGuard::canAccess()` |
+| `admincp_base()` | `AdmincpUrlGenerator::base()` |
+| `getDownloadsList()` / `addDownload()` / `editDownload()` / `deleteDownload()` / `updateDownloadsCache()` | `DownloadLinkService` |
 | `message()` / `inline_message()` | `MessageRenderer::toast()` / `::inline()` |
 | `lang()` / `langf()` | `Translator::phrase()` / `::phraseFmt()` |
 | `config()` / `cmsConfigs()` | `ConfigProvider::cms()` via `bootstrapConfigProvider()` |
@@ -331,6 +363,7 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 | `loadJsonFile()` / `readableFileSize()` / `getDirectoryListFromPath()` | `FileHelper` |
 | `getInstalledLanguagesList()` | `LanguageRepository::getInstalled()` |
 | `base64url_encode()` / `base64url_decode()` | `Encoder` |
+| `enabledisableCheckboxes()` / `weekDaySelectOptions()` | compatibility-only HTML helpers for remaining config partials |
 
 ## What to edit vs. what not to touch
 
@@ -345,9 +378,13 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 | `includes/bootstrap/compat.php` | ⚠️ | Add wrappers only; no logic — logic goes in `src/` |
 | `includes/bootstrap/boot.php` | ❌ | Entry point — do not add logic here |
 | `config/config.json` | ✅ | Main config: DB credentials, server name, feature toggles |
+| `config/admincp-layout.php` | ✅ | AdminCP shell/sidebar metadata |
+| `config/routes.admincp.php` | ✅ | AdminCP controller route table |
 | `config/routes.web.php` | ✅ | Top-level controller route table — add new page routes here |
 | `config/routes.subpages.php` | ✅ | Sub-page route table — add new sub-page routes here |
 | `config/routing-migration.json` | ✅ | Machine-readable migration status — keep in sync with route tables |
+| `views/admincp/` | ✅ | AdminCP layout + controller-backed module templates |
+| `views/admincp/mconfig/` | ✅ | Transitional AdminCP module-config partials |
 | `public/assets/css/*.css` | ✅ | Global page/component styles |
 | `public/themes/default/css/*.css` | ✅ | Template layout styles |
 | `public/themes/default/js/*.js` | ✅ | Template JS |
@@ -376,6 +413,15 @@ Examples already following this rule:
 - `Darkheim\Application\Page\RankingsSectionController` → `views/ranking.php`
 - `Darkheim\Application\Subpage\Usercp\AbstractCharacterActionTableSubpageController` → `views/subpages/usercp/actiontables.php`
 - `Darkheim\Infrastructure\Theme\DefaultThemeLayoutBuilder` → `public/themes/default/index.php` + `inc/modules/*.php`
+- `Darkheim\Application\Admincp\*Controller` → `views/admincp/*.php`
+
+## AdminCP MVC notes
+
+- AdminCP no longer uses `public/admincp/modules/*.php` as runtime module entry points.
+- `AdmincpModuleDispatcher` does **not** fall back to include-based legacy AdminCP modules.
+- AdminCP shell metadata lives in `config/admincp-layout.php` and is normalized by `AdmincpLayoutDataProvider`.
+- The canonical AdminCP shell template is `views/admincp/layout.php`.
+- Transitional module-config partials now live in `views/admincp/mconfig/`.
 
 ## Adding a new controller-backed view
 

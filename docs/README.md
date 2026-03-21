@@ -28,6 +28,7 @@
 | Add a top-level page | [Project Structure → Recipe: add a top-level page](project-structure.md#recipe-add-a-top-level-page) |
 | Add a subpage route | [Project Structure → Recipe: add a subpage route](project-structure.md#recipe-add-a-subpage-route) |
 | Add a controller-backed route/view | [Project Structure → Adding a new controller-backed view](project-structure.md#adding-a-new-controller-backed-view) |
+| Work on AdminCP MVC | [Project Structure → AdminCP MVC notes](project-structure.md#admincp-mvc-notes) |
 | Change the default theme shell | [Frontend Assets → Changing the default theme shell](build.md#changing-the-default-theme-shell) |
 | Add a language | [Configuration → Language](configuration.md#language) |
 | Run tests | [PHPUnit → Quick start](phpunit.md#quick-start) |

@@ -1,0 +1,51 @@
+<?php
+/**
+ * AdminCP search character view.
+ *
+ * Variables:
+ * - string      $searchRequest
+ * - array|null  $results  – array of ['name','accountInfoUrl','editCharUrl'], or null
+ * - string|null $error
+ */
+?>
+<h1 class="page-header"><i class="bi bi-search me-2"></i>Search Character</h1>
+
+<div class="acp-card mb-4">
+    <form class="d-flex gap-2" role="form" method="post">
+        <label>
+            <input type="text" class="form-control" name="search_request"
+                   placeholder="Character name" style="max-width:300px;"
+                   value="<?php echo htmlspecialchars($searchRequest, ENT_QUOTES, 'UTF-8'); ?>"/>
+        </label>
+        <button type="submit" class="btn btn-primary" name="search_character" value="ok">
+            <i class="bi bi-search me-1"></i>Search
+        </button>
+    </form>
+</div>
+
+<?php if ($error !== null): ?>
+    <?php message('error', $error); ?>
+<?php elseif ($results !== null): ?>
+    <div class="acp-card">
+        <div class="acp-card-header">
+            Results for: <strong><?php echo htmlspecialchars($searchRequest, ENT_QUOTES, 'UTF-8'); ?></strong>
+        </div>
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Character</th><th></th></tr></thead>
+            <tbody>
+            <?php foreach ($results as $row): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td class="text-end">
+                    <a href="<?php echo htmlspecialchars($row['accountInfoUrl'], ENT_QUOTES, 'UTF-8'); ?>"
+                       class="btn btn-sm btn-default me-1">Account Info</a>
+                    <a href="<?php echo htmlspecialchars($row['editCharUrl'], ENT_QUOTES, 'UTF-8'); ?>"
+                       class="btn btn-sm btn-warning">Edit Character</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif; ?>
+
