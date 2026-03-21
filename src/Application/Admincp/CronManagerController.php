@@ -68,7 +68,6 @@ final class CronManagerController
                         'disableUrl'  => admincp_base('cronmanager&action=disable&id=' . ($row['cron_id'] ?? '')),
                         'resetUrl'    => admincp_base('cronmanager&action=reset&id=' . ($row['cron_id'] ?? '')),
                         'deleteUrl'   => admincp_base('cronmanager&action=delete&id=' . ($row['cron_id'] ?? '')),
-                        'runUrl'      => $cronManager->getCronApiUrl($row['cron_id']),
                     ];
                 }
             }
@@ -86,7 +85,6 @@ final class CronManagerController
                 'rows'            => $rows,
                 'intervalOptions' => $intervalOptions,
                 'cronFilesHtml'   => $cronManager->listCronFiles(),
-                'cronApiUrl'      => $cronManager->getCronApiUrl(),
                 'addUrl'          => admincp_base('cronmanager'),
                 'bulkEnableUrl'   => admincp_base('cronmanager&action=allenable'),
                 'bulkDisableUrl'  => admincp_base('cronmanager&action=alldisable'),

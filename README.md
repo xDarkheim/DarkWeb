@@ -55,7 +55,7 @@ Open `https://your-domain/install/` in the browser, complete the setup wizard, t
 | Plugins | Runtime-loadable plugin system |
 | Multi-language | EN, RU, CN, ES, PT, RO |
 | Mobile responsive | Hamburger menu, stacking grid, touch-friendly tables |
-| Cron & API | Scheduled tasks via `public/api/cron.php` |
+| Cron | Scheduled tasks via `bin/cron.php` (CLI only) |
 | Info page | Server rates, character classes, game features, maps |
 
 ---

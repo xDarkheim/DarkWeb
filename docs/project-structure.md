@@ -148,14 +148,6 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   │   ├── css/                    # Admin-specific styles
 │   │   ├── js/                     # Admin-specific scripts
 │   │   └── .htaccess
-│   ├── api/                        # Public REST-like endpoints
-│   │   ├── castlesiege.php
-│   │   ├── cron.php                # Cron trigger (Docker cron or external)
-│   │   ├── events.php              # Standalone — does NOT bootstrap boot.php
-│   │   ├── guildmark.php
-│   │   ├── paypal.php              # PayPal IPN receiver
-│   │   ├── servertime.php
-│   │   └── version.php
 │   ├── install/                    # Web-based installer (remove after setup)
 │   └── themes/                  # ★ Theme files (web-accessible CSS/JS/img)
 │       └── default/                # Default dark-fantasy theme (Bootstrap 3)
@@ -168,6 +160,17 @@ This map shows where the main CMS components live and which paths are safe to mo
 │               └── modules/
 │                   ├── footer.php
 │                   └── sidebar.php
+│
+├── bin/
+│   └── cron.php                    # CLI cron runner (preferred over HTTP trigger)
+│
+├── src/Application/Api/            # API endpoint controllers routed via /api/*.php
+│   ├── CastleSiegeApiController.php
+│   ├── EventsApiController.php
+│   ├── GuildmarkApiController.php
+│   ├── PaypalApiController.php
+│   ├── ServerTimeApiController.php
+│   └── VersionApiController.php
 │
 ├── config/                         # ★ Configuration files (NOT web-accessible)
 │   ├── config.json                 # Main config (DB, language, server info, …)

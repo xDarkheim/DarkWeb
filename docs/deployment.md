@@ -60,11 +60,12 @@ See [Configuration](configuration.md) for all available keys.
 | :--- | :---: | :--- |
 | `DOCKER_SERVER_NAME` | `localhost` | `mu.example.com` |
 | `DOCKER_TIMEZONE` | `UTC` | `Europe/Moscow` |
-| `DOCKER_CRON_URL` | `http://localhost:8081/api/cron.php?key=123456` | `https://mu.example.com/api/cron.php?key=SECRET` |
+| `DOCKER_CRON_COMMAND` | `/usr/local/bin/php /var/www/html/bin/cron.php` | `/usr/local/bin/php /var/www/html/bin/cron.php` |
 | `DOCKER_XDEBUG_MODE` | `off` | `off` |
 
 > **`DOCKER_SERVER_NAME`** is injected into the Apache `VirtualHost` as `ServerName` at container start.
-> Changing `docker/config.env` only requires `docker compose restart` — no rebuild needed.
+> Changing `docker/config.env` requires container recreation: `docker compose up -d --force-recreate`.
+> Changing `docker/Dockerfile` or `docker/entrypoint.sh` requires rebuild + recreation: `docker compose up -d --build --force-recreate`.
 
 The default container name is **`cms_darkcore`**. To change it, edit `docker-compose.yml`:
 
@@ -152,7 +153,7 @@ SSL → **Request a new SSL Certificate** (Let's Encrypt).
 5. Fixes ownership/permissions: `www-data:www-data`, mode `775`
 6. Runs `composer install --no-interaction --optimize-autoloader`
 7. Applies timezone from `DOCKER_TIMEZONE`
-8. Writes `/etc/cron.d/cms-cron` from `DOCKER_CRON_URL`
+8. Writes `/etc/cron.d/cms-cron` from `DOCKER_CRON_COMMAND`
 9. Starts the cron service
 10. Exports `DOCKER_SERVER_NAME`, `XDEBUG_MODE`, `PHP_IDE_CONFIG`
 11. Starts Apache via `exec apache2-foreground`

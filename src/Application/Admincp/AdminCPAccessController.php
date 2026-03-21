@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Darkheim\Application\Admincp;
 
 use Darkheim\Domain\Validator;
+use Darkheim\Infrastructure\Config\ConfigRepository;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 final class AdminCPAccessController
@@ -56,12 +57,7 @@ final class AdminCPAccessController
                 }
 
                 $cmsConfigurations['admins'] = $adminAccounts;
-                $cfgFile = fopen(__PATH_CONFIGS__ . 'config.json', 'wb');
-                if (!$cfgFile) {
-                    throw new \RuntimeException('Could not open configuration file.');
-                }
-                fwrite($cfgFile, json_encode($cmsConfigurations, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
-                fclose($cfgFile);
+                (new ConfigRepository(__PATH_CONFIGS__))->saveCms($cmsConfigurations);
                 message('success', 'Settings saved!');
             } catch (\Exception $ex) {
                 message('error', $ex->getMessage());

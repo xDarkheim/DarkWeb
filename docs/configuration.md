@@ -83,10 +83,19 @@ Copy `config.default.json` to `config.json` and fill in your values. The install
 
 ### Cron
 
-| Key | Type | Description |
-| :--- | :---: | :--- |
-| `cron_api` | bool | Enable the `/api/cron.php` endpoint |
-| `cron_api_key` | string | Secret key required in the `?key=` query parameter |
+Cron is CLI-only.
+
+Use:
+
+```bash
+php bin/cron.php
+```
+
+Optional single-task run:
+
+```bash
+php bin/cron.php --id=3
+```
 
 ### Social links
 
@@ -120,12 +129,12 @@ cp docker/config.env.example docker/config.env
 | :--- | :---: | :--- |
 | `DOCKER_SERVER_NAME` | `localhost` | Domain name — injected into Apache `VirtualHost` as `ServerName` and into `PHP_IDE_CONFIG` for Xdebug path mapping |
 | `DOCKER_TIMEZONE` | `UTC` | IANA timezone applied to the container via `/etc/localtime` |
-| `DOCKER_CRON_URL` | *(empty)* | Full URL for the cron endpoint — written to `/etc/cron.d/cms-cron`. Must include `?key=<cron_api_key>`. Leave empty to disable cron |
+| `DOCKER_CRON_COMMAND` | `/usr/local/bin/php /var/www/html/bin/cron.php` | CLI command written to `/etc/cron.d/cms-cron` and executed every minute |
 | `DOCKER_XDEBUG_MODE` | `off` | Xdebug 3 mode: `off`, `debug`, `profile`, `trace`, `coverage`, or comma-separated combos |
 
 > **When to rebuild vs restart:**
-> - `docker/config.env` change only → `docker compose restart`
-> - `docker/Dockerfile` or `docker/entrypoint.sh` change → `docker compose up -d --build`
+> - `docker/config.env` change only → `docker compose up -d --force-recreate`
+> - `docker/Dockerfile` or `docker/entrypoint.sh` change → `docker compose up -d --build --force-recreate`
 
 ## Other config files
 

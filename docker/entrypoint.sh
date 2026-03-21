@@ -94,13 +94,19 @@ if [ -n "$DOCKER_TIMEZONE" ]; then
 fi
 
 # ── 6. Setup cron ─────────────────────────────────────────────────────────────
-if [ -n "$DOCKER_CRON_URL" ]; then
-    echo "[startup] Configuring CMS cron..."
-    echo "* * * * * root curl -s \"${DOCKER_CRON_URL}\" >> /var/log/cron.log 2>&1" > /etc/cron.d/cms-cron
+CRON_COMMAND="${DOCKER_CRON_COMMAND:-/usr/local/bin/php /var/www/html/bin/cron.php}"
+
+if [ -n "$CRON_COMMAND" ]; then
+    echo "[startup] Configuring CMS cron (command mode)..."
+    {
+        echo "SHELL=/bin/sh"
+        echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        echo "* * * * * root cd /var/www/html && ${CRON_COMMAND} >> /var/log/cron.log 2>&1"
+    } > /etc/cron.d/cms-cron
     chmod 0644 /etc/cron.d/cms-cron
-    echo "[startup] Cron configured: ${DOCKER_CRON_URL}"
+    echo "[startup] Cron configured (command): ${CRON_COMMAND}"
 else
-    echo "[startup] WARNING: DOCKER_CRON_URL not set in docker/config.env — cron job skipped."
+    echo "[startup] WARNING: DOCKER_CRON_COMMAND is not set in docker/config.env — cron job skipped."
 fi
 
 # ── 7. Start cron service ─────────────────────────────────────────────────────

@@ -116,24 +116,6 @@ class CronManagerTest extends TestCase
         $this->assertTrue($sut->deleteCron());
     }
 
-    // ── getCronApiUrl ────────────────────────────────────────────────────────
-
-    public function testGetCronApiUrlWithoutId(): void
-    {
-        $db  = $this->createMock(dB::class);
-        $sut = $this->make($db);
-        $url = $sut->getCronApiUrl();
-        $this->assertStringContainsString('cron.php', $url);
-        $this->assertStringContainsString('key=', $url);
-    }
-
-    public function testGetCronApiUrlWithId(): void
-    {
-        $db  = $this->createMock(dB::class);
-        $sut = $this->make($db);
-        $url = $sut->getCronApiUrl(3);
-        $this->assertStringContainsString('id=3', $url);
-    }
 
     // ── getCommonIntervals ───────────────────────────────────────────────────
 

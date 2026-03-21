@@ -108,7 +108,6 @@ $GLOBALS['_TEST_CMS_CONFIG'] = [
     'ip_block_system_enable'    => false,
     'admins'                    => [],
     'website_title'             => 'Test',
-    'cron_api_key'              => 'test-key',
 ];
 
 // ── Global function stubs ────────────────────────────────────────────────────

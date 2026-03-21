@@ -12,8 +12,6 @@ use Darkheim\Domain\Validator;
  */
 class CronManager
 {
-    private $_api = 'cron.php';
-
     protected $_id;
     public $_name {
         set {
@@ -112,11 +110,6 @@ class CronManager
         return true;
     }
 
-    public function getCronApiUrl($id = null): string
-    {
-        if (check_value($id)) return __PATH_API__ . $this->_api . '?key=' . config('cron_api_key', true) . '&id=' . $id;
-        return __PATH_API__ . $this->_api . '?key=' . config('cron_api_key', true);
-    }
 
     public function addCron(): bool
     {

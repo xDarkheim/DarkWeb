@@ -26,6 +26,7 @@ class Handler
     private LanguageBootstrapper $languageBootstrapper;
     private ModuleRouteResolver $moduleRouteResolver;
     private SubpageRouteDispatcher $subpageRouteDispatcher;
+    private ApiRouteDispatcher $apiRouteDispatcher;
     private PageAccessDispatcher $pageAccessDispatcher;
     private DefaultThemeLayoutBuilder $themeLayoutBuilder;
 
@@ -39,6 +40,7 @@ class Handler
         ?LanguageBootstrapper $languageBootstrapper = null,
         ?ModuleRouteResolver $moduleRouteResolver = null,
         ?SubpageRouteDispatcher $subpageRouteDispatcher = null,
+        ?ApiRouteDispatcher $apiRouteDispatcher = null,
         ?PageAccessDispatcher $pageAccessDispatcher = null,
         ?DefaultThemeLayoutBuilder $themeLayoutBuilder = null,
     ) {
@@ -51,6 +53,7 @@ class Handler
         $this->languageBootstrapper = $languageBootstrapper ?? new LanguageBootstrapper();
         $this->moduleRouteResolver = $moduleRouteResolver ?? new ModuleRouteResolver();
         $this->subpageRouteDispatcher = $subpageRouteDispatcher ?? new SubpageRouteDispatcher();
+        $this->apiRouteDispatcher = $apiRouteDispatcher ?? new ApiRouteDispatcher();
         $this->pageAccessDispatcher = $pageAccessDispatcher ?? new PageAccessDispatcher();
         $this->themeLayoutBuilder = $themeLayoutBuilder ?? new DefaultThemeLayoutBuilder();
     }
@@ -73,6 +76,11 @@ class Handler
         $currentSubpage = isset($_REQUEST['subpage'])
             ? $this->routeInputSanitizer->sanitize((string) $_REQUEST['subpage'])
             : '';
+
+        if ($this->dispatchApiRequest($currentPage, $currentSubpage)) {
+            return;
+        }
+
         $moduleHtml = $this->renderModuleHtml($currentPage, $currentSubpage);
         $themeLayout = $this->themeLayoutBuilder->build($currentPage, $currentSubpage);
 
@@ -188,6 +196,24 @@ class Handler
     }
 
     private function module404(): void { redirect(); }
+
+    private function dispatchApiRequest(string $page, string $subpage): bool
+    {
+        if ($page !== 'api' || $subpage === '') {
+            return false;
+        }
+
+        if (!$this->apiRouteDispatcher->dispatch($subpage)) {
+            http_response_code(404);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'code' => 404,
+                'error' => 'API endpoint not found.',
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        return true;
+    }
 
 }
 

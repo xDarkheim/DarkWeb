@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Darkheim\Application\Admincp;
 
 use Darkheim\Domain\Validator;
+use Darkheim\Infrastructure\Config\ConfigRepository;
 use Darkheim\Infrastructure\Database\dB;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
@@ -53,10 +54,7 @@ final class ConnectionSettingsController
                     $cmsConfigurations[$k] = $setting[$k];
                 }
 
-                $cfgFile = fopen(__PATH_CONFIGS__ . 'config.json', 'wb');
-                if (!$cfgFile) throw new \RuntimeException('There was a problem opening the configuration file.');
-                fwrite($cfgFile, json_encode($cmsConfigurations, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
-                fclose($cfgFile);
+                (new ConfigRepository(__PATH_CONFIGS__))->saveCms($cmsConfigurations);
                 message('success', 'Settings successfully saved!');
             } catch (\Exception $ex) {
                 message('error', $ex->getMessage());

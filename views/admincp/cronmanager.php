@@ -6,7 +6,6 @@
  * - array  $rows             – cron job rows
  * - array  $intervalOptions  – array of ['value','label']
  * - string $cronFilesHtml    – pre-built <option> HTML for file select
- * - string $cronApiUrl       – base cron API URL
  * - string $addUrl
  * - string $bulkEnableUrl
  * - string $bulkDisableUrl
@@ -16,20 +15,20 @@
 <h1 class="page-header"><i class="bi bi-clock-history me-2"></i>Cron Job Manager</h1>
 
 <div class="row g-4">
-    <!-- Left: add form + bulk + api -->
+    <!-- Left: add form + bulk -->
     <div class="col-lg-3">
         <div class="acp-card mb-3">
             <div class="acp-card-header">Add Cron Job</div>
             <div class="p-3">
                 <form action="<?php echo htmlspecialchars($addUrl, ENT_QUOTES, 'UTF-8'); ?>" method="post">
-                    <div class="form-group"><label>Name</label><input type="text" class="form-control" name="cron_name" required/></div>
+                    <div class="form-group"><label for="cron_name">Name</label><input id="cron_name" type="text" class="form-control" name="cron_name" required/></div>
                     <div class="form-group">
-                        <label>File</label>
-                        <select class="form-control" name="cron_file"><?php echo $cronFilesHtml; ?></select>
+                        <label for="cron_file">File</label>
+                        <select id="cron_file" class="form-control" name="cron_file"><?php echo $cronFilesHtml; ?></select>
                     </div>
                     <div class="form-group">
-                        <label>Repeat</label>
-                        <select class="form-control" name="cron_time">
+                        <label for="cron_time">Repeat</label>
+                        <select id="cron_time" class="form-control" name="cron_time">
                             <?php foreach ($intervalOptions as $opt): ?>
                             <option value="<?php echo htmlspecialchars($opt['value'], ENT_QUOTES, 'UTF-8'); ?>">
                                 <?php echo htmlspecialchars($opt['label'], ENT_QUOTES, 'UTF-8'); ?>
@@ -52,9 +51,9 @@
         </div>
 
         <div class="acp-card">
-            <div class="acp-card-header">Cron API URL</div>
+            <div class="acp-card-header">CLI Cron</div>
             <div class="p-3">
-                <input type="text" class="form-control" value="<?php echo htmlspecialchars($cronApiUrl, ENT_QUOTES, 'UTF-8'); ?>" readonly/>
+                <code>php /var/www/html/bin/cron.php</code>
             </div>
         </div>
     </div>
@@ -83,7 +82,6 @@
                     </td>
                     <td class="text-end d-flex gap-1 justify-content-end">
                         <a href="<?php echo htmlspecialchars($row['resetUrl'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-default" title="Reset"><i class="bi bi-arrow-clockwise"></i></a>
-                        <a href="<?php echo htmlspecialchars($row['runUrl'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm btn-default"><i class="bi bi-play-fill"></i></a>
                         <?php if (!$row['protected']): ?>
                         <a href="<?php echo htmlspecialchars($row['deleteUrl'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
                         <?php endif; ?>

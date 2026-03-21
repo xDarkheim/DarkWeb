@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Darkheim\Application\Admincp;
 
 use Darkheim\Domain\Validator;
+use Darkheim\Infrastructure\Config\ConfigRepository;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 final class WebsiteSettingsController
@@ -34,8 +35,6 @@ final class WebsiteSettingsController
         'username_max_len',
         'password_min_len',
         'password_max_len',
-        'cron_api',
-        'cron_api_key',
         'social_link_facebook',
         'social_link_instagram',
         'social_link_discord',
@@ -65,13 +64,7 @@ final class WebsiteSettingsController
                     $cmsConfigurations[$settingName] = $setting[$settingName];
                 }
 
-                $newConfig = json_encode($cmsConfigurations, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
-                $cfgFile = fopen(__PATH_CONFIGS__ . 'config.json', 'wb');
-                if (!$cfgFile) {
-                    throw new \RuntimeException('There was a problem opening the configuration file.');
-                }
-                fwrite($cfgFile, $newConfig);
-                fclose($cfgFile);
+                (new ConfigRepository(__PATH_CONFIGS__))->saveCms($cmsConfigurations);
 
                 message('success', 'Settings successfully saved!');
             } catch (\Exception $ex) {
@@ -151,13 +144,6 @@ final class WebsiteSettingsController
             $setting[$numSetting] = (string) $_POST[$numSetting];
         }
 
-        $setting['cron_api'] = $this->expectBool('cron_api', 'Invalid setting (cron_api)');
-
-        if (!isset($_POST['cron_api_key'])) {
-            throw new \RuntimeException('Invalid setting (cron_api_key)');
-        }
-        $setting['cron_api_key'] = (string) $_POST['cron_api_key'];
-
         foreach ([
             'social_link_facebook' => 'The facebook link setting is not a valid URL.',
             'social_link_instagram' => 'The instagram link setting is not a valid URL.',
@@ -216,8 +202,6 @@ final class WebsiteSettingsController
             ['key' => 'username_max_len', 'label' => 'Username Maximum Length', 'description' => 'Maximum allowed username length.', 'type' => 'text', 'required' => true],
             ['key' => 'password_min_len', 'label' => 'Password Minimum Length', 'description' => 'Minimum allowed password length.', 'type' => 'text', 'required' => true],
             ['key' => 'password_max_len', 'label' => 'Password Maximum Length', 'description' => 'Maximum allowed password length.', 'type' => 'text', 'required' => true],
-            ['key' => 'cron_api', 'label' => 'Cron API', 'description' => 'Enable/disable cron API endpoint.', 'type' => 'bool'],
-            ['key' => 'cron_api_key', 'label' => 'Cron API Key', 'description' => 'Usage: ' . __BASE_URL__ . 'api/cron.php?key=123456', 'type' => 'text', 'required' => true],
             ['key' => 'social_link_facebook', 'label' => 'Facebook Link', 'description' => 'Link to your Facebook page.', 'type' => 'text', 'required' => false],
             ['key' => 'social_link_instagram', 'label' => 'Instagram Link', 'description' => 'Link to your Instagram page.', 'type' => 'text', 'required' => false],
             ['key' => 'social_link_discord', 'label' => 'Discord Link', 'description' => 'Link to your Discord invite.', 'type' => 'text', 'required' => false],

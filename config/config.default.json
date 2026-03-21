@@ -33,8 +33,6 @@
     "password_min_len": 4,
     "password_max_len": 20,
 	"cms_installed": false,
-    "cron_api": true,
-    "cron_api_key": "123456",
     "social_link_facebook": "https:\/\/facebook.com\/",
     "social_link_instagram": "https:\/\/instagram.com\/",
     "social_link_discord": "https:\/\/discord.com\/",

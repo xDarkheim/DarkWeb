@@ -29,13 +29,8 @@ if(isset($_POST['install_step_5_submit'])) {
         $cmsDefaultConfig['SQL_SHA256_SALT']         = $_SESSION['install_sql_sha256_salt'];
         $cmsDefaultConfig['cms_installed']           = true;
 
-        $newCmsConfigs = json_encode($cmsDefaultConfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        if(!$newCmsConfigs) throw new Exception('Could not encode DarkCore configurations.');
-
-        $cfgFile = fopen($cmsConfigsPath, 'w');
-        if(!$cfgFile) throw new Exception('Could not open configuration file for writing. Check file permissions.');
-        if(!fwrite($cfgFile, $newCmsConfigs)) throw new Exception('Could not save configuration file.');
-        fclose($cfgFile);
+        $configRepository = new \Darkheim\Infrastructure\Config\ConfigRepository(dirname($cmsConfigsPath));
+        $configRepository->saveCms($cmsDefaultConfig);
 
         $_SESSION = array();
         session_destroy();
@@ -58,8 +53,8 @@ if(isset($_POST['install_step_5_submit'])) {
     <div class="inst-card mb-3">
         <div class="inst-card-header"><i class="bi bi-person-fill-gear me-1"></i>Admin Account</div>
         <div class="inst-card-body">
-            <label class="form-label">Username <span style="color:var(--red)">*</span></label>
-            <input type="text" name="install_step_5_1" class="form-control" placeholder="e.g. admin" required>
+            <label for="install_step_5_1" class="form-label">Username <span style="color:var(--red)">*</span></label>
+            <input id="install_step_5_1" type="text" name="install_step_5_1" class="form-control" placeholder="e.g. admin" required>
             <div class="form-text">In-game account username that will have full AdminCP access. Alphanumeric only.</div>
         </div>
     </div>
