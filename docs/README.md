@@ -8,7 +8,7 @@
 | Document | Focus |
 | :--- | :--- |
 | [Project Structure](project-structure.md) | Directory layout, bootstrap path, namespace map, what to edit |
-| [Configuration](configuration.md) | `cms.json` keys, `docker/config.env` variables, security notes |
+| [Configuration](configuration.md) | `config.json` keys, `docker/config.env` variables, security notes |
 | [Deployment](deployment.md) | Docker setup, reverse proxy (Nginx Proxy Manager), useful commands |
 | [Frontend Assets](build.md) | CSS/JS load order, cache busting, adding new files |
 | [CSS Architecture](css-architecture.md) | `dh-*` class naming, dark mode, mobile breakpoints |
@@ -20,7 +20,7 @@
 | Task | Where |
 | :--- | :--- |
 | Start local environment | [Deployment → Quick start](deployment.md#quick-start) |
-| Edit CMS config | [Configuration → cms.json](configuration.md#cmsjson--main-config) |
+| Edit CMS config | [Configuration → config.json](configuration.md#cmsjson--main-config) |
 | Edit Docker config | [Configuration → Docker](configuration.md#docker) |
 | Add a CSS file | [Frontend Assets → Adding a new CSS file](build.md#adding-a-new-css-file) |
 | Add a JS file | [Frontend Assets → Adding a new JS file](build.md#adding-a-new-js-file) |

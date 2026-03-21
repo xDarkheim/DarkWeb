@@ -27,13 +27,13 @@ final class ConfigRepository
     }
 
     /**
-     * Loads cms.json and preserves the exact legacy exception messages.
+     * Loads config.json and preserves the exact legacy exception messages.
      *
      * @throws Exception
      */
     public function loadCmsOrFail(): array
     {
-        $path = $this->configDir . 'cms.json';
+        $path = $this->configDir . 'config.json';
 
         if (!is_file($path)) {
             throw new Exception("Darkheim's configuration file doesn't exist, please reupload the website files.");

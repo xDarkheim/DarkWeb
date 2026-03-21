@@ -11,7 +11,7 @@ function saveChanges(): void {
 			return;
 		}
 	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'usercp.addstats.xml';
+	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'add-stats.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	
 	if(!isset($_POST['setting_1'])) {
@@ -95,7 +95,7 @@ if(isset($_POST['submit_changes'])) {
 	saveChanges();
 }
 
-loadModuleConfigs('usercp.addstats');
+loadModuleConfigs('add-stats');
 
 $creditSystem = new CreditSystem();
 ?>

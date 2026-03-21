@@ -30,7 +30,7 @@ docker compose exec web composer analyse
 | `level` | 5 |
 | `phpVersion` | 80400 |
 | `paths` | `src/` |
-| `bootstrapFiles` | `includes/bootstrap/compat.php`, `config/cms.tables.php`, `config/custom.tables.php` |
+| `bootstrapFiles` | `includes/bootstrap/compat.php`, `config/tables.php`, `config/tables.custom.php` |
 
 Bootstrap files make global helpers (`lang()`, `config()`) and DB constants (`_TBL_CHR_`, `_CLMN_CHR_LVL_`)
 visible to PHPStan without a live database.
@@ -57,7 +57,7 @@ visible to PHPStan without a live database.
 
 | Pattern | Reason |
 | :--- | :--- |
-| `Constant [A-Za-z0-9_]+ not found` | DB table/column constants are defined at runtime by `custom.tables.php`. Bootstrap files load it, but a suppression prevents false positives if a constant is still missing. |
+| `Constant [A-Za-z0-9_]+ not found` | DB table/column constants are defined at runtime by `tables.custom.php`. Bootstrap files load it, but a suppression prevents false positives if a constant is still missing. |
 
 ### Inline suppressions
 
@@ -65,7 +65,7 @@ A small number of intentional constructs require `@phpstan-ignore` annotations.
 
 **`_TBL_CHR_ == _TBL_MASTERLVL_` comparisons**
 
-`custom.tables.php` defines these as two different string literals — PHPStan flags
+`tables.custom.php` defines these as two different string literals — PHPStan flags
 the equality check as always-false. The check is intentional: some configurations store
 character and master-level data in the same table, making it runtime-conditional.
 

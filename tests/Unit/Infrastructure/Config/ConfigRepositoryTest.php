@@ -46,7 +46,7 @@ class ConfigRepositoryTest extends TestCase
     public function testLoadCmsOrFailSuccess(): void
     {
         $data = ['cms_installed' => true, 'language_default' => 'en'];
-        file_put_contents($this->dir . 'cms.json', json_encode($data));
+        file_put_contents($this->dir . 'config.json', json_encode($data));
         $repo   = new ConfigRepository($this->dir);
         $result = $repo->loadCmsOrFail();
         $this->assertSame($data, $result);
@@ -62,7 +62,7 @@ class ConfigRepositoryTest extends TestCase
 
     public function testLoadCmsOrFailEmptyFile(): void
     {
-        file_put_contents($this->dir . 'cms.json', '');
+        file_put_contents($this->dir . 'config.json', '');
         $repo = new ConfigRepository($this->dir);
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('empty');

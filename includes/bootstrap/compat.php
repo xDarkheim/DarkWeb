@@ -204,7 +204,11 @@ function loadModuleConfigs($module): void
 
 function moduleConfigExists($module): bool
 {
-    return file_exists(__PATH_MODULE_CONFIGS__ . $module . '.xml');
+    if (!check_value($module)) {
+        return false;
+    }
+
+    return bootstrapConfigProvider()->moduleConfig((string) $module) !== null;
 }
 
 function globalConfigExists($config_file): bool

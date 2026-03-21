@@ -30,7 +30,7 @@ Microsoft SQL Server  (external — your MuOnline game database)
 
  File  Contains  Git-tracked 
  :---  :---  :---: 
- `config/cms.json`  Database, site settings, features  No 
+ `config/config.json`  Database, site settings, features  No 
  `docker/config.env`  Docker runtime: domain, timezone, cron, Xdebug  No 
 
 Both have committed example/default files to copy from.
@@ -38,11 +38,11 @@ Both have committed example/default files to copy from.
 ### 1. Copy config files
 
 ```bash
-cp config/cms.json.default config/cms.json
+cp config/config.default.json config/config.json
 cp docker/config.env.example docker/config.env
 ```
 
-### 2. Fill in `config/cms.json`
+### 2. Fill in `config/config.json`
 
 | Key | Example | Description |
 | :--- | :---: | :--- |
@@ -84,9 +84,9 @@ git clone <your-repo-url> DarkCore
 cd DarkCore
 
 # 2. Copy and configure both files
-cp config/cms.json.default config/cms.json
+cp config/config.default.json config/config.json
 cp docker/config.env.example docker/config.env
-# → Edit cms.json with your SQL Server credentials
+# → Edit config.json with your SQL Server credentials
 # → Edit docker/config.env with your domain and timezone
 
 # 3. Create the shared proxy network (once per Docker host — skip if it already exists)
@@ -101,7 +101,7 @@ docker compose up -d --build
 ```
 
 > **Rebuilding the image is required** when you change `docker/Dockerfile` or
-> `docker/entrypoint.sh`. For `cms.json` changes only — `docker compose restart` is enough.
+> `docker/entrypoint.sh`. For `config.json` changes only — `docker compose restart` is enough.
 
 ## Reverse proxy setup (Nginx Proxy Manager)
 
@@ -179,7 +179,7 @@ The override file:
 
 ```bash
 docker compose up -d --build   # first start / rebuild
-docker compose restart         # restart after cms.json changes
+docker compose restart         # restart after config.json changes
 docker compose down            # stop and remove containers
 docker compose logs -f web     # follow logs
 docker compose exec web bash   # open shell in container

@@ -82,7 +82,7 @@ config.local.php
 # Agent-specific files
 AGENTS.md
 # Darkheim CMS configuration files
-cms.json
+config/config.json
 # Installation .htaccess files
 public/install/.htaccess
 public/install/sql/.htaccess

@@ -1,7 +1,7 @@
 <?php
 use Darkheim\Application\Credits\CreditSystem;
 use Darkheim\Domain\Validator;
-echo '<h2>Unstick Character Settings</h2>';
+echo '<h2>Reset Stats Settings</h2>';
 
 function saveChanges(): void {
 	global $_POST;
@@ -11,11 +11,11 @@ function saveChanges(): void {
 			return;
 		}
 	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'usercp.unstick.xml';
+	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'reset-stats.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	
 	if(!isset($_POST['setting_1'])) {
-		throw new \RuntimeException('Invalid setting (active)');
+		throw new RuntimeException('Invalid setting (active)');
 	}
 	if(!in_array($_POST['setting_1'], array('0','1',0,1))) {
 		throw new RuntimeException('Invalid setting (active)');
@@ -58,20 +58,20 @@ if(isset($_POST['submit_changes'])) {
 	saveChanges();
 }
 
-loadModuleConfigs('usercp.unstick');
+loadModuleConfigs('reset-stats');
 
 $creditSystem = new CreditSystem();
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
-			<th>Status<br/><span>Enable/disable the character unstick module.</span></th>
+			<th>Status<br/><span>Enable/disable the reset stats module.</span></th>
 			<td>
 				<?php enabledisableCheckboxes('setting_1',mconfig('active'),'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
-			<th>Zen Cost<br/><span>Amount of zen required to unstick the character. Set to 0 to disable zen requirement.</span></th>
+			<th>Zen Cost<br/><span>Amount of zen required to reset the character stats. Set to 0 to disable zen requirement.</span></th>
 			<td>
 				<label>
 					<input class="form-control" type="text" name="setting_2" value="<?php echo mconfig('zen_cost'); ?>"/>
@@ -79,7 +79,7 @@ $creditSystem = new CreditSystem();
 			</td>
 		</tr>
 		<tr>
-			<th>Credit Cost<br/><span>Amount of credit required to unstick the character. Set to 0 to disable credit requirement.</span></th>
+			<th>Credit Cost<br/><span>Amount of credit required to reset the character stats. Set to 0 to disable credit requirement.</span></th>
 			<td>
 				<label>
 					<input class="form-control" type="text" name="setting_4" value="<?php echo mconfig('credit_cost'); ?>"/>

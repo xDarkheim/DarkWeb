@@ -27,7 +27,7 @@ try {
 			);
 			
 			// save changes
-			$cfgFile = fopen(__PATH_CONFIGS__.'usercp.json', 'wb');
+			$cfgFile = fopen(__PATH_CONFIGS__.'usercp-menu.json', 'wb');
 			if(!$cfgFile) {
 				throw new RuntimeException(
 					'There was a problem opening the usercp file.'
@@ -98,7 +98,7 @@ try {
 			);
 			
 			// save changes
-			$cfgFile = fopen(__PATH_CONFIGS__.'usercp.json', 'wb');
+			$cfgFile = fopen(__PATH_CONFIGS__.'usercp-menu.json', 'wb');
 			if(!$cfgFile) {
 				throw new RuntimeException(
 					'There was a problem opening the usercp file.'
@@ -164,7 +164,7 @@ try {
 			);
 			
 			// save changes
-			$cfgFile = fopen(__PATH_CONFIGS__.'usercp.json', 'wb');
+			$cfgFile = fopen(__PATH_CONFIGS__.'usercp-menu.json', 'wb');
 			if(!$cfgFile) {
 				throw new RuntimeException(
 					'There was a problem opening the usercp file.'

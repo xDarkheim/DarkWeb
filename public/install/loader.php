@@ -40,7 +40,7 @@ try {
         class_alias(\Darkheim\Infrastructure\Database\dB::class, 'dB');
         class_alias(\Darkheim\Domain\Validator::class, 'Validator');
 
-        if(!@include(__PATH_CONFIGS__ . 'cms.tables.php')) throw new Exception('Could not load DarkCore table definitions.');
+        if(!@include(__PATH_CONFIGS__ . 'tables.php')) throw new Exception('Could not load DarkCore table definitions.');
         if(!@include(__INSTALL_ROOT__ . 'definitions.php')) throw new Exception('Could not load DarkCore Installer definitions.');
 
 	$cmsConfigsPath = __PATH_CONFIGS__ . CMS_CONFIGURATION_FILE;
@@ -74,7 +74,7 @@ try {
 	if(!is_array($cmsDefaultConfig)) throw new Exception('DarkCore default configuration file could not be decoded.');
 
 		if(!@include(__PATH_INCLUDES__ . 'bootstrap/compat.php')) throw new Exception('Could not load DarkCore functions.');
-        if(!@include(__PATH_CONFIGS__ . 'timezone.php')) throw new Exception('Could not load DarkCore timezone.');
+        if(!@include(__PATH_CONFIGS__ . 'timezone-config.php')) throw new Exception('Could not load DarkCore timezone.');
 
 	$writablePaths = json_decode(
         file_get_contents(__PATH_CONFIGS__.CMS_WRITABLE_PATHS_FILE),

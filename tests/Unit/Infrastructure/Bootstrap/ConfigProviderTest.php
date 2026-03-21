@@ -33,7 +33,7 @@ final class ConfigProviderTest extends TestCase
 
     public function testCmsLoadsAndCachesConfiguration(): void
     {
-        file_put_contents($this->configDir . 'cms.json', json_encode([
+        file_put_contents($this->configDir . 'config.json', json_encode([
             'website_title' => 'DarkCore',
             'docker_timezone' => 'UTC',
         ], JSON_THROW_ON_ERROR));
@@ -41,7 +41,7 @@ final class ConfigProviderTest extends TestCase
         $loader = new ConfigProvider($this->configDir);
 
         $first = $loader->cms();
-        file_put_contents($this->configDir . 'cms.json', json_encode([
+        file_put_contents($this->configDir . 'config.json', json_encode([
             'website_title' => 'Changed',
             'docker_timezone' => 'Europe/Kyiv',
         ], JSON_THROW_ON_ERROR));
@@ -53,12 +53,12 @@ final class ConfigProviderTest extends TestCase
 
     public function testModuleAndGlobalXmlConfigsLoadThroughLoader(): void
     {
-        file_put_contents($this->configDir . 'email.xml', '<config><smtp_host>mail.example.com</smtp_host></config>');
+        file_put_contents($this->configDir . 'email-templates.xml', '<config><smtp_host>mail.example.com</smtp_host></config>');
         file_put_contents($this->configDir . 'modules/login.xml', '<config><max_login_attempts>5</max_login_attempts></config>');
 
         $loader = new ConfigProvider($this->configDir);
 
-        $this->assertSame('mail.example.com', $loader->globalXml('email')['smtp_host'] ?? null);
+        $this->assertSame('mail.example.com', $loader->globalXml('email-templates')['smtp_host'] ?? null);
         $this->assertSame('5', $loader->moduleConfig('login')['max_login_attempts'] ?? null);
     }
 
@@ -71,7 +71,7 @@ final class ConfigProviderTest extends TestCase
 
     public function testTimezoneInitializerAppliesConfiguredTimezone(): void
     {
-        file_put_contents($this->configDir . 'cms.json', json_encode([
+        file_put_contents($this->configDir . 'config.json', json_encode([
             'docker_timezone' => 'Europe/Kyiv',
         ], JSON_THROW_ON_ERROR));
 

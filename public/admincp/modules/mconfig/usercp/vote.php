@@ -16,7 +16,7 @@ function saveChanges(): void {
 			return;
 		}
 	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'usercp.vote.xml';
+	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'vote.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	
 	$xml->active = $_POST['setting_1'];
@@ -54,7 +54,7 @@ if(isset($_REQUEST['deletesite'])) {
 	}
 }
 
-loadModuleConfigs('usercp.vote');
+loadModuleConfigs('vote');
 
 $creditSystem = new CreditSystem();
 ?>

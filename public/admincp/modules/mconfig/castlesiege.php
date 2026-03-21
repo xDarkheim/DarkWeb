@@ -7,7 +7,7 @@ function saveChanges(): void {
 	
 	$days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 	
-	$cfgFile = __PATH_CONFIGS__.'castlesiege.json';
+	$cfgFile = __PATH_CONFIGS__.'castle-siege.json';
 	if(!is_writable($cfgFile)) {
 		throw new RuntimeException('The configuration file is not writable.');
 	}
@@ -234,7 +234,7 @@ if(isset($_POST['submit_changes'])) {
 }
 
 // load configs
-$cfg = file_get_contents(__PATH_CONFIGS__.'castlesiege.json');
+$cfg = file_get_contents(__PATH_CONFIGS__.'castle-siege.json');
 if(!$cfg) {
 	throw new RuntimeException('Error loading config file.');
 }

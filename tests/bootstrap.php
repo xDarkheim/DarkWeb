@@ -26,7 +26,8 @@ if (!is_dir($tmpBase) && !mkdir($tmpBase, 0777, true) && !is_dir($tmpBase)) {
 define('__PATH_CACHE__',             $tmpBase . 'cache/');
 define('__PATH_LOGS__',              $tmpBase . 'logs/');
 define('__PATH_CONFIGS__',           $tmpBase . 'config/');
-define('__PATH_MODULE_CONFIGS__',    $tmpBase . 'config/modules/');
+define('__PATH_MODULE_CONFIGS__',       $tmpBase . 'config/modules/');
+define('__PATH_MODULE_CONFIGS_USERCP__', $tmpBase . 'config/modules/usercp/');
 define('__PATH_LANGUAGES__',         $tmpBase . 'languages/');
 define('__PATH_EMAILS__',            $tmpBase . 'emails/');
 define('__PATH_CRON__',              $tmpBase . 'cron/');
@@ -55,6 +56,7 @@ foreach ([
     __PATH_CACHE__,
     __PATH_CONFIGS__,
     __PATH_MODULE_CONFIGS__,
+    __PATH_MODULE_CONFIGS_USERCP__,
     __PATH_LANGUAGES__,
     __PATH_EMAILS__,
     __PATH_CRON__,
@@ -77,8 +79,8 @@ foreach ([
 
 // ── DB table/column constants from the real config files ────────────────────
 
-require_once __DIR__ . '/../config/cms.tables.php';
-require_once __DIR__ . '/../config/custom.tables.php';
+require_once __DIR__ . '/../config/tables.php';
+require_once __DIR__ . '/../config/tables.custom.php';
 
 // ── Global test config (used by config() / cmsConfigs() stubs) ──────────────
 
@@ -285,7 +287,8 @@ function addRankingMenuLink(string $phrase, string $module, mixed $filesExclusiv
 
 function moduleConfigExists(string $module): bool
 {
-    return file_exists(__PATH_MODULE_CONFIGS__ . $module . '.xml');
+    return file_exists(__PATH_MODULE_CONFIGS__ . $module . '.xml')
+        || file_exists(__PATH_MODULE_CONFIGS_USERCP__ . $module . '.xml');
 }
 
 function returnGuildLogo(string $binaryData = '', int $size = 40): string

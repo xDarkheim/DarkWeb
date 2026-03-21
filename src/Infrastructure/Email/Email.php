@@ -46,7 +46,7 @@ class Email
 
     public function __construct()
     {
-        $configs = gconfig('email', true);
+        $configs = gconfig('email-templates', true);
         if (!is_array($configs)) throw new \Exception(lang('error_90'));
 
         $this->_active    = $configs['active'];

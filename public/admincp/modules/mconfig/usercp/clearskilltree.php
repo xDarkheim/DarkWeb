@@ -1,7 +1,7 @@
 <?php
 use Darkheim\Application\Credits\CreditSystem;
 use Darkheim\Domain\Validator;
-echo '<h2>Reset Stats Settings</h2>';
+echo '<h2>Clear Skill-Tree Settings</h2>';
 
 function saveChanges(): void {
 	global $_POST;
@@ -11,7 +11,7 @@ function saveChanges(): void {
 			return;
 		}
 	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'usercp.resetstats.xml';
+	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'clear-skill-tree.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	
 	if(!isset($_POST['setting_1'])) {
@@ -46,6 +46,27 @@ function saveChanges(): void {
 	}
 	$xml->credit_cost = $_POST['setting_4'];
 	
+	if(!isset($_POST['setting_5'])) {
+		throw new RuntimeException('Invalid setting (required_level)');
+	}
+	if(!Validator::UnsignedNumber($_POST['setting_5'])) {
+		throw new RuntimeException('Invalid setting (required_level)');
+	}
+	if($_POST['setting_5'] > 400) {
+		throw new RuntimeException(
+				'The required level setting can have a maximum value of 400.'
+		);
+	}
+	$xml->required_level = $_POST['setting_5'];
+	
+	if(!isset($_POST['setting_6'])) {
+		throw new RuntimeException('Invalid setting (required_master_level)');
+	}
+	if(!Validator::UnsignedNumber($_POST['setting_6'])) {
+		throw new RuntimeException('Invalid setting (required_master_level)');
+	}
+	$xml->required_master_level = $_POST['setting_6'];
+	
 	$save = $xml->asXML($xmlPath);
 	if($save) {
 		message('success','Settings successfully saved.');
@@ -58,20 +79,20 @@ if(isset($_POST['submit_changes'])) {
 	saveChanges();
 }
 
-loadModuleConfigs('usercp.resetstats');
+loadModuleConfigs('clear-skill-tree');
 
 $creditSystem = new CreditSystem();
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
-			<th>Status<br/><span>Enable/disable the reset stats module.</span></th>
+			<th>Status<br/><span>Enable/disable the clear skill tree module.</span></th>
 			<td>
 				<?php enabledisableCheckboxes('setting_1',mconfig('active'),'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
-			<th>Zen Cost<br/><span>Amount of zen required to reset the character stats. Set to 0 to disable zen requirement.</span></th>
+			<th>Zen Cost<br/><span>Amount of zen required to clear the master skill tree. Set to 0 to disable zen requirement.</span></th>
 			<td>
 				<label>
 					<input class="form-control" type="text" name="setting_2" value="<?php echo mconfig('zen_cost'); ?>"/>
@@ -79,7 +100,7 @@ $creditSystem = new CreditSystem();
 			</td>
 		</tr>
 		<tr>
-			<th>Credit Cost<br/><span>Amount of credit required to reset the character stats. Set to 0 to disable credit requirement.</span></th>
+			<th>Credit Cost<br/><span>Number of credits required to clear the master skill tree. Set to 0 to disable credit requirement.</span></th>
 			<td>
 				<label>
 					<input class="form-control" type="text" name="setting_4" value="<?php echo mconfig('credit_cost'); ?>"/>
@@ -90,6 +111,22 @@ $creditSystem = new CreditSystem();
 			<th>Credit Configuration<br/><span></span></th>
 			<td>
 				<?php echo $creditSystem->buildSelectInput("setting_3", mconfig('credit_config'), "form-control"); ?>
+			</td>
+		</tr>
+		<tr>
+			<th>Required Level<br/><span>Minimum level required to clear the master skill tree. It is recommended to keep this setting at the maximum level of 400.</span></th>
+			<td>
+				<label>
+					<input class="form-control" type="text" name="setting_5" value="<?php echo mconfig('required_level'); ?>"/>
+				</label>
+			</td>
+		</tr>
+		<tr>
+			<th>Required Master Level<br/><span>Minimum master level required to clear the master skill tree.</span></th>
+			<td>
+				<label>
+					<input class="form-control" type="text" name="setting_6" value="<?php echo mconfig('required_master_level'); ?>"/>
+				</label>
 			</td>
 		</tr>
 		<tr>

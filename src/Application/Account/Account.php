@@ -143,7 +143,7 @@ class Account extends Common
         if (!Validator::PasswordLength($new_password)) throw new \Exception(lang('error_7', true));
         if ($new_password != $confirm_new_password) throw new \Exception(lang('error_8', true));
 
-        $mypassCfg = loadConfigurations('usercp.mypassword');
+        $mypassCfg = loadConfigurations('my-password');
         if (!$this->validateUser($username, $password)) throw new \Exception(lang('error_13', true));
         if ($this->accountOnline($username)) throw new \Exception(lang('error_14', true));
         if ($this->hasActivePasswordChangeRequest($userid)) throw new \Exception(lang('error_19', true));
@@ -183,7 +183,7 @@ class Account extends Common
         $result = $this->muonline->query_fetch_single("SELECT * FROM " . Passchange_Request . " WHERE user_id = ?", array($user_id));
         if (!is_array($result)) throw new \Exception(lang('error_25', true));
 
-        $mypassCfg       = loadConfigurations('usercp.mypassword');
+        $mypassCfg       = loadConfigurations('my-password');
         $request_timeout = $mypassCfg['change_password_request_timeout'] * 3600;
         $request_date    = $result['request_date'] + $request_timeout;
 
@@ -287,7 +287,7 @@ class Account extends Common
         $accountInfo = $this->accountInformation($accountId);
         if (!is_array($accountInfo)) throw new \Exception(lang('error_21', true));
 
-        $myemailCfg = loadConfigurations('usercp.myemail');
+        $myemailCfg = loadConfigurations('my-email');
         if ($myemailCfg['require_verification']) {
             $userName         = $accountInfo[_CLMN_USERNM_];
             $userEmail        = $accountInfo[_CLMN_EMAIL_];

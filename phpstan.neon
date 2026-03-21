@@ -6,17 +6,17 @@ parameters:
         - src/
 
     # Global helper functions and constants are loaded at runtime from
-    # includes/bootstrap/compat.php and config/cms.tables.php — tell PHPStan
+    # includes/bootstrap/compat.php and config/tables.php — tell PHPStan
     # about them so they don't produce "function/constant not found" errors.
     bootstrapFiles:
         - includes/bootstrap/compat.php
-        - config/cms.tables.php
-        - config/custom.tables.php
+        - config/tables.php
+        - config/tables.custom.php
 
     # Ignore errors caused by runtime-defined constants (DB column/table names
-    # from cms.tables.php) and other project-specific patterns.
+    # from tables.php) and other project-specific patterns.
     ignoreErrors:
-        # Runtime-defined DB column/table constants (cms.tables.php) may be undefined
+        # Runtime-defined DB column/table constants (tables.php) may be undefined
         # in environments without a live DB – suppress at PHPStan level.
         - '#Constant [A-Za-z0-9_]+ not found\.#'
 

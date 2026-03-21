@@ -9,7 +9,7 @@ function saveChanges(): void {
 			return;
 		}
 	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'forgotpassword.xml';
+	$xmlPath = __PATH_MODULE_CONFIGS__.'forgot-password.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	
 	$xml->active = $_POST['setting_1'];
@@ -26,7 +26,7 @@ if(isset($_POST['submit_changes'])) {
 	saveChanges();
 }
 
-loadModuleConfigs('forgotpassword');
+loadModuleConfigs('forgot-password');
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">

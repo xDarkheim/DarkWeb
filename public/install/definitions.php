@@ -16,24 +16,24 @@ define('INSTALLER_VERSION', '1.1.0');
 /**
  * CMS_CONFIGURATION_FILE
  */
-define('CMS_CONFIGURATION_FILE', 'cms.json');
+define('CMS_CONFIGURATION_FILE', 'config.json');
 
 /**
  * CMS_WRITABLE_PATHS_FILE
  */
-define('CMS_WRITABLE_PATHS_FILE', 'writable.paths.json');
+define('CMS_WRITABLE_PATHS_FILE', 'writable.json');
 
 /**
  * CMS_DEFAULT_CONFIGURATION_FILE
  */
-define('CMS_DEFAULT_CONFIGURATION_FILE', 'cms.json.default');
+define('CMS_DEFAULT_CONFIGURATION_FILE', 'config.default.json');
 
 $install['PDO_DSN'] = array(
 	1 => 'dblib',
 );
 
 /**
- * Tables defined in cms.tables.php
+ * Tables defined in tables.php
  * Constants: Bans, Ban_Log, Blocked_IP, Credits_Config, Credits_Logs,
  * Cron, Downloads, FLA, News, Passchange_Request, PayPal_Transactions,
  * Plugins, Register_Account, Votes, Vote_Logs, Vote_Sites,

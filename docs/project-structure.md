@@ -52,7 +52,7 @@ This map shows where the main CMS components live and which paths are safe to mo
 │       ├── Bootstrap/
 │       │   ├── AppKernel.php       # Composition root — wires all services, boots app
 │       │   ├── BootstrapContext.php # Static registry: configProvider / runtimeState / handler
-│       │   ├── ConfigProvider.php  # Loads cms.json, module XML configs
+│       │   ├── ConfigProvider.php  # Loads config.json, module XML configs
 │       │   ├── RuntimeState.php    # In-memory bag: language phrases, module config, custom tables
 │       │   └── TimezoneInitializer.php
 │       ├── Cache/
@@ -136,17 +136,17 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   │   ├── boot.php                # Entry point: loads autoloader + boots AppKernel
 │   │   └── compat.php              # Global function shim — thin wrappers over src/ classes
 │   ├── config/                     # Configuration files (see configuration.md)
-│   │   ├── cms.json                # Main config (DB, language, server info, …)
-│   │   ├── cms.json.default        # Template for fresh installs
-│   │   ├── cms.tables.php          # Core DB column name mappings
-│   │   ├── custom.tables.php       # Project-specific column overrides
-│   │   ├── castlesiege.json        # Castle Siege config
-│   │   ├── usercp.json             # UserCP sidebar menu items
-│   │   ├── navbar.json             # Navigation bar items
-│   │   ├── email.xml               # Email templates
-│   │   ├── timezone.php            # date_default_timezone_set()
+│   │   ├── config.json                # Main config (DB, language, server info, …)
+│   │   ├── config.default.json        # Template for fresh installs
+│   │   ├── tables.php          # Core DB column name mappings
+│   │   ├── tables.custom.php       # Project-specific column overrides
+│   │   ├── castle-siege.json        # Castle Siege config
+│   │   ├── usercp-menu.json             # UserCP sidebar menu items
+│   │   ├── navigation.json             # Navigation bar items
+│   │   ├── email-templates.xml               # Email templates
+│   │   ├── timezone-config.php            # date_default_timezone_set()
 │   │   ├── modules/                # Per-module XML configs (feature toggles)
-│   │   └── writable.paths.json     # Paths checked for write permissions on install
+│   │   └── writable.json     # Paths checked for write permissions on install
 │   ├── languages/                  # Phrase files — one PHP file per language code
 │   ├── emails/                     # Email template helpers
 │   ├── cron/                       # Cron job scripts
@@ -191,10 +191,10 @@ public/index.php
   └── ../includes/bootstrap/boot.php    ← composition root
         ├── vendor/autoload.php         ← Composer PSR-4 autoloader
         └── AppKernel::boot()           ← Darkheim\Infrastructure\Bootstrap\AppKernel
-              ├── ConfigProvider        ← reads config/cms.json + XML configs
+              ├── ConfigProvider        ← reads config/config.json + XML configs
               ├── RuntimeState          ← in-memory bag: language phrases, module config
-              ├── config/cms.tables.php
-              ├── config/timezone.php
+              ├── config/tables.php
+              ├── config/timezone-config.php
               ├── includes/bootstrap/compat.php
               ├── plugin files          ← from var/cache/plugins.cache
               └── Handler::loadPage()  ← Darkheim\Infrastructure\Routing\Handler
@@ -304,7 +304,7 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 | `src/` | ✅ | Application / domain / infrastructure classes |
 | `includes/bootstrap/compat.php` | ⚠️ | Add wrappers only; no logic — logic goes in `src/` |
 | `includes/bootstrap/boot.php` | ❌ | Entry point — do not add logic here |
-| `config/cms.json` | ✅ | Main config: DB credentials, server name, feature toggles |
+| `config/config.json` | ✅ | Main config: DB credentials, server name, feature toggles |
 | `public/assets/css/*.css` | ✅ | Global page/component styles |
 | `public/themes/default/css/*.css` | ✅ | Template layout styles |
 | `public/themes/default/js/*.js` | ✅ | Template JS |

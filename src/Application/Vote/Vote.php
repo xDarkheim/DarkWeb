@@ -19,7 +19,7 @@ class Vote
     private $_votesideId;
     private $_ip;
 
-    private string $_configXml    = 'usercp.vote.xml';
+    private string $_configXml    = 'vote.xml';
     private bool   $_active;
     private bool   $_saveLogs;
     private $_creditConfig;
@@ -34,7 +34,7 @@ class Vote
         $this->muonline = Connection::Database('MuOnline');
 
         $this->xml = simplexml_load_string(
-            file_get_contents(__PATH_MODULE_CONFIGS__ . $this->_configXml)
+            file_get_contents(__PATH_MODULE_CONFIGS_USERCP__ . $this->_configXml)
         );
         if (!$this->xml) throw new \Exception(lang('error_100'));
 

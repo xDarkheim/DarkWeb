@@ -43,8 +43,8 @@ final class AppKernel
         $this->definePathConstants();
         $this->configureErrorLogging();
 
-        $this->requireSupportFile(__PATH_CONFIGS__ . 'cms.tables.php', 'Could not load Darkheim CMS table definitions.');
-        $this->requireSupportFile(__PATH_CONFIGS__ . 'timezone.php', 'Could not load timezone.');
+        $this->requireSupportFile(__PATH_CONFIGS__ . 'tables.php', 'Could not load Darkheim CMS table definitions.');
+        $this->requireSupportFile(__PATH_CONFIGS__ . 'timezone-config.php', 'Could not load timezone.');
         $this->requireSupportFile(__PATH_INCLUDES__ . 'bootstrap/compat.php', 'Could not load functions.');
 
         $config = $this->configProvider->cms();
@@ -150,6 +150,8 @@ final class AppKernel
             '__ROOT_DIR__' => $rootDir,
             '__PUBLIC_DIR__' => $publicDir,
             '__PATH_THEMES__' => $publicDir . 'themes/',
+            // Legacy WebEngine alias
+            '__PATH_TEMPLATES__' => $publicDir . 'themes/',
             '__RELATIVE_ROOT__' => $relativeRoot,
             '__BASE_URL__' => $baseUrl,
             '__PATH_INCLUDES__' => $rootDir . 'includes/',
@@ -166,6 +168,7 @@ final class AppKernel
             '__PATH_PLUGINS__' => $rootDir . 'includes/plugins/',
             '__PATH_CONFIGS__' => $rootDir . 'config/',
             '__PATH_MODULE_CONFIGS__' => $rootDir . 'config/modules/',
+            '__PATH_MODULE_CONFIGS_USERCP__' => $rootDir . 'config/modules/usercp/',
             '__PATH_CRON__' => $rootDir . 'includes/cron/',
             '__PATH_LOGS__' => $rootDir . 'var/logs/',
             '__PATH_GUILD_PROFILES_CACHE__' => $rootDir . 'var/cache/profiles/guilds/',
@@ -181,7 +184,7 @@ final class AppKernel
             '__PATH_ASSETS_CSS__' => $baseUrl . 'assets/css/',
             '__PATH_ASSETS_JS__' => $baseUrl . 'assets/js/',
             'DARKHEIM_DATABASE_ERRORLOG' => $rootDir . 'var/logs/database_errors.log',
-            'DARKHEIM_WRITABLE_PATHS' => $rootDir . 'config/writable.paths.json',
+            'DARKHEIM_WRITABLE_PATHS' => $rootDir . 'config/writable.json',
             'DARKHEIM_PHP_ERRORLOG' => $rootDir . 'var/logs/php_errors.log',
         ];
 
@@ -208,7 +211,7 @@ final class AppKernel
     private function loadCustomTables(): void
     {
         $custom = [];
-        if (!@include(__PATH_CONFIGS__ . 'custom.tables.php')) {
+        if (!@include(__PATH_CONFIGS__ . 'tables.custom.php')) {
             throw new Exception('Could not load the table definitions.');
         }
 
@@ -335,12 +338,19 @@ final class AppKernel
     private function defineThemePathConstants(string $theme): void
     {
         $constants = [
-            '__PATH_THEME_ROOT__' => __PATH_THEMES__ . $theme . '/',
-            '__PATH_THEME__' => __BASE_URL__ . 'themes/' . $theme . '/',
-            '__PATH_THEME_IMG__' => __BASE_URL__ . 'themes/' . $theme . '/img/',
-            '__PATH_THEME_CSS__' => __BASE_URL__ . 'themes/' . $theme . '/css/',
-            '__PATH_THEME_JS__' => __BASE_URL__ . 'themes/' . $theme . '/js/',
-            '__PATH_THEME_FONTS__' => __BASE_URL__ . 'themes/' . $theme . '/fonts/',
+            '__PATH_THEME_ROOT__'   => __PATH_THEMES__ . $theme . '/',
+            '__PATH_THEME__'        => __BASE_URL__ . 'themes/' . $theme . '/',
+            '__PATH_THEME_IMG__'    => __BASE_URL__ . 'themes/' . $theme . '/img/',
+            '__PATH_THEME_CSS__'    => __BASE_URL__ . 'themes/' . $theme . '/css/',
+            '__PATH_THEME_JS__'     => __BASE_URL__ . 'themes/' . $theme . '/js/',
+            '__PATH_THEME_FONTS__'  => __BASE_URL__ . 'themes/' . $theme . '/fonts/',
+            // Legacy WebEngine template aliases
+            '__PATH_TEMPLATE_ROOT__'  => __PATH_THEMES__ . $theme . '/',
+            '__PATH_TEMPLATE__'       => __BASE_URL__ . 'themes/' . $theme . '/',
+            '__PATH_TEMPLATE_IMG__'   => __BASE_URL__ . 'themes/' . $theme . '/img/',
+            '__PATH_TEMPLATE_CSS__'   => __BASE_URL__ . 'themes/' . $theme . '/css/',
+            '__PATH_TEMPLATE_JS__'    => __BASE_URL__ . 'themes/' . $theme . '/js/',
+            '__PATH_TEMPLATE_FONTS__' => __BASE_URL__ . 'themes/' . $theme . '/fonts/',
         ];
 
         foreach ($constants as $name => $value) {

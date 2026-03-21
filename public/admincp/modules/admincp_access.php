@@ -41,7 +41,7 @@ if(isset($_POST['settings_submit'])) {
 			$adminAccounts[$newAdminUser] = (int)$newAdminLevel;
 		}
 		$cmsConfigurations['admins'] = $adminAccounts;
-		$cfgFile = fopen(__PATH_CONFIGS__.'cms.json', 'wb');
+		$cfgFile = fopen(__PATH_CONFIGS__.'config.json', 'wb');
 		if(!$cfgFile) {
 			throw new RuntimeException('Could not open configuration file.');
 		}

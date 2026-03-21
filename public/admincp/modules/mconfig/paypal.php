@@ -13,7 +13,7 @@ function saveChanges(): void {
 	}
 	
 	// PAYPAL
-	$xmlPath = __PATH_MODULE_CONFIGS__.'donation.paypal.xml';
+	$xmlPath = __PATH_MODULE_CONFIGS__.'donation-paypal.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	$xml->active = $_POST['setting_2'];
 	$xml->paypal_enable_sandbox = $_POST['setting_3'];
@@ -39,7 +39,7 @@ if(isset($_POST['submit_changes'])) {
 	saveChanges();
 }
 
-loadModuleConfigs('donation.paypal');
+loadModuleConfigs('donation-paypal');
 
 $creditSystem = new CreditSystem();
 ?>

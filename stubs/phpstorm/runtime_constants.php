@@ -31,6 +31,7 @@ if (false) {
     define('__PATH_PLUGINS__', '');
     define('__PATH_CONFIGS__', '');
     define('__PATH_MODULE_CONFIGS__', '');
+    define('__PATH_MODULE_CONFIGS_USERCP__', '');
     define('__PATH_CRON__', '');
     define('__PATH_LOGS__', '');
     define('__PATH_GUILD_PROFILES_CACHE__', '');

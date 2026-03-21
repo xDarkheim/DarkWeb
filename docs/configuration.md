@@ -4,9 +4,9 @@ This document maps the config files and keys used by the CMS.
 
 All configuration files live in `config/`. The directory is web-blocked by `.htaccess` (`Deny from all`) and created automatically by the Docker entrypoint on first start.
 
-## cms.json — main config
+## config.json — main config
 
-Copy `cms.json.default` to `cms.json` and fill in your values. The installer does this for you.
+Copy `config.default.json` to `config.json` and fill in your values. The installer does this for you.
 
 ### System
 
@@ -129,18 +129,18 @@ cp docker/config.env.example docker/config.env
 
 | File | Purpose |
 | :--- | :--- |
-| `cms.tables.php` | Maps CMS internal column names to your actual DB column names |
-| `custom.tables.php` | Project-specific column overrides — takes precedence over `cms.tables.php` |
-| `castlesiege.json` | Castle Siege configuration (guild, schedule, prize) |
-| `usercp.json` | UserCP menu items — controls which pages appear in the sidebar |
-| `navbar.json` | Navigation bar items configuration |
-| `email.xml` | Email template definitions (subject, body for registration, password reset, etc.) |
-| `timezone.php` | Sets `date_default_timezone_set()`. Defaults to `Europe/Kiev` |
-| `writable.paths.json` | List of paths the installer checks for write permissions |
+| `tables.php` | Maps CMS internal column names to your actual DB column names |
+| `tables.custom.php` | Project-specific column overrides — takes precedence over `tables.php` |
+| `castle-siege.json` | Castle Siege configuration (guild, schedule, prize) |
+| `usercp-menu.json` | UserCP menu items — controls which pages appear in the sidebar |
+| `navigation.json` | Navigation bar items configuration |
+| `email-templates.xml` | Email template definitions (subject, body for registration, password reset, etc.) |
+| `timezone-config.php` | Sets `date_default_timezone_set()`. Defaults to `Europe/Kiev` |
+| `writable.json` | List of paths the installer checks for write permissions |
 
 ## Security notes
 
 - `config/`, `var/cache/`, and `var/logs/` are protected from direct web access (`public/` is the only DocumentRoot)
-- Never commit `cms.json` to a public repository — it contains database credentials
+- Never commit `config.json` to a public repository — it contains database credentials
 - `docker-compose.override.yml` is in `.gitignore` and must never be committed
 - Delete the `public/install/` directory after running the web installer

@@ -35,7 +35,7 @@
 git clone https://github.com/xDarkheim/DarkCore DarkCore
 cd DarkCore
 
-cp config/cms.json.default config/cms.json
+cp config/config.default.json config/config.json
 cp docker/config.env.example docker/config.env
 
 # Edit both files with your credentials, then:
@@ -69,7 +69,7 @@ Open `https://your-domain/install/` in the browser, complete the setup wizard, t
 | Document | What it covers |
 | :--- | :--- |
 | [`docs/project-structure.md`](docs/project-structure.md) | Directory layout, bootstrap path, namespace map |
-| [`docs/configuration.md`](docs/configuration.md) | `cms.json` keys, `docker/config.env` variables |
+| [`docs/configuration.md`](docs/configuration.md) | `config.json` keys, `docker/config.env` variables |
 | [`docs/deployment.md`](docs/deployment.md) | Docker setup, reverse proxy, useful commands |
 | [`docs/build.md`](docs/build.md) | Frontend assets, CSS/JS load order, cache busting |
 | [`docs/css-architecture.md`](docs/css-architecture.md) | CSS naming conventions, dark mode, mobile breakpoints |

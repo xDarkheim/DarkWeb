@@ -27,7 +27,7 @@ try {
 			);
 			
 			// save changes
-			$cfgFile = fopen(__PATH_CONFIGS__.'navbar.json', 'wb');
+			$cfgFile = fopen(__PATH_CONFIGS__.'navigation.json', 'wb');
 			if(!$cfgFile) {
 				throw new RuntimeException(
 					'There was a problem opening the navbar file.'
@@ -94,7 +94,7 @@ try {
 			);
 			
 			// save changes
-			$cfgFile = fopen(__PATH_CONFIGS__.'navbar.json', 'wb');
+			$cfgFile = fopen(__PATH_CONFIGS__.'navigation.json', 'wb');
 			if(!$cfgFile) {
 				throw new RuntimeException(
 					'There was a problem opening the navbar file.'
@@ -156,7 +156,7 @@ try {
 			);
 			
 			// save changes
-			$cfgFile = fopen(__PATH_CONFIGS__.'navbar.json', 'wb');
+			$cfgFile = fopen(__PATH_CONFIGS__.'navigation.json', 'wb');
 			if(!$cfgFile) {
 				throw new \RuntimeException(
 					'There was a problem opening the navbar file.'

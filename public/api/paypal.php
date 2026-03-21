@@ -13,7 +13,7 @@ if(!@include(rtrim(str_replace('\\','/', dirname(__DIR__, 2)), '/') . '/includes
 }
 
 // Load PayPal Configurations
-$cfg = loadConfigurations('donation.paypal');
+$cfg = loadConfigurations('donation-paypal');
 if(!is_array($cfg)) {
 	header("HTTP/1.1 500 Internal Server Error");
 	die();

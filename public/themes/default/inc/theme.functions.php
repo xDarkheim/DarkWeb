@@ -141,10 +141,18 @@ function themeLanguageSelector() {
 	}
 	
 	echo '<ul class="dh-lang-switcher">';
-		echo '<li><a href="'.__BASE_URL__.'language/switch/to/'.strtolower($lang).'" title="'.$langList[$lang][0].'"><img src="'.getCountryFlag($langList[$lang][1]).'" /> '.strtoupper($lang).'</a></li> ';
+		echo '<li><a href="'.__BASE_URL__.'language/switch/to/'.strtolower($lang).'" title="'.$langList[$lang][0].'"><img src="'.getCountryFlag($langList[$lang][1]).'" /> '.strtoupper($lang).'</a></li> ';
 		foreach($langList as $language => $languageInfo) {
 			if($language == $lang) continue;
-			echo '<li><a href="'.__BASE_URL__.'language/switch/to/'.strtolower($language).'" title="'.$languageInfo[0].'"><img src="'.getCountryFlag($languageInfo[1]).'" /> '.strtoupper($language).'</a></li> ';
+			echo '<li><a href="'.__BASE_URL__.'language/switch/to/'.strtolower($language).'" title="'.$languageInfo[0].'"><img src="'.getCountryFlag($languageInfo[1]).'" /> '.strtoupper($language).'</a></li> ';
 		}
 	echo '</ul>';
 }
+
+// ---------------------------------------------------------------------------
+// Legacy WebEngine aliases — kept for backward compatibility with old templates
+// ---------------------------------------------------------------------------
+function buildNavbar():        void { themeBuildNavbar(); }
+function buildUsercp():        void { themeBuildUsercp(); }
+function castleSiegeWidget():  void { themeCastleSiegeWidget(); }
+function languageSelector():   void { themeLanguageSelector(); }

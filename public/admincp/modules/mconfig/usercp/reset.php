@@ -11,7 +11,7 @@ function saveChanges(): void {
 			return;
 		}
 	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'usercp.reset.xml';
+	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'reset.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	
 	// active
@@ -149,7 +149,7 @@ if(isset($_POST['submit_changes'])) {
 	saveChanges();
 }
 
-loadModuleConfigs('usercp.reset');
+loadModuleConfigs('reset');
 
 $creditSystem = new CreditSystem();
 ?>

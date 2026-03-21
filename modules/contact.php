@@ -16,7 +16,7 @@ try {
 			if(!Validator::Email($_POST['contact_email'])) throw new Exception(lang('error_9',true));
 			if(!Validator::Length($_POST['contact_message'], 300, 10)) throw new Exception(lang('error_57',true));
 			
-			$emailConfigs = gconfig('email',true);
+			$emailConfigs = gconfig('email-templates',true);
 			if(!is_array($emailConfigs)) throw new Exception(lang('error_21', true));
 			
 			$email = new Email();

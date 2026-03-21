@@ -1,7 +1,6 @@
 <?php
-?>
-<h2>My Account Settings</h2>
-<?php
+echo '<h2>Change Email Settings</h2>';
+
 function saveChanges(): void {
 	global $_POST;
 	foreach($_POST as $setting) {
@@ -10,10 +9,11 @@ function saveChanges(): void {
 			return;
 		}
 	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'usercp.myaccount.xml';
+	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'my-email.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	
 	$xml->active = $_POST['setting_1'];
+	$xml->require_verification = $_POST['setting_2'];
 	
 	$save = $xml->asXML($xmlPath);
 	if($save) {
@@ -27,14 +27,20 @@ if(isset($_POST['submit_changes'])) {
 	saveChanges();
 }
 
-loadModuleConfigs('usercp.myaccount');
+loadModuleConfigs('my-email');
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
-			<th>Status<br/><span>Enable/disable my account's module.</span></th>
+			<th>Status<br/><span>Enable/disable the change email module.</span></th>
 			<td>
 				<?php enabledisableCheckboxes('setting_1',mconfig('active'),'Enabled','Disabled'); ?>
+			</td>
+		</tr>
+		<tr>
+			<th>Email Verification<br/><span>If enabled, the account's email will not be changed until the user clicks the verification link sent to their current email.</span></th>
+			<td>
+				<?php enabledisableCheckboxes('setting_2',mconfig('require_verification'),'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>

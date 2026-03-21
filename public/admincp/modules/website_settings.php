@@ -303,7 +303,7 @@ if(isset($_POST['settings_submit'])) {
 			$cmsConfigurations,
 			JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT
 		);
-		$cfgFile = fopen(__PATH_CONFIGS__.'cms.json', 'wb');
+		$cfgFile = fopen(__PATH_CONFIGS__.'config.json', 'wb');
 		if(!$cfgFile) {
 			throw new RuntimeException(
 				'There was a problem opening the configuration file.'

@@ -10,7 +10,7 @@ function saveChanges(): void {
 			return;
 		}
 	}
-	$xmlPath = __PATH_CONFIGS__.'email.xml';
+	$xmlPath = __PATH_CONFIGS__.'email-templates.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	
 	$xml->active = $_POST['setting_1'];
@@ -35,7 +35,7 @@ if(isset($_POST['submit_changes'])) {
 }
 
 // Load SMTP Configs
-$emailConfigs = gconfig('email');
+$emailConfigs = gconfig('email-templates');
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">

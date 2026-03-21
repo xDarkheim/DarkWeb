@@ -8,9 +8,9 @@ if [ -z "$DOCKER_SERVER_NAME" ] && [ -z "$DOCKER_TIMEZONE" ]; then
     echo "[startup]          Continuing with empty defaults — the site may not work correctly."
 fi
 
-CMS_JSON="/var/www/html/config/cms.json"
+CMS_JSON="/var/www/html/config/config.json"
 
-# ── Helper: read a key from cms.json via PHP (safe, no jq dependency) ─────────
+# ── Helper: read a key from config.json via PHP (safe, no jq dependency) ─────────
 cms_get() {
     php -r "
         \$f = '${CMS_JSON}';

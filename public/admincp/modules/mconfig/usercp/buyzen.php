@@ -9,7 +9,7 @@ function saveChanges(): void {
 			return;
 		}
 	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'usercp.buyzen.xml';
+	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'buy-zen.xml';
 	$xml = simplexml_load_string(file_get_contents($xmlPath));
 	
 	$xml->active = $_POST['setting_1'];
@@ -30,7 +30,7 @@ if(isset($_POST['submit_changes'])) {
 	saveChanges();
 }
 
-loadModuleConfigs('usercp.buyzen');
+loadModuleConfigs('buy-zen');
 
 $creditSystem = new CreditSystem();
 ?>

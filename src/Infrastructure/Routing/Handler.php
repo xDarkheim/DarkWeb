@@ -94,6 +94,10 @@ class Handler
 
             // First controller-based slice: replace direct file includes for core pages.
             if (!check_value($subpage) && in_array($page, ['home', 'login', 'register'], true)) {
+                // Keep legacy mconfig() behavior for modules rendered via controllers.
+                @loadModuleConfigs($page);
+                $mconfig = moduleConfigData();
+
                 switch ($page) {
                     case 'home':
                         (new HomeController())->render();

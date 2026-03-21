@@ -11,6 +11,7 @@ final class ConfigProvider
 {
     private string $configDir;
     private string $moduleConfigDir;
+    private string $usercpModuleConfigDir;
     private ConfigRepository $configRepository;
     private XmlConfigReader $xmlReader;
     private bool $cmsLoaded = false;
@@ -25,6 +26,7 @@ final class ConfigProvider
     ) {
         $this->configDir = rtrim(str_replace('\\', '/', $configDir), '/') . '/';
         $this->moduleConfigDir = $this->configDir . 'modules/';
+        $this->usercpModuleConfigDir = $this->configDir . 'modules/usercp/';
         $this->configRepository = $configRepository ?? new ConfigRepository($this->configDir);
         $this->xmlReader = $xmlReader ?? new XmlConfigReader();
     }
@@ -53,7 +55,14 @@ final class ConfigProvider
             return null;
         }
 
-        return $this->configRepository->load($name);
+        $result = $this->configRepository->load($name);
+        if ($result !== null) {
+            return $result;
+        }
+
+        $aliases = $this->configAliases();
+        $alias = $aliases[$name] ?? null;
+        return $alias !== null ? $this->configRepository->load($alias) : null;
     }
 
     /**
@@ -65,7 +74,68 @@ final class ConfigProvider
             return null;
         }
 
-        return $this->xmlReader->readFile($this->moduleConfigDir . $module . '.xml');
+        $candidates = [$module];
+        $aliases = $this->moduleAliases();
+        if (isset($aliases[$module])) {
+            $candidates[] = $aliases[$module];
+        }
+
+        foreach ($candidates as $candidate) {
+            if (str_contains($candidate, '/')) {
+                $result = $this->xmlReader->readFile($this->moduleConfigDir . $candidate . '.xml');
+                if ($result !== null) {
+                    return $result;
+                }
+                continue;
+            }
+
+            // Check main modules/ directory first, then usercp/ subdirectory
+            $result = $this->xmlReader->readFile($this->moduleConfigDir . $candidate . '.xml');
+            if ($result !== null) {
+                return $result;
+            }
+
+            $result = $this->xmlReader->readFile($this->usercpModuleConfigDir . $candidate . '.xml');
+            if ($result !== null) {
+                return $result;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function configAliases(): array
+    {
+        return [
+            'cms' => 'config',
+            'navbar' => 'navigation',
+            'usercp' => 'usercp-menu',
+            'castlesiege' => 'castle-siege',
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function moduleAliases(): array
+    {
+        return [
+            'forgotpassword' => 'forgot-password',
+            'usercp.addstats' => 'usercp/add-stats',
+            'usercp.buyzen' => 'usercp/buy-zen',
+            'usercp.clearpk' => 'usercp/clear-pk',
+            'usercp.clearskilltree' => 'usercp/clear-skill-tree',
+            'usercp.myaccount' => 'usercp/my-account',
+            'usercp.myemail' => 'usercp/my-email',
+            'usercp.mypassword' => 'usercp/my-password',
+            'usercp.reset' => 'usercp/reset',
+            'usercp.resetstats' => 'usercp/reset-stats',
+            'usercp.unstick' => 'usercp/unstick',
+            'usercp.vote' => 'usercp/vote',
+        ];
     }
 
     /**
@@ -82,8 +152,12 @@ final class ConfigProvider
 
     public function timezone(): string
     {
-        $config = $this->config('cms');
-        $timezone = is_array($config) ? ($config['docker_timezone'] ?? 'UTC') : 'UTC';
+        try {
+            $config = $this->cms();
+        } catch (\Exception) {
+            $config = [];
+        }
+        $timezone = $config['docker_timezone'] ?? 'UTC';
 
         return is_string($timezone) && trim($timezone) !== '' ? $timezone : 'UTC';
     }

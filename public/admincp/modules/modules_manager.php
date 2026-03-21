@@ -33,9 +33,12 @@ echo '</div></div></div>';
 echo '</div>';
 
 if(isset($_GET['config'])) {
-	$filePath = __PATH_ADMINCP_MODULES__.'mconfig/'.$_GET['config'].'.php';
+	$_usercpModules = ['addstats','buyzen','clearpk','clearskilltree','myaccount','myemail','mypassword','reset','resetstats','unstick','vote'];
+	$_configKey = preg_replace('/[^a-z0-9_-]/', '', strtolower((string)$_GET['config']));
+	$_subDir = in_array($_configKey, $_usercpModules, true) ? 'usercp/' : '';
+	$filePath = __PATH_ADMINCP_MODULES__.'mconfig/'.$_subDir.$_configKey.'.php';
 	if(file_exists($filePath)) {
-		echo '<div class="acp-card"><div class="acp-card-header"><i class="bi bi-sliders me-1"></i>Configuration: '.htmlspecialchars($_GET['config']).'</div><div class="p-3">';
+		echo '<div class="acp-card"><div class="acp-card-header"><i class="bi bi-sliders me-1"></i>Configuration: '.htmlspecialchars($_configKey).'</div><div class="p-3">';
 		include($filePath);
 		echo '</div></div>';
 	} else {
