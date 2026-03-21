@@ -178,5 +178,29 @@ class Common
         $result = $this->muonline->query("UPDATE " . _TBL_MI_ . " SET " . _CLMN_EMAIL_ . " = ? WHERE " . _CLMN_MEMBID_ . " = ?", array($newEmail, $userid));
         if ($result) return true;
     }
+
+    public function retrieveBlockedIPs(): array|false
+    {
+        $result = $this->muonline->query_fetch("SELECT * FROM " . Blocked_IP . " ORDER BY block_date DESC", []);
+        return is_array($result) ? $result : false;
+    }
+
+    public function blockIpAddress(string $ip, string $blockedBy): bool
+    {
+        if (!check_value($ip)) return false;
+        if (!check_value($blockedBy)) return false;
+        $result = $this->muonline->query(
+            "INSERT INTO " . Blocked_IP . " (block_ip, block_by, block_date) VALUES (?, ?, ?)",
+            [$ip, $blockedBy, time()]
+        );
+        return (bool) $result;
+    }
+
+    public function unblockIpAddress($id): bool
+    {
+        if (!Validator::Number($id)) return false;
+        $result = $this->muonline->query("DELETE FROM " . Blocked_IP . " WHERE id = ?", [$id]);
+        return (bool) $result;
+    }
 }
 

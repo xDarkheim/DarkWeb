@@ -123,6 +123,26 @@ function cmsConfigs(): array
     return $GLOBALS['_TEST_CMS_CONFIG'];
 }
 
+function customData(): array
+{
+    return [];
+}
+
+function getLanguagePhrases(): array
+{
+    return [];
+}
+
+function setLanguagePhrases(array $phrases): void
+{
+    // no-op in tests
+}
+
+function moduleConfigData(): array
+{
+    return [];
+}
+
 function config(string $config_name, bool $return = false): mixed
 {
     $cfg = cmsConfigs();

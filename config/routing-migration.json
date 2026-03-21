@@ -7,19 +7,29 @@
     ],
     "pages": {
         "castlesiege": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\CastleSiegeController",
+            "module_config": "castlesiege"
         },
         "contact": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\ContactController",
+            "module_config": "contact"
         },
         "donation": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\DonationController",
+            "module_config": "donation"
         },
         "downloads": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\DownloadsController",
+            "module_config": "downloads"
         },
         "forgotpassword": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\ForgotPasswordController",
+            "module_config": "forgotpassword"
         },
         "home": {
             "status": "migrated",
@@ -27,7 +37,9 @@
             "module_config": "home"
         },
         "info": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\InfoController",
+            "module_config": "info"
         },
         "login": {
             "status": "migrated",
@@ -35,19 +47,29 @@
             "module_config": "login"
         },
         "logout": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\LogoutController",
+            "module_config": "logout"
         },
         "news": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\NewsController",
+            "module_config": "news"
         },
         "privacy": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\PrivacyController",
+            "module_config": "privacy"
         },
         "rankings": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\RankingsController",
+            "module_config": "rankings"
         },
         "refunds": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\RefundsController",
+            "module_config": "refunds"
         },
         "register": {
             "status": "migrated",
@@ -55,14 +77,19 @@
             "module_config": "register"
         },
         "tos": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\TosController",
+            "module_config": "tos"
         },
         "usercp": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\UsercpController",
+            "module_config": "usercp"
         },
         "verifyemail": {
-            "status": "legacy"
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\VerifyEmailController",
+            "module_config": "verifyemail"
         }
     }
 }
-

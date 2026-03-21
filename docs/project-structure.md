@@ -11,7 +11,7 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   │   ├── Auth/
 │   │   │   ├── AdminGuard.php      # AdminCP access check (canAccess)
 │   │   │   ├── AuthService.php     # Core authentication logic
-│   │   │   ├── Common.php          # Shared auth helpers
+│   │   │   ├── Common.php          # Shared auth + IP-block helpers
 │   │   │   ├── Login.php           # Login handler
 │   │   │   └── SessionManager.php  # Session lifecycle
 │   │   ├── CastleSiege/
@@ -32,6 +32,24 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   │   │   ├── NewsItem.php        # News value object
 │   │   │   ├── NewsRepository.php  # DB-backed news reads
 │   │   │   └── NewsService.php     # News orchestration
+│   │   ├── Page/                   # ★ Top-level page controllers (one per public route)
+│   │   │   ├── CastleSiegeController.php
+│   │   │   ├── ContactController.php
+│   │   │   ├── DonationController.php
+│   │   │   ├── DownloadsController.php
+│   │   │   ├── ForgotPasswordController.php
+│   │   │   ├── HomeController.php
+│   │   │   ├── InfoController.php
+│   │   │   ├── LoginController.php
+│   │   │   ├── LogoutController.php
+│   │   │   ├── NewsController.php
+│   │   │   ├── PrivacyController.php
+│   │   │   ├── RankingsController.php
+│   │   │   ├── RefundsController.php
+│   │   │   ├── RegisterController.php
+│   │   │   ├── TosController.php
+│   │   │   ├── UsercpController.php
+│   │   │   └── VerifyEmailController.php
 │   │   ├── Profile/
 │   │   │   ├── ProfileRenderer.php # Player / guild profile link builder
 │   │   │   └── ProfileRepository.php
@@ -81,7 +99,17 @@ This map shows where the main CMS components live and which paths are safe to mo
 │       ├── Plugins/
 │       │   └── Plugins.php
 │       ├── Routing/
-│       │   └── Handler.php         # Request dispatcher — loadPage() / loadModule()
+│       │   ├── Handler.php                  # Entry point — loadPage() / loadModule() / loadAdminCPModule()
+│       │   ├── AdmincpModuleDispatcher.php  # Locates & includes AdminCP module files, injects context via extract()
+│       │   ├── ControllerRouteDispatcher.php# Resolves page name → Controller via WebRouteRegistry and calls render()
+│       │   ├── LanguageBootstrapper.php     # Applies session language override before rendering
+│       │   ├── ModuleRouteResolver.php      # Normalises (?page=x&subpage=y) into a typed route descriptor
+│       │   ├── PageAccessDispatcher.php     # Enforces the `access` constant and renders the theme shell
+│       │   ├── RequestParameterParser.php   # Populates QueryStore from raw $_GET on each request
+│       │   ├── RouteInputSanitizer.php      # Strips dangerous chars from $page / $subpage tokens
+│       │   ├── SubpageRouteDispatcher.php   # Dispatches sub-page include routes (config/routes.subpages.php)
+│       │   ├── SubpageRouteRegistry.php     # Loads & caches config/routes.subpages.php route table
+│       │   └── WebRouteRegistry.php         # Loads & caches config/routes.web.php route table
 │       ├── Runtime/
 │       │   ├── SessionStore.php    # Session abstraction + native adapter
 │       │   ├── QueryStore.php      # `$_GET` abstraction + native adapter
@@ -131,22 +159,26 @@ This map shows where the main CMS components live and which paths are safe to mo
 │                   ├── footer.php
 │                   └── sidebar.php
 │
+├── config/                         # ★ Configuration files (NOT web-accessible)
+│   ├── config.json                 # Main config (DB, language, server info, …)
+│   ├── config.default.json         # Template for fresh installs
+│   ├── tables.php                  # Core DB table/column name constants
+│   ├── tables.custom.php           # Project-specific column overrides
+│   ├── castle-siege.json           # Castle Siege config
+│   ├── usercp-menu.json            # UserCP sidebar menu items
+│   ├── navigation.json             # Navigation bar items
+│   ├── email-templates.xml         # Email templates
+│   ├── timezone-config.php         # date_default_timezone_set()
+│   ├── routes.web.php              # Top-level controller route table (WebRouteRegistry)
+│   ├── routes.subpages.php         # Sub-page include route table (SubpageRouteRegistry)
+│   ├── routing-migration.json      # Machine-readable migration status per page
+│   ├── writable.json               # Paths checked for write permissions on install
+│   └── modules/                    # Per-module XML configs (feature toggles)
+│
 ├── includes/                       # CMS bootstrap layer (NOT web-accessible)
 │   ├── bootstrap/
 │   │   ├── boot.php                # Entry point: loads autoloader + boots AppKernel
 │   │   └── compat.php              # Global function shim — thin wrappers over src/ classes
-│   ├── config/                     # Configuration files (see configuration.md)
-│   │   ├── config.json                # Main config (DB, language, server info, …)
-│   │   ├── config.default.json        # Template for fresh installs
-│   │   ├── tables.php          # Core DB column name mappings
-│   │   ├── tables.custom.php       # Project-specific column overrides
-│   │   ├── castle-siege.json        # Castle Siege config
-│   │   ├── usercp-menu.json             # UserCP sidebar menu items
-│   │   ├── navigation.json             # Navigation bar items
-│   │   ├── email-templates.xml               # Email templates
-│   │   ├── timezone-config.php            # date_default_timezone_set()
-│   │   ├── modules/                # Per-module XML configs (feature toggles)
-│   │   └── writable.json     # Paths checked for write permissions on install
 │   ├── languages/                  # Phrase files — one PHP file per language code
 │   ├── emails/                     # Email template helpers
 │   ├── cron/                       # Cron job scripts
@@ -246,8 +278,9 @@ All classes under `src/` are autoloaded via Composer PSR-4 with the root namespa
 | `Darkheim\Application\Game\*` | `src/Application/Game/` | Class avatars, maps, Gens, guild logo |
 | `Darkheim\Application\Helpers\*` | `src/Application/Helpers/` | Encoder, TimeHelper |
 | `Darkheim\Application\Language\*` | `src/Application/Language/` | Translator, LanguageRepository |
-| `Darkheim\Application\News\*` | `src/Application/News/` | News value object, repository, service |
-| `Darkheim\Application\Profile\*` | `src/Application/Profile/` | Profile link builder, repository |
+ `Darkheim\Application\News\*`  `src/Application/News/`  News value object, repository, service 
+ `Darkheim\Application\Page\*`  `src/Application/Page/`  Top-level page controllers (one per public route) 
+ `Darkheim\Application\Profile\*`  `src/Application/Profile/`  Profile link builder, repository 
 | `Darkheim\Application\Rankings\*` | `src/Application/Rankings/` | Ranking cache, repository, service |
 | `Darkheim\Application\View\*` | `src/Application/View/` | MessageRenderer (toast + inline) |
 | `Darkheim\Application\Vote\*` | `src/Application/Vote/` | Vote tracking |
@@ -262,7 +295,7 @@ All classes under `src/` are autoloaded via Composer PSR-4 with the root namespa
 | `Darkheim\Infrastructure\Http\*` | `src/Infrastructure/Http/` | Redirector, GeoIpService |
 | `Darkheim\Infrastructure\Payment\*` | `src/Infrastructure/Payment/` | PayPal IPN |
 | `Darkheim\Infrastructure\Plugins\*` | `src/Infrastructure/Plugins/` | Plugin loader |
-| `Darkheim\Infrastructure\Routing\*` | `src/Infrastructure/Routing/` | Request handler / module loader |
+ `Darkheim\Infrastructure\Routing\*`  `src/Infrastructure/Routing/`  Handler, Controller/Subpage/AdminCP dispatchers, registries, sanitizers 
 | `Darkheim\Infrastructure\Runtime\*` | `src/Infrastructure/Runtime/` | Request/session/server boundary adapters |
 | `Darkheim\Infrastructure\Security\*` | `src/Infrastructure/Security/` | IpBlocker |
 
@@ -301,10 +334,13 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 
 | Path | Edit? | Notes |
 | :--- | :---: | :--- |
-| `src/` | ✅ | Application / domain / infrastructure classes |
-| `includes/bootstrap/compat.php` | ⚠️ | Add wrappers only; no logic — logic goes in `src/` |
-| `includes/bootstrap/boot.php` | ❌ | Entry point — do not add logic here |
-| `config/config.json` | ✅ | Main config: DB credentials, server name, feature toggles |
+ `src/`  ✅  Application / domain / infrastructure classes 
+ `includes/bootstrap/compat.php`  ⚠️  Add wrappers only; no logic — logic goes in `src/` 
+ `includes/bootstrap/boot.php`  ❌  Entry point — do not add logic here 
+ `config/config.json`  ✅  Main config: DB credentials, server name, feature toggles 
+ `config/routes.web.php`  ✅  Top-level controller route table — add new page routes here 
+ `config/routes.subpages.php`  ✅  Sub-page include route table — add new sub-page routes here 
+ `config/routing-migration.json`  ✅  Machine-readable migration status — keep in sync with route tables 
 | `public/assets/css/*.css` | ✅ | Global page/component styles |
 | `public/themes/default/css/*.css` | ✅ | Template layout styles |
 | `public/themes/default/js/*.js` | ✅ | Template JS |

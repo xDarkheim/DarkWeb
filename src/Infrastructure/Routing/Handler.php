@@ -19,32 +19,35 @@ class Handler
     private SessionStore $session;
     private QueryStore $query;
     private ControllerRouteDispatcher $controllerDispatcher;
-    private LegacyModuleAdapter $legacyModuleAdapter;
+    private AdmincpModuleDispatcher $admincpModuleDispatcher;
     private RequestParameterParser $requestParameterParser;
     private RouteInputSanitizer $routeInputSanitizer;
     private LanguageBootstrapper $languageBootstrapper;
     private ModuleRouteResolver $moduleRouteResolver;
+    private SubpageRouteDispatcher $subpageRouteDispatcher;
     private PageAccessDispatcher $pageAccessDispatcher;
 
     public function __construct(
         ?SessionStore $session = null,
         ?QueryStore $query = null,
         ?ControllerRouteDispatcher $controllerDispatcher = null,
-        ?LegacyModuleAdapter $legacyModuleAdapter = null,
+        ?AdmincpModuleDispatcher $admincpModuleDispatcher = null,
         ?RequestParameterParser $requestParameterParser = null,
         ?RouteInputSanitizer $routeInputSanitizer = null,
         ?LanguageBootstrapper $languageBootstrapper = null,
         ?ModuleRouteResolver $moduleRouteResolver = null,
+        ?SubpageRouteDispatcher $subpageRouteDispatcher = null,
         ?PageAccessDispatcher $pageAccessDispatcher = null,
     ) {
         $this->session = $session ?? new NativeSessionStore();
         $this->query = $query ?? new NativeQueryStore();
         $this->controllerDispatcher = $controllerDispatcher ?? new ControllerRouteDispatcher();
-        $this->legacyModuleAdapter = $legacyModuleAdapter ?? new LegacyModuleAdapter();
+        $this->admincpModuleDispatcher = $admincpModuleDispatcher ?? new AdmincpModuleDispatcher();
         $this->requestParameterParser = $requestParameterParser ?? new RequestParameterParser();
         $this->routeInputSanitizer = $routeInputSanitizer ?? new RouteInputSanitizer();
         $this->languageBootstrapper = $languageBootstrapper ?? new LanguageBootstrapper();
         $this->moduleRouteResolver = $moduleRouteResolver ?? new ModuleRouteResolver();
+        $this->subpageRouteDispatcher = $subpageRouteDispatcher ?? new SubpageRouteDispatcher();
         $this->pageAccessDispatcher = $pageAccessDispatcher ?? new PageAccessDispatcher();
     }
 
@@ -89,16 +92,21 @@ class Handler
                 return;
             }
 
+            // Top-level pages must be controller-routed; no legacy fallback.
+            if (!check_value($subpage)) {
+                $this->module404();
+                return;
+            }
+
             $resolved = $this->moduleRouteResolver->resolve((string) $page, $subpage);
 
             if ($resolved['type'] === 'module') {
-                if ($this->legacyModuleAdapter->loadModule($resolved['page'])) {
-                    $mconfig = moduleConfigData();
-                } else {
-                    $this->module404();
+                if ($this->controllerDispatcher->dispatch($resolved['page'])) {
+                    return;
                 }
+                $this->module404();
             } else {
-                if ($this->legacyModuleAdapter->loadSubModule($resolved['page'], (string) ($resolved['subpage'] ?? ''))) {
+                if ($this->subpageRouteDispatcher->dispatch($resolved['page'], (string) ($resolved['subpage'] ?? ''))) {
                     $mconfig = moduleConfigData();
                 } else {
                     $this->module404();
@@ -123,7 +131,9 @@ class Handler
         $common = new Common();
 
         $module = (check_value($module) ? $module : 'home');
-        if ($this->legacyModuleAdapter->loadAdmincpModule((string) $module)) {
+        if ($this->admincpModuleDispatcher->dispatch((string) $module, compact(
+            'config', 'lang', 'custom', 'handler', 'mconfig', 'gconfig', 'cms', 'dB', 'common'
+        ))) {
             return;
         }
 
