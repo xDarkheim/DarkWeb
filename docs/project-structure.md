@@ -98,6 +98,8 @@ This map shows where the main CMS components live and which paths are safe to mo
 │       │   └── PaypalIPN.php       # PayPal IPN handler
 │       ├── Plugins/
 │       │   └── Plugins.php
+│       ├── View/
+│       │   └── ViewRenderer.php    # Renders view templates — lookup: theme override → views/
 │       ├── Routing/
 │       │   ├── Handler.php                  # Entry point — loadPage() / loadModule() / loadAdminCPModule()
 │       │   ├── AdmincpModuleDispatcher.php  # Locates & includes AdminCP module files, injects context via extract()
@@ -188,21 +190,13 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── cache/                      # JSON/text caches, ranking caches, news cache, plugins cache
 │   └── logs/                       # PHP and DB error logs
 │
-├── modules/                        # Frontend page modules (NOT web-accessible directly)
-│   ├── home.php
-│   ├── login.php
-│   ├── register.php
-│   ├── news.php
-│   ├── rankings.php
-│   ├── usercp.php
-│   ├── donation.php
-│   ├── info.php
-│   ├── downloads.php
-│   ├── contact.php
-│   ├── forgotpassword.php
-│   ├── castlesiege.php
-│   ├── tos.php / privacy.php / refunds.php
+├── modules/                        # ★ Legacy frontend modules still awaiting MVC split
+│   ├── home.php                    # Pages migrated to Controller+View are removed from here
 │   └── usercp/                     # UserCP sub-page modules
+│
+├── views/                          # ★ View templates (NOT web-accessible)
+│   └── news.php                    # Permanent, theme-agnostic HTML templates
+│                                   # Themes may override: public/themes/{theme}/views/{name}.php
 │
 ├── docker/
 │   ├── Dockerfile                  # PHP 8.4 + Apache + FreeTDS + pdo_dblib
@@ -239,7 +233,8 @@ public/index.php
 | `__ROOT_DIR__` | Project root filesystem path |
 | `__PUBLIC_DIR__` | `public/` filesystem path (DocumentRoot) |
 | `__PATH_INCLUDES__` | `includes/` filesystem path |
-| `__PATH_MODULES__` | `modules/` filesystem path |
+ `__PATH_MODULES__`  `modules/` filesystem path 
+ `__PATH_VIEWS__`  `views/` filesystem path — permanent view templates 
 | `__PATH_THEMES__` | `public/themes/` filesystem path |
 | `__PATH_CONFIGS__` | `config/` filesystem path |
 | `__PATH_CACHE__` | `var/cache/` filesystem path |
@@ -296,6 +291,7 @@ All classes under `src/` are autoloaded via Composer PSR-4 with the root namespa
 | `Darkheim\Infrastructure\Payment\*` | `src/Infrastructure/Payment/` | PayPal IPN |
 | `Darkheim\Infrastructure\Plugins\*` | `src/Infrastructure/Plugins/` | Plugin loader |
  `Darkheim\Infrastructure\Routing\*`  `src/Infrastructure/Routing/`  Handler, Controller/Subpage/AdminCP dispatchers, registries, sanitizers 
+ `Darkheim\Infrastructure\View\*`  `src/Infrastructure/View/`  ViewRenderer — theme-aware template engine 
 | `Darkheim\Infrastructure\Runtime\*` | `src/Infrastructure/Runtime/` | Request/session/server boundary adapters |
 | `Darkheim\Infrastructure\Security\*` | `src/Infrastructure/Security/` | IpBlocker |
 
@@ -335,6 +331,8 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 | Path | Edit? | Notes |
 | :--- | :---: | :--- |
  `src/`  ✅  Application / domain / infrastructure classes 
+ `views/`  ✅  View templates — write once, works for all themes 
+ `public/themes/{theme}/views/`  ✅  Optional per-theme template overrides (only when markup must differ) 
  `includes/bootstrap/compat.php`  ⚠️  Add wrappers only; no logic — logic goes in `src/` 
  `includes/bootstrap/boot.php`  ❌  Entry point — do not add logic here 
  `config/config.json`  ✅  Main config: DB credentials, server name, feature toggles 
