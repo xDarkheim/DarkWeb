@@ -1,40 +1,4 @@
-<?php
-echo '<h2>Registration Settings</h2>';
-
-function saveChanges(): void {
-	global $_POST;
-	foreach($_POST as $setting) {
-		if(!check_value($setting)) {
-			message('error','Missing data (complete all fields).');
-			return;
-		}
-	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'register.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	
-	$xml->active = $_POST['setting_1'];
-	$xml->register_enable_recaptcha = $_POST['setting_2'];
-	$xml->register_recaptcha_site_key = $_POST['setting_3'];
-	$xml->register_recaptcha_secret_key = $_POST['setting_4'];
-	$xml->send_welcome_email = $_POST['setting_6'];
-	$xml->verify_email = $_POST['setting_5'];
-	$xml->verification_timelimit = $_POST['setting_7'];
-	$xml->automatic_login = $_POST['setting_8'];
-	
-	$save = $xml->asXML($xmlPath);
-	if($save) {
-		message('success','Settings successfully saved.');
-	} else {
-		message('error','There has been an error while saving changes.');
-	}
-}
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-loadModuleConfigs('register');
-?>
+<h2>Registration Settings</h2>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>

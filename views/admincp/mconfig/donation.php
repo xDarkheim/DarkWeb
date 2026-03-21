@@ -1,35 +1,4 @@
-<?php
-?>
 <h2>Donation Gateways Settings</h2>
-<?php
-function saveChanges(): void {
-	global $_POST;
-	foreach($_POST as $setting) {
-		if(!check_value($setting)) {
-			message('error','Missing data (complete all fields).');
-			return;
-		}
-	}
-	
-	// DONATION MODULE
-	$xmlPath = __PATH_MODULE_CONFIGS__.'donation.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	$xml->active = $_POST['setting_1'];
-	$save1 = $xml->asXML($xmlPath);
-	
-	if($save1) {
-		message('success','[Donation] Settings successfully saved.');
-	} else {
-		message('error','[Donation] There has been an error while saving changes.');
-	}
-}
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-loadModuleConfigs('donation');
-?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>

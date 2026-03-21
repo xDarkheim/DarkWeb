@@ -1,66 +1,5 @@
 <?php
-use Darkheim\Application\Credits\CreditSystem;
-use Darkheim\Domain\Validator;
 echo '<h2>Unstick Character Settings</h2>';
-
-function saveChanges(): void {
-	global $_POST;
-	foreach($_POST as $setting) {
-		if(!check_value($setting)) {
-			message('error','Missing data (complete all fields).');
-			return;
-		}
-	}
-	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'unstick.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	
-	if(!isset($_POST['setting_1'])) {
-		throw new \RuntimeException('Invalid setting (active)');
-	}
-	if(!in_array($_POST['setting_1'], array('0','1',0,1))) {
-		throw new RuntimeException('Invalid setting (active)');
-	}
-	$xml->active = $_POST['setting_1'];
-	
-	if(!isset($_POST['setting_2'])) {
-		throw new RuntimeException('Invalid setting (zen_cost)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_2'])) {
-		throw new RuntimeException('Invalid setting (zen_cost)');
-	}
-	$xml->zen_cost = $_POST['setting_2'];
-	
-	if(!isset($_POST['setting_3'])) {
-		throw new RuntimeException('Invalid setting (credit_config)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_3'])) {
-		throw new RuntimeException('Invalid setting (credit_config)');
-	}
-	$xml->credit_config = $_POST['setting_3'];
-	
-	if(!isset($_POST['setting_4'])) {
-		throw new RuntimeException('Invalid setting (credit_cost)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_4'])) {
-		throw new RuntimeException('Invalid setting (credit_cost)');
-	}
-	$xml->credit_cost = $_POST['setting_4'];
-	
-	$save = $xml->asXML($xmlPath);
-	if($save) {
-		message('success','Settings successfully saved.');
-	} else {
-		message('error','There has been an error while saving changes.');
-	}
-}
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-loadModuleConfigs('unstick');
-
-$creditSystem = new CreditSystem();
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
@@ -89,7 +28,7 @@ $creditSystem = new CreditSystem();
 		<tr>
 			<th>Credit Configuration<br/><span></span></th>
 			<td>
-				<?php echo $creditSystem->buildSelectInput("setting_3", mconfig('credit_config'), "form-control"); ?>
+				<?php echo $unstickCreditConfigSelect ?? ''; ?>
 			</td>
 		</tr>
 		<tr>

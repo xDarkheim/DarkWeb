@@ -1,5 +1,3 @@
-<?php
-?>
 <h2>Downloads Settings</h2>
 <?php
 $downloadTypes = array (
@@ -10,70 +8,19 @@ $downloadTypes = array (
 
 function downloadTypesSelect($downloadTypes,$selected=null): void {
 	foreach($downloadTypes as $key => $typeOPTION) {
-		if(check_value($selected) && $key == $selected) {
-			echo '<option value="'.$key.'" selected="selected">'.$typeOPTION.'</option>';
+		$optionValue = downloadEsc($key);
+		$optionLabel = downloadEsc($typeOPTION);
+		if(check_value($selected) && (string)$key === (string)$selected) {
+			echo '<option value="'.$optionValue.'" selected="selected">'.$optionLabel.'</option>';
 		} else {
-			echo '<option value="'.$key.'">'.$typeOPTION.'</option>';
+			echo '<option value="'.$optionValue.'">'.$optionLabel.'</option>';
 		}
 	}
 }
 
-function saveChanges(): void {
-	global $_POST;
-	foreach($_POST as $setting) {
-		if(!check_value($setting)) {
-			message('error','Missing data (complete all fields).');
-			return;
-		}
-	}
-	$xmlPath = __PATH_MODULE_CONFIGS__.'downloads.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	
-	$xml->active = $_POST['setting_1'];
-	$xml->show_client_downloads = $_POST['setting_2'];
-	$xml->show_patch_downloads = $_POST['setting_3'];
-	$xml->show_tool_downloads = $_POST['setting_4'];
-	
-	$save = $xml->asXML($xmlPath);
-	if($save) {
-		message('success','Settings successfully saved.');
-	} else {
-		message('error','There has been an error while saving changes.');
-	}
+function downloadEsc($value): string {
+	return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-if(isset($_POST['downloads_add_submit'])) {
-	$action = addDownload($_POST['downloads_add_title'], $_POST['downloads_add_desc'], $_POST['downloads_add_link'], $_POST['downloads_add_size'], $_POST['downloads_add_type']);
-	if($action) {
-		message('success','Your download link has been successfully added!');
-	} else {
-		message('error','There was an error adding the download link.');
-	}
-}
-
-if(isset($_POST['downloads_edit_submit'])) {
-	$action = editDownload($_POST['downloads_edit_id'], $_POST['downloads_edit_title'], $_POST['downloads_edit_desc'], $_POST['downloads_edit_link'], $_POST['downloads_edit_size'], $_POST['downloads_edit_type']);
-	if($action) {
-		message('success','Your download link has been successfully updated!');
-	} else {
-		message('error','There was an error updating the download link.');
-	}
-}
-
-if(isset($_REQUEST['deletelink'])) {
-	$action = deleteDownload($_REQUEST['deletelink']);
-	if($action) {
-		message('success','Your download link has been successfully deleted!');
-	} else {
-		message('error','There was an error deleting the download link.');
-	}
-}
-
-loadModuleConfigs('downloads');
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
@@ -110,8 +57,9 @@ loadModuleConfigs('downloads');
 <hr>
 <h3>Manage Downloads</h3>
 <?php
-$downloads = getDownloadsList();
+$downloads = $downloadsList ?? null;
 if(is_array($downloads)) {
+$downloadsConfigUrl = downloadEsc(admincp_base('modules_manager&config=downloads'));
 echo '
 <table class="table table-striped table-bordered table-hover">
 	<tr>
@@ -124,14 +72,20 @@ echo '
 	</tr>';
 	
 	foreach($downloads as $thisDownload) {
+	$downloadId = (int)$thisDownload['download_id'];
+	$downloadTitle = downloadEsc($thisDownload['download_title'] ?? '');
+	$downloadDescription = downloadEsc($thisDownload['download_description'] ?? '');
+	$downloadLink = downloadEsc($thisDownload['download_link'] ?? '');
+	$downloadSize = downloadEsc(round((float)($thisDownload['download_size'] ?? 0), 2));
+	$deleteLink = downloadEsc(admincp_base('modules_manager&config=downloads&deletelink='.$downloadId));
 	echo '
-	<form action="index.php?module=modules_manager&config=downloads" method="post">
-	<input type="hidden" name="downloads_edit_id" value="'.$thisDownload['download_id'].'"/>
+	<form action="'.$downloadsConfigUrl.'" method="post">
+	<input type="hidden" name="downloads_edit_id" value="'.$downloadId.'"/>
 	<tr>
-		<td><input type="text" name="downloads_edit_title" class="form-control" value="'.$thisDownload['download_title'].'"/></td>
-		<td><input type="text" name="downloads_edit_desc" class="form-control" value="'.$thisDownload['download_description'].'"/></td>
-		<td><input type="text" name="downloads_edit_link" class="form-control" value="'.$thisDownload['download_link'].'"/></td>
-		<td><input type="text" name="downloads_edit_size" class="form-control" value="'.round($thisDownload['download_size'],2).'"/></td>
+		<td><input type="text" name="downloads_edit_title" class="form-control" value="'.$downloadTitle.'"/></td>
+		<td><input type="text" name="downloads_edit_desc" class="form-control" value="'.$downloadDescription.'"/></td>
+		<td><input type="text" name="downloads_edit_link" class="form-control" value="'.$downloadLink.'"/></td>
+		<td><input type="text" name="downloads_edit_size" class="form-control" value="'.$downloadSize.'"/></td>
 		<td>
 			<select name="downloads_edit_type" class="form-control">';
 				downloadTypesSelect($downloadTypes, $thisDownload['download_type']);
@@ -140,7 +94,7 @@ echo '
 		</td>
 		<td>
 		<input type="submit" class="btn btn-success" name="downloads_edit_submit" value="Save"/>
-		<a href="index.php?module=modules_manager&config=downloads&deletelink='.$thisDownload['download_id'].'" class="btn btn-danger">Remove</a>
+		<a href="'.$deleteLink.'" class="btn btn-danger">Remove</a>
 		</td>
 	</tr>
 	</form>';
@@ -154,7 +108,7 @@ echo '</table>';
 
 <hr>
 <h3>Add Download</h3>
-<form action="index.php?module=modules_manager&config=downloads" method="post">
+<form action="<?php echo downloadEsc(admincp_base('modules_manager&config=downloads')); ?>" method="post">
 <table class="table table-striped table-bordered table-hover">
 	<tr>
 		<th>Title</th>

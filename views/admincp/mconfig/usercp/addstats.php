@@ -1,103 +1,5 @@
 <?php
-use Darkheim\Application\Credits\CreditSystem;
-use Darkheim\Domain\Validator;
 echo '<h2>Add Stats Settings</h2>';
-
-function saveChanges(): void {
-	global $_POST;
-	foreach($_POST as $setting) {
-		if(!check_value($setting)) {
-			message('error','Missing data (complete all fields).');
-			return;
-		}
-	}
-	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'add-stats.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	
-	if(!isset($_POST['setting_1'])) {
-		throw new RuntimeException('Invalid setting (active)');
-	}
-	if(!in_array($_POST['setting_1'], array('0','1',0,1))) {
-		throw new RuntimeException('Invalid setting (active)');
-	}
-	$xml->active = $_POST['setting_1'];
-	
-	if(!isset($_POST['setting_2'])) {
-		throw new RuntimeException('Invalid setting (zen_cost)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_2'])) {
-		throw new RuntimeException('Invalid setting (zen_cost)');
-	}
-	$xml->zen_cost = $_POST['setting_2'];
-	
-	if(!isset($_POST['setting_3'])) {
-		throw new RuntimeException('Invalid setting (credit_config)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_3'])) {
-		throw new RuntimeException('Invalid setting (credit_config)');
-	}
-	$xml->credit_config = $_POST['setting_3'];
-	
-	if(!isset($_POST['setting_4'])) {
-		throw new RuntimeException('Invalid setting (credit_cost)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_4'])) {
-		throw new RuntimeException('Invalid setting (credit_cost)');
-	}
-	$xml->credit_cost = $_POST['setting_4'];
-	
-	if(!isset($_POST['setting_5'])) {
-		throw new RuntimeException('Invalid setting (required_level)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_5'])) {
-		throw new RuntimeException('Invalid setting (required_level)');
-	}
-	if($_POST['setting_5'] > 400) {
-		throw new RuntimeException(
-				'The required level setting can have a maximum value of 400.'
-		);
-	}
-	$xml->required_level = $_POST['setting_5'];
-	
-	if(!isset($_POST['setting_6'])) {
-		throw new RuntimeException('Invalid setting (required_master_level)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_6'])) {
-		throw new RuntimeException('Invalid setting (required_master_level)');
-	}
-	$xml->required_master_level = $_POST['setting_6'];
-	
-	if(!isset($_POST['setting_7'])) {
-		throw new RuntimeException('Invalid setting (max_stats)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_7'])) {
-		throw new RuntimeException('Invalid setting (max_stats)');
-	}
-	$xml->max_stats = $_POST['setting_7'];
-	
-	if(!isset($_POST['setting_8'])) {
-		throw new RuntimeException('Invalid setting (minimum_limit)');
-	}
-	if(!Validator::UnsignedNumber($_POST['setting_8'])) {
-		throw new RuntimeException('Invalid setting (minimum_limit)');
-	}
-	$xml->minimum_limit = $_POST['setting_8'];
-	
-	$save = $xml->asXML($xmlPath);
-	if($save) {
-		message('success','Settings successfully saved.');
-	} else {
-		message('error','There has been an error while saving changes.');
-	}
-}
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-loadModuleConfigs('add-stats');
-
-$creditSystem = new CreditSystem();
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
@@ -126,7 +28,7 @@ $creditSystem = new CreditSystem();
 		<tr>
 			<th>Credit Configuration<br/><span></span></th>
 			<td>
-				<?php echo $creditSystem->buildSelectInput("setting_3", mconfig('credit_config'), "form-control"); ?>
+				<?php echo $addstatsCreditConfigSelect ?? ''; ?>
 			</td>
 		</tr>
 		<tr>

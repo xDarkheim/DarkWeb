@@ -1,51 +1,10 @@
-<?php
-?>
 <h2>Rankings Settings</h2>
 <?php
-function saveChanges(): void {
-	global $_POST;
-	
-	$xmlPath = __PATH_MODULE_CONFIGS__.'rankings.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	
-	$xml->active = $_POST['setting_1'];
-	$xml->rankings_results = $_POST['setting_2'];
-	$xml->rankings_show_date = $_POST['setting_3'];
-	$xml->rankings_show_default = $_POST['setting_4'];
-	$xml->rankings_show_place_number = $_POST['setting_5'];
-	$xml->rankings_enable_level = $_POST['setting_6'];
-	$xml->rankings_enable_resets = $_POST['setting_7'];
-	$xml->rankings_enable_pk = $_POST['setting_8'];
-	$xml->rankings_enable_gr = $_POST['setting_9'];
-	$xml->rankings_enable_online = $_POST['setting_10'];
-	$xml->rankings_enable_guilds = $_POST['setting_11'];
-	$xml->rankings_enable_master = $_POST['setting_12'];
-	$xml->rankings_enable_gens = $_POST['setting_14'];
-	$xml->rankings_enable_votes = $_POST['setting_15'];
-	$xml->rankings_excluded_characters = $_POST['setting_16'];
-	$xml->combine_level_masterlevel = $_POST['setting_17'];
-	$xml->show_country_flags = $_POST['setting_18'];
-	$xml->show_location = $_POST['setting_19'];
-	$xml->show_online_status = $_POST['setting_20'];
-	$xml->guild_score_formula = $_POST['setting_21'];
-	$xml->guild_score_multiplier = $_POST['setting_22'];
-	$xml->rankings_excluded_guilds = $_POST['setting_23'];
-	$xml->rankings_class_filter = $_POST['setting_24'];
-	
-	$save = $xml->asXML($xmlPath);
-	if($save) {
-		message('success','Settings successfully saved.');
-	} else {
-		message('error','There has been an error while saving changes.');
-	}
+$moduleConfig = $rankingsModuleConfig ?? null;
+if(!$moduleConfig instanceof \SimpleXMLElement) {
+	message('error', 'There has been an error while loading module settings.');
+	return;
 }
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-$xmlPath = __PATH_MODULE_CONFIGS__.'rankings.xml';
-$moduleConfig = simplexml_load_string(file_get_contents($xmlPath));
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
@@ -70,7 +29,7 @@ $moduleConfig = simplexml_load_string(file_get_contents($xmlPath));
 			</td>
 		</tr>
 		<tr>
-			<th>Default Rankings<br/><span>Which rankings will be shown by default when accessing to the rankings page.<br/><br/>Options:<ul><li>level</li><li>resets</li><li>killers</li><li>grandresets</li><li>online</li><li>guilds</li><li>master</li><li>gens</li></ul></span></th>
+			<th>Default Rankings<br/><span>Which rankings will be shown by default when accessing to the rankings page.<br/><br/>Options:<br/>level, resets, killers, grandresets, online, guilds, master, gens</span></th>
 			<td>
 				<label>
 					<input class="form-control" type="text" name="setting_4" value="<?php echo $moduleConfig->rankings_show_default; ?>"/>

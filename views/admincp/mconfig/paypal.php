@@ -1,47 +1,5 @@
 <?php
-use Darkheim\Application\Credits\CreditSystem;
-?>
-<h1 class="page-header">PayPal Settings</h1>
-<?php
-function saveChanges(): void {
-	global $_POST;
-	foreach($_POST as $setting) {
-		if(!check_value($setting)) {
-			message('error','Missing data (complete all fields).');
-			return;
-		}
-	}
-	
-	// PAYPAL
-	$xmlPath = __PATH_MODULE_CONFIGS__.'donation-paypal.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	$xml->active = $_POST['setting_2'];
-	$xml->paypal_enable_sandbox = $_POST['setting_3'];
-	$xml->paypal_email = $_POST['setting_4'];
-	$xml->paypal_title = $_POST['setting_5'];
-	$xml->paypal_currency = $_POST['setting_6'];
-	$xml->paypal_return_url = $_POST['setting_7'];
-	$xml->paypal_notify_url = $_POST['setting_8'];
-	$xml->paypal_conversion_rate = $_POST['setting_9'];
-	$xml->credit_config = $_POST['setting_10'];
-	$save2 = $xml->asXML($xmlPath);
-	
-
-	if($save2) {
-		message('success','[PayPal] Settings successfully saved.');
-	} else {
-		message('error','[PayPal] There has been an error while saving changes.');
-	}
-
-}
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-loadModuleConfigs('donation-paypal');
-
-$creditSystem = new CreditSystem();
+echo '<h1 class="page-header">PayPal Settings</h1>';
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
@@ -108,7 +66,7 @@ $creditSystem = new CreditSystem();
 		<tr>
 			<th>Credit Configuration<br/><span></span></th>
 			<td>
-				<?php echo $creditSystem->buildSelectInput("setting_10", mconfig('credit_config'), "form-control"); ?>
+				<?php echo $paypalCreditConfigSelect ?? ''; ?>
 			</td>
 		</tr>
 		<tr>

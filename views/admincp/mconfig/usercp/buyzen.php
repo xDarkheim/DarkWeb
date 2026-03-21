@@ -1,38 +1,5 @@
 <?php
-use Darkheim\Application\Credits\CreditSystem;
 echo '<h2>Buy Zen Settings</h2>';
-function saveChanges(): void {
-	global $_POST;
-	foreach($_POST as $setting) {
-		if(!check_value($setting)) {
-			message('error','Missing data (complete all fields).');
-			return;
-		}
-	}
-	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'buy-zen.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	
-	$xml->active = $_POST['setting_1'];
-	$xml->max_zen = $_POST['setting_2'];
-	$xml->exchange_ratio = $_POST['setting_3'];
-	$xml->increment_rate = $_POST['setting_5'];
-	$xml->credit_config = $_POST['setting_4'];
-	
-	$save = $xml->asXML($xmlPath);
-	if($save) {
-		message('success','Settings successfully saved.');
-	} else {
-		message('error','There has been an error while saving changes.');
-	}
-}
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-loadModuleConfigs('buy-zen');
-
-$creditSystem = new CreditSystem();
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
@@ -69,7 +36,7 @@ $creditSystem = new CreditSystem();
 		<tr>
 			<th>Credit Configuration<br/><span></span></th>
 			<td>
-				<?php echo $creditSystem->buildSelectInput("setting_4", mconfig('credit_config'), "form-control"); ?>
+				<?php echo $buyzenCreditConfigSelect ?? ''; ?>
 			</td>
 		</tr>
 		<tr>

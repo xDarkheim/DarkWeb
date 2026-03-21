@@ -1,64 +1,8 @@
 <?php
-use Darkheim\Application\Vote\Vote;
-use Darkheim\Application\Credits\CreditSystem;
+echo '<h2>Vote and Reward Settings</h2>';
+$voteConfigUrl = admincp_base('modules_manager&config=vote');
 ?>
-<h2>Vote and Reward Settings</h2>
-<?php
-
-// Load Vote Class
-$vote = new Vote();
-
-function saveChanges(): void {
-	global $_POST;
-	foreach($_POST as $setting) {
-		if(!check_value($setting)) {
-			message('error','Missing data (complete all fields).');
-			return;
-		}
-	}
-	$xmlPath = __PATH_MODULE_CONFIGS_USERCP__.'vote.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	
-	$xml->active = $_POST['setting_1'];
-	$xml->vote_save_logs = $_POST['setting_2'];
-	$xml->credit_config = $_POST['setting_3'];
-	
-	$save = $xml->asXML($xmlPath);
-	if($save) {
-		message('success','Settings successfully saved.');
-	} else {
-		message('error','There has been an error while saving changes.');
-	}
-}
-
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-if(isset($_POST['votesite_add_submit'])) {
-	$add = $vote->addVotesite($_POST['votesite_add_title'],$_POST['votesite_add_link'],$_POST['votesite_add_reward'],$_POST['votesite_add_time']);
-	if($add) {
-		message('success','Votesite successfully added.');
-	} else {
-		message('error','There has been an error while adding the topsite.');
-	}
-}
-
-if(isset($_REQUEST['deletesite'])) {
-	$delete = $vote->deleteVotesite($_REQUEST['deletesite']);
-	if($delete) {
-		message('success','Votesite successfully deleted.');
-	} else {
-		message('error','There has been an error while deleting the topsite.');
-	}
-}
-
-loadModuleConfigs('vote');
-
-$creditSystem = new CreditSystem();
-?>
-<form action="index.php?module=modules_manager&config=vote" method="post">
+<form action="<?php echo $voteConfigUrl; ?>" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
 			<th>Status<br/><span>Enable/disable the vote module.</span></th>
@@ -75,7 +19,7 @@ $creditSystem = new CreditSystem();
 		<tr>
 			<th>Credit Configuration<br/><span></span></th>
 			<td>
-				<?php echo $creditSystem->buildSelectInput("setting_3", mconfig('credit_config'), "form-control"); ?>
+				<?php echo $voteCreditConfigSelect ?? ''; ?>
 			</td>
 		</tr>
 		<tr>
@@ -87,7 +31,7 @@ $creditSystem = new CreditSystem();
 <hr>
 <h3>Manage Vote Sites</h3>
 <?php
-$votesiteList = $vote->retrieveVotesites();
+$votesiteList = $voteSiteList ?? null;
 if(is_array($votesiteList)) {
 	echo '<table class="table table-striped table-bordered table-hover">';
 	echo '<tr>';
@@ -104,7 +48,7 @@ if(is_array($votesiteList)) {
 		echo '<td>'.$thisVoteSite['votesite_link'].'</td>';
 		echo '<td>'.$thisVoteSite['votesite_reward'].' credit(s)</td>';
 		echo '<td>'.$thisVoteSite['votesite_time'].' hour(s)</td>';
-		echo '<td><a href="index.php?module=modules_manager&config=vote&deletesite='.$thisVoteSite['votesite_id'].'" class="btn btn-block"><i class="fa fa-remove"></i></a></td>';
+		echo '<td><a href="'.admincp_base('modules_manager&config=vote&deletesite='.$thisVoteSite['votesite_id']).'" class="btn btn-block"><i class="fa fa-remove"></i></a></td>';
 		echo '</tr>';
 	}
 } else {
@@ -118,7 +62,7 @@ if(is_array($votesiteList)) {
 	echo '<th></th>';
 	echo '</tr>';
 }
-echo '<form action="index.php?module=modules_manager&config=vote" method="post">';
+echo '<form action="'.$voteConfigUrl.'" method="post">';
 echo '<tr>';
 echo '<td><input name="votesite_add_title" class="form-control" type="text"/></td>';
 echo '<td><input name="votesite_add_link" class="form-control" type="text"/></td>';

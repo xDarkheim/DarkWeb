@@ -1,41 +1,15 @@
-<?php
-?>
 <h1 class="page-header">Email Settings</h1>
 <?php
-function saveChanges(): void {
-	global $_POST;
-	foreach($_POST as $setting) {
-		if(!check_value($setting)) {
-			message('error','Missing data (complete all fields).');
-			return;
-		}
-	}
-	$xmlPath = __PATH_CONFIGS__.'email-templates.xml';
-	$xml = simplexml_load_string(file_get_contents($xmlPath));
-	
-	$xml->active = $_POST['setting_1'];
-	$xml->send_from = $_POST['setting_2'];
-	$xml->send_name = $_POST['setting_3'];
-	$xml->smtp_active = $_POST['setting_4'];
-	$xml->smtp_host = $_POST['setting_5'];
-	$xml->smtp_port = $_POST['setting_6'];
-	$xml->smtp_user = $_POST['setting_7'];
-	$xml->smtp_pass = $_POST['setting_8'];
-	
-	$save = $xml->asXML($xmlPath);
-	if($save) {
-		message('success','Settings successfully saved.');
-	} else {
-		message('error','There has been an error while saving changes.');
-	}
-}
-
-if(isset($_POST['submit_changes'])) {
-	saveChanges();
-}
-
-// Load SMTP Configs
-$emailConfigs = gconfig('email-templates');
+$emailConfigs = array_replace([
+	'active' => 0,
+	'send_from' => '',
+	'send_name' => '',
+	'smtp_active' => 0,
+	'smtp_host' => '',
+	'smtp_port' => '',
+	'smtp_user' => '',
+	'smtp_pass' => '',
+], is_array($emailConfigs ?? null) ? $emailConfigs : []);
 ?>
 <form action="" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
