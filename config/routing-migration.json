@@ -1,0 +1,68 @@
+{
+    "version": 1,
+    "statuses": [
+        "legacy",
+        "hybrid",
+        "migrated"
+    ],
+    "pages": {
+        "castlesiege": {
+            "status": "legacy"
+        },
+        "contact": {
+            "status": "legacy"
+        },
+        "donation": {
+            "status": "legacy"
+        },
+        "downloads": {
+            "status": "legacy"
+        },
+        "forgotpassword": {
+            "status": "legacy"
+        },
+        "home": {
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\HomeController",
+            "module_config": "home"
+        },
+        "info": {
+            "status": "legacy"
+        },
+        "login": {
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\LoginController",
+            "module_config": "login"
+        },
+        "logout": {
+            "status": "legacy"
+        },
+        "news": {
+            "status": "legacy"
+        },
+        "privacy": {
+            "status": "legacy"
+        },
+        "rankings": {
+            "status": "legacy"
+        },
+        "refunds": {
+            "status": "legacy"
+        },
+        "register": {
+            "status": "migrated",
+            "controller": "Darkheim\\Application\\Page\\RegisterController",
+            "module_config": "register"
+        },
+        "tos": {
+            "status": "legacy"
+        },
+        "usercp": {
+            "status": "legacy"
+        },
+        "verifyemail": {
+            "status": "legacy"
+        }
+    }
+}
+
