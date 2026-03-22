@@ -1,19 +1,19 @@
 <?php
 echo '<h2>Clear Skill-Tree Settings</h2>';
 ?>
-<form action="" method="post">
+<form action="<?php echo htmlspecialchars((string) ($selectedConfigFormAction ?? ""), ENT_QUOTES, "UTF-8"); ?>" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
 			<th>Status<br/><span>Enable/disable the clear skill tree module.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_1',mconfig('active'),'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_1',\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active'),'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Zen Cost<br/><span>Amount of zen required to clear the master skill tree. Set to 0 to disable zen requirement.</span></th>
 			<td>
 				<label>
-					<input class="form-control" type="text" name="setting_2" value="<?php echo mconfig('zen_cost'); ?>"/>
+					<input class="form-control" type="text" name="setting_2" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost'); ?>"/>
 				</label>
 			</td>
 		</tr>
@@ -21,7 +21,7 @@ echo '<h2>Clear Skill-Tree Settings</h2>';
 			<th>Credit Cost<br/><span>Number of credits required to clear the master skill tree. Set to 0 to disable credit requirement.</span></th>
 			<td>
 				<label>
-					<input class="form-control" type="text" name="setting_4" value="<?php echo mconfig('credit_cost'); ?>"/>
+					<input class="form-control" type="text" name="setting_4" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost'); ?>"/>
 				</label>
 			</td>
 		</tr>
@@ -35,7 +35,7 @@ echo '<h2>Clear Skill-Tree Settings</h2>';
 			<th>Required Level<br/><span>Minimum level required to clear the master skill tree. It is recommended to keep this setting at the maximum level of 400.</span></th>
 			<td>
 				<label>
-					<input class="form-control" type="text" name="setting_5" value="<?php echo mconfig('required_level'); ?>"/>
+					<input class="form-control" type="text" name="setting_5" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_level'); ?>"/>
 				</label>
 			</td>
 		</tr>
@@ -43,7 +43,7 @@ echo '<h2>Clear Skill-Tree Settings</h2>';
 			<th>Required Master Level<br/><span>Minimum master level required to clear the master skill tree.</span></th>
 			<td>
 				<label>
-					<input class="form-control" type="text" name="setting_6" value="<?php echo mconfig('required_master_level'); ?>"/>
+					<input class="form-control" type="text" name="setting_6" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_master_level'); ?>"/>
 				</label>
 			</td>
 		</tr>

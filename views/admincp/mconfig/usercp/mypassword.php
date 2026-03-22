@@ -1,23 +1,23 @@
 <h2>Change Password Settings</h2>
-<form action="" method="post">
+<form action="<?php echo htmlspecialchars((string) ($selectedConfigFormAction ?? ""), ENT_QUOTES, "UTF-8"); ?>" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
 			<th>Status<br/><span>Enable/disable the change password module.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_1',mconfig('active'),'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_1',\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active'),'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Email Verification<br/><span>If enabled, the account's password will not be changed until the user clicks the verification link sent via email.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_2',mconfig('change_password_email_verification'),'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_2',\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('change_password_email_verification'),'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Change Password Time Limit<br/><span>If email verification is enabled, set the time that the verification link will stay valid.</span></th>
 			<td>
 				<label>
-					<input class="input-small" type="text" name="setting_3" value="<?php echo mconfig('change_password_request_timeout'); ?>"/>
+					<input class="input-small" type="text" name="setting_3" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('change_password_request_timeout'); ?>"/>
 				</label> hour(s)
 			</td>
 		</tr>

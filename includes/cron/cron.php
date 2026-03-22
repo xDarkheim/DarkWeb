@@ -27,7 +27,7 @@ foreach ($cronList as $cron) {
     if ($cron['cron_status'] != 1) {
         continue;
     }
-    if (! check_value($cron['cron_last_run'])) {
+    if (! \Darkheim\Domain\Validator::hasValue($cron['cron_last_run'])) {
         $lastRun = $cron['cron_run_time'];
     } else {
         $lastRun = $cron['cron_last_run'] + $cron['cron_run_time'];

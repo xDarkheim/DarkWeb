@@ -62,12 +62,16 @@ final class ModulesManagerController
         $mconfigData = $this->prepareMconfigData($configKey);
         $globalModules = $this->buildModuleLinks($cmsModules['_global'], $admincpUrl);
         $usercpModules = $this->buildModuleLinks($cmsModules['_usercp'], $admincpUrl);
+        $selectedConfigFormAction = is_string($configKey) && $configKey !== ''
+            ? $admincpUrl->base('modules_manager&config=' . $configKey)
+            : '';
 
         $this->view->render('admincp/modulesmanager', [
             'globalModules'          => $globalModules,
             'usercpModules'          => $usercpModules,
             'selectedConfigKey'      => $configKey,
             'selectedConfigFilePath' => $configFilePath,
+            'selectedConfigFormAction' => $selectedConfigFormAction,
             'downloadsConfigUrl'     => $admincpUrl->base('modules_manager&config=downloads'),
             'downloadsDeleteUrlBase' => $admincpUrl->base('modules_manager&config=downloads&deletelink='),
             'voteConfigUrl'          => $admincpUrl->base('modules_manager&config=vote'),
@@ -587,8 +591,9 @@ final class ModulesManagerController
             return;
         }
 
-        foreach ($_POST as $setting) {
-            if (! Validator::hasValue($setting)) {
+        $expectedPostKeys = array_keys($simpleMap[$configKey]['fields']);
+        foreach ($expectedPostKeys as $postKey) {
+            if (! array_key_exists($postKey, $_POST)) {
                 \Darkheim\Application\View\MessageRenderer::toast('error', 'Missing data (complete all fields).');
                 return;
             }

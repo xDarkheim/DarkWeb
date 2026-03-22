@@ -1,19 +1,19 @@
 <?php
 echo '<h2>Clear PK Settings</h2>';
 ?>
-<form action="" method="post">
+<form action="<?php echo htmlspecialchars((string) ($selectedConfigFormAction ?? ""), ENT_QUOTES, "UTF-8"); ?>" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
 			<th>Status<br/><span>Enable/disable the clear pk module.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_1',mconfig('active'),'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_1',\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active'),'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Zen Cost<br/><span>Amount of zen required to clear the character pk status. Set to 0 to disable zen requirement.</span></th>
 			<td>
 				<label>
-					<input class="form-control" type="text" name="setting_2" value="<?php echo mconfig('zen_cost'); ?>"/>
+					<input class="form-control" type="text" name="setting_2" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost'); ?>"/>
 				</label>
 			</td>
 		</tr>
@@ -21,7 +21,7 @@ echo '<h2>Clear PK Settings</h2>';
 			<th>Credit Cost<br/><span>Number of credits required to clear the character pk status. Set to 0 to disable credit requirement.</span></th>
 			<td>
 				<label>
-					<input class="form-control" type="text" name="setting_4" value="<?php echo mconfig('credit_cost'); ?>"/>
+					<input class="form-control" type="text" name="setting_4" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost'); ?>"/>
 				</label>
 			</td>
 		</tr>

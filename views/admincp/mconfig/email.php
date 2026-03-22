@@ -11,12 +11,12 @@ $emailConfigs = array_replace([
 	'smtp_pass' => '',
 ], is_array($emailConfigs ?? null) ? $emailConfigs : []);
 ?>
-<form action="" method="post">
+<form action="<?php echo htmlspecialchars((string) ($selectedConfigFormAction ?? ""), ENT_QUOTES, "UTF-8"); ?>" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
 			<th>Email System<br/><span>Enable/disable the email system.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_1',$emailConfigs['active'],'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_1',$emailConfigs['active'],'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
@@ -38,7 +38,7 @@ $emailConfigs = array_replace([
 		<tr>
 			<th>SMTP Status<br/><span>Enable/disable the SMTP system.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_4',$emailConfigs['smtp_active'],'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_4',$emailConfigs['smtp_active'],'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>

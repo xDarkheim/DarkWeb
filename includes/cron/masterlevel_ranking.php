@@ -10,9 +10,9 @@ $file_name = basename(__FILE__);
 $Rankings = new Rankings();
 
 // Load Ranking Configs
-loadModuleConfigs('rankings');
+\Darkheim\Infrastructure\Bootstrap\BootstrapContext::loadModuleConfig('rankings');
 
-if (mconfig('active') && mconfig('rankings_enable_master')) {
+if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active') && \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_master')) {
     $Rankings->UpdateRankingCache('master');
 }
 

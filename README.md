@@ -82,11 +82,11 @@ Open `https://your-domain/install/` in the browser, complete the setup wizard, t
 
 ## Architecture notes
 
-- `src/Infrastructure/Bootstrap/` owns the composition-root logic through `AppKernel`, `ConfigProvider`, `RuntimeState`, and `TimezoneInitializer`.
+- `src/Infrastructure/Bootstrap/` owns the composition-root logic through `EntrypointBootstrapper`, `AppKernel`, `ConfigProvider`, `RuntimeState`, and `TimezoneInitializer`.
 - `src/Infrastructure/Runtime/` contains the runtime boundary for request, post, query, session, and server access.
 - Classes in `src/` depend on these adapters instead of reading PHP superglobals directly.
-- `includes/bootstrap/boot.php` — thin entry point; loads Composer autoloader and boots `AppKernel`.
-- `includes/bootstrap/compat.php` — **global function shim**; every function is a one-liner that delegates to a namespaced class. Legacy modules keep working without change; new code calls the class directly.
+- Front controllers (`public/index.php`, `public/admincp/index.php`) and CLI entrypoint (`bin/cron.php`) load Composer autoloader and call `EntrypointBootstrapper::boot()`.
+- Legacy bootstrap shims under `includes/bootstrap/` have been removed; runtime code now uses namespaced classes directly.
 - AdminCP now uses `config/routes.admincp.php` + controller-backed modules under `src/Application/Admincp/`.
 - AdminCP shell metadata lives in `config/admincp-layout.php` and is normalized by `AdmincpLayoutDataProvider` before rendering `views/admincp/layout.php`.
 - `public/admincp/index.php` is a thin front controller; AdminCP no longer uses runtime `public/admincp/modules/*.php` includes.

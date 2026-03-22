@@ -1,23 +1,23 @@
 <h2>Login Settings</h2>
-<form action="" method="post">
+<form action="<?php echo htmlspecialchars((string) ($selectedConfigFormAction ?? ""), ENT_QUOTES, "UTF-8"); ?>" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
 			<th>Status<br/><span>Enable/disable the login module.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_1',mconfig('active'),'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_1',\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active'),'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Session Timeout<br/><span>Enable/disable sessions timeout.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_2',mconfig('enable_session_timeout'),'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_2',\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('enable_session_timeout'),'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Session Timeout Limit<br/><span>If session timeout is enabled, define the time (in seconds) after which the inactive session should be logged out automatically.</span></th>
 			<td>
 				<label>
-					<input class="input-mini" type="text" name="setting_3" value="<?php echo mconfig('session_timeout'); ?>"/>
+					<input class="input-mini" type="text" name="setting_3" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('session_timeout'); ?>"/>
 				</label> seconds
 			</td>
 		</tr>
@@ -25,7 +25,7 @@
 			<th>Maximum Failed Login Attempts<br/><span>Define the maximum failed login attempts before the client's IP address should be temporarily blocked.</span></th>
 			<td>
 				<label>
-					<input class="input-mini" type="text" name="setting_4" value="<?php echo mconfig('max_login_attempts'); ?>"/>
+					<input class="input-mini" type="text" name="setting_4" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_login_attempts'); ?>"/>
 				</label>
 			</td>
 		</tr>
@@ -33,7 +33,7 @@
 			<th>Failed Login Attempts IP Block Duration<br/><span>Time in minutes of failed login attempts IP block duration.</span></th>
 			<td>
 				<label>
-					<input class="input-mini" type="text" name="setting_5" value="<?php echo mconfig('failed_login_timeout'); ?>"/>
+					<input class="input-mini" type="text" name="setting_5" value="<?php echo \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('failed_login_timeout'); ?>"/>
 				</label> minutes
 			</td>
 		</tr>

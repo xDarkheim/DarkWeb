@@ -24,30 +24,30 @@ function downloadEsc($value): string
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
 ?>
-<form action="" method="post">
+<form action="<?php echo htmlspecialchars((string) ($selectedConfigFormAction ?? ""), ENT_QUOTES, "UTF-8"); ?>" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
 			<th>Status<br/><span>Enable/disable the downloads module.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_1', mconfig('active'), 'Enabled', 'Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_1', \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active'), 'Enabled', 'Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Show Client Downloads<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_2', mconfig('show_client_downloads'), 'Yes', 'No'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_2', \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('show_client_downloads'), 'Yes', 'No'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Show Patches Downloads<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_3', mconfig('show_patch_downloads'), 'Yes', 'No'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_3', \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('show_patch_downloads'), 'Yes', 'No'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Show Tools Downloads<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_4', mconfig('show_tool_downloads'), 'Yes', 'No'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_4', \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('show_tool_downloads'), 'Yes', 'No'); ?>
 			</td>
 		</tr>
 		<tr>

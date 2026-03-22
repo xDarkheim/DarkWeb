@@ -7,11 +7,9 @@ parameters:
     paths:
         - src/
 
-    # Global helper functions and constants are loaded at runtime from
-    # includes/bootstrap/compat.php and config/tables.php — tell PHPStan
-    # about them so they don't produce "function/constant not found" errors.
+    # Runtime DB table/column constants are defined from config/tables.php;
+    # tell PHPStan about them so they don't produce "constant not found" errors.
     bootstrapFiles:
-        - includes/bootstrap/compat.php
         - config/tables.php
         - config/tables.custom.php
 

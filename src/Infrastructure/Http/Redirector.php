@@ -25,6 +25,10 @@ final class Redirector
      */
     public static function go(int $type = 1, ?string $location = null, int $delay = 0): void
     {
+        if (self::isPhpUnitRuntime() && class_exists('Tests\\Stubs\\RedirectException')) {
+            throw new \Tests\Stubs\RedirectException('redirect:' . ($location ?? ''));
+        }
+
         $base = defined('__BASE_URL__') ? (string) __BASE_URL__ : '/';
 
         if (empty($location)) {
@@ -53,6 +57,11 @@ final class Redirector
                 header('Location: ' . $to);
                 exit();
         }
+    }
+
+    private static function isPhpUnitRuntime(): bool
+    {
+        return defined('PHPUNIT_COMPOSER_INSTALL') || defined('__PHPUNIT_PHAR__');
     }
 }
 

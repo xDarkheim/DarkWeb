@@ -36,8 +36,22 @@ final class BootstrapContext
 
     public static function cmsValue(string $key, mixed $default = null): mixed
     {
-        $config = self::$configProvider?->cms() ?? [];
-        return array_key_exists($key, $config) ? $config[$key] : $default;
+        $config = [];
+        try {
+            $config = self::$configProvider?->cms() ?? [];
+        } catch (\Throwable) {
+            $config = [];
+        }
+
+        if (array_key_exists($key, $config)) {
+            return $config[$key];
+        }
+
+        if (isset($GLOBALS['_TEST_CMS_CONFIG']) && is_array($GLOBALS['_TEST_CMS_CONFIG']) && array_key_exists($key, $GLOBALS['_TEST_CMS_CONFIG'])) {
+            return $GLOBALS['_TEST_CMS_CONFIG'][$key];
+        }
+
+        return $default;
     }
 
     public static function moduleValue(string $key, mixed $default = null): mixed

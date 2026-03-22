@@ -17,7 +17,7 @@ if(is_array($accountList)) {
 	$Account = new Account();
 	foreach($accountList as $row) {
 		$countryCode = GeoIpService::getCountryCode((string) $row[_CLMN_MS_IP_]);
-		if(!check_value($countryCode)) continue;
+		if(!\Darkheim\Domain\Validator::hasValue($countryCode)) continue;
 		$Account->_account = $row[_CLMN_MS_MEMBID_];
 		$Account->_country = $countryCode;
 		$Account->insertAccountCountry();

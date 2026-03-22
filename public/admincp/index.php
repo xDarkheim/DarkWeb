@@ -8,13 +8,13 @@ use Darkheim\Application\Admincp\AdmincpLayoutDataProvider;
 use Darkheim\Application\Admincp\AdmincpUrlGenerator;
 use Darkheim\Application\Auth\AdminGuard;
 use Darkheim\Application\Auth\SessionManager;
+use Darkheim\Infrastructure\Bootstrap\EntrypointBootstrapper;
 use Darkheim\Infrastructure\Http\Redirector;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 try {
-    if (! @include('../../includes/bootstrap/boot.php')) {
-        throw new RuntimeException('Could not load CMS.');
-    }
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    $handler = EntrypointBootstrapper::boot(dirname(__DIR__, 2));
     if (! SessionManager::websiteAuthenticated()) {
         Redirector::go();
     }
@@ -22,7 +22,7 @@ try {
         Redirector::go();
     }
     new AdmincpConfigurationChecker()->ensureValid();
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
     $errorPage = file_get_contents('../../includes/error.html');
     echo str_replace('{ERROR_MESSAGE}', $ex->getMessage(), $errorPage);
     die();
@@ -34,9 +34,9 @@ $admincpUrl         = new AdmincpUrlGenerator();
 
 $view = new ViewRenderer();
 $view->render('admincp/layout', [
-    'sidebarGroups' => $layoutDataProvider->sidebarGroups(),
-    'currentModule' => $currentModule,
-    'admincpHomeUrl' => $admincpUrl->base(),
+    'sidebarGroups'        => $layoutDataProvider->sidebarGroups(),
+    'currentModule'        => $currentModule,
+    'admincpHomeUrl'       => $admincpUrl->base(),
     'admincpModuleBaseUrl' => $admincpUrl->base() . '?module=',
-    'handler'       => $handler,
+    'handler'              => $handler,
 ]);

@@ -20,7 +20,7 @@ final class AdmincpModuleDispatcher
      */
     public function dispatch(string $module, array $context = []): bool
     {
-        $route = $this->registry->routeFor($module);
+        $route        = $this->registry->routeFor($module);
         $moduleConfig = is_array($route) ? ($route['module_config'] ?? null) : null;
         if (is_string($moduleConfig) && $moduleConfig !== '') {
             BootstrapContext::loadModuleConfig($moduleConfig);
@@ -29,12 +29,12 @@ final class AdmincpModuleDispatcher
         $controllerClass = is_array($route) ? ($route['controller'] ?? null) : null;
 
         if (is_string($controllerClass) && $controllerClass !== '') {
-            if (!class_exists($controllerClass)) {
+            if (! class_exists($controllerClass)) {
                 return false;
             }
 
             $controller = new $controllerClass();
-            if (!method_exists($controller, 'render')) {
+            if (! method_exists($controller, 'render')) {
                 return false;
             }
 
@@ -45,4 +45,3 @@ final class AdmincpModuleDispatcher
         return false;
     }
 }
-

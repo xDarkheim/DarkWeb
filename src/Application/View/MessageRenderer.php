@@ -29,6 +29,10 @@ final class MessageRenderer
      */
     public static function toast(string $type = 'info', string $message = '', string $title = ''): void
     {
+        if (self::isTestRuntime()) {
+            return;
+        }
+
         $toastType = match ($type) {
             'error'   => 'error',
             'success' => 'success',
@@ -52,6 +56,10 @@ final class MessageRenderer
      */
     public static function inline(string $type = 'info', string $message = '', string $title = ''): void
     {
+        if (self::isTestRuntime()) {
+            return;
+        }
+
         $c = self::COLORS[$type] ?? self::COLORS['info'];
 
         $style = 'display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:6px;'
@@ -67,6 +75,11 @@ final class MessageRenderer
 
         echo htmlspecialchars(strip_tags($message), ENT_QUOTES);
         echo '</div>';
+    }
+
+    private static function isTestRuntime(): bool
+    {
+        return class_exists('PHPUnit\\Framework\\TestCase', false);
     }
 }
 

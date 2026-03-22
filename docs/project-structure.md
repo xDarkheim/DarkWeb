@@ -137,7 +137,7 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   └── phpmailer/phpmailer/
 │
 ├── public/                         # ★ DocumentRoot — only this directory is web-accessible
-│   ├── index.php                   # Web entry point → ../includes/bootstrap/boot.php
+│   ├── index.php                   # Web entry point → EntrypointBootstrapper::boot()
 │   ├── .htaccess                   # mod_rewrite routing rules
 │   ├── robots.txt
 │   ├── assets/                     # Global CSS / JS bundles
@@ -190,10 +190,7 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   ├── writable.json               # Paths checked for write permissions on install
 │   └── modules/                    # Per-module XML configs (feature toggles)
 │
-├── includes/                       # CMS bootstrap layer (NOT web-accessible)
-│   ├── bootstrap/
-│   │   ├── boot.php                # Entry point: loads autoloader + boots AppKernel
-│   │   └── compat.php              # Global function shim — thin wrappers over src/ classes
+├── includes/                       # Runtime support files (NOT web-accessible)
 │   ├── languages/                  # Phrase files — one PHP file per language code
 │   ├── emails/                     # Email template helpers
 │   ├── cron/                       # Cron job scripts
@@ -235,33 +232,31 @@ This map shows where the main CMS components live and which paths are safe to mo
 
 ```
 public/index.php
-  └── ../includes/bootstrap/boot.php    ← composition root
-        ├── vendor/autoload.php         ← Composer PSR-4 autoloader
-        └── AppKernel::boot()           ← Darkheim\Infrastructure\Bootstrap\AppKernel
-              ├── ConfigProvider        ← reads config/config.json + XML configs
-              ├── RuntimeState          ← in-memory bag: language phrases, module config
+  ├── vendor/autoload.php                 ← Composer PSR-4 autoloader
+  └── EntrypointBootstrapper::boot()      ← Darkheim\Infrastructure\Bootstrap\EntrypointBootstrapper
+        └── AppKernel::boot()             ← Darkheim\Infrastructure\Bootstrap\AppKernel
+              ├── ConfigProvider          ← reads config/config.json + XML configs
+              ├── RuntimeState            ← in-memory bag: language phrases, module config
               ├── config/tables.php
               ├── config/timezone-config.php
-              ├── includes/bootstrap/compat.php
-              ├── plugin files          ← from var/cache/plugins.cache
-              └── Handler::loadPage()  ← Darkheim\Infrastructure\Routing\Handler
+              ├── plugin files            ← from var/cache/plugins.cache
+              └── Handler::loadPage()     ← Darkheim\Infrastructure\Routing\Handler
 ```
 
 ## AdminCP bootstrap path
 
 ```
 public/admincp/index.php
-  └── ../../includes/bootstrap/boot.php
-        └── AppKernel::boot()
-              ├── includes/bootstrap/compat.php
-              ├── AdmincpConfigurationChecker::ensureValid()
-              ├── AdmincpLayoutDataProvider::sidebarGroups()
-              ├── ViewRenderer::render('admincp/layout')
-              └── Handler::loadAdminCPModule($module)
-                    └── AdmincpModuleDispatcher::dispatch()
-                          ├── config/routes.admincp.php
-                          ├── loadModuleConfigs($route['module_config'])
-                          └── <AdminCP controller>::render()
+  ├── vendor/autoload.php
+  └── EntrypointBootstrapper::boot()
+        ├── AdmincpConfigurationChecker::ensureValid()
+        ├── AdmincpLayoutDataProvider::sidebarGroups()
+        ├── ViewRenderer::render('admincp/layout')
+        └── Handler::loadAdminCPModule($module)
+              └── AdmincpModuleDispatcher::dispatch()
+                    ├── config/routes.admincp.php
+                    ├── BootstrapContext::loadModuleConfig($route['module_config'])
+                    └── <AdminCP controller>::render()
 ```
 
 ## Path constants defined by AppKernel
@@ -294,7 +289,7 @@ Classes under `src/` avoid reading PHP superglobals directly. Runtime state is f
 | `PostStore`     | `$_POST`    | `PaypalIPN`                                     |
 | `ServerContext` | `$_SERVER`  | `Login`, `Account`, `CreditSystem`              |
 
-This keeps the composition root in `includes/bootstrap/boot.php` explicit while making namespaced services easier to test in isolation.
+This keeps the composition root inside `src/Infrastructure/Bootstrap/` explicit while making namespaced services easier to test in isolation.
 
 ## Namespace map
 
@@ -334,25 +329,21 @@ All classes under `src/` are autoloaded via Composer PSR-4 with the root namespa
 | `Darkheim\Infrastructure\Runtime\*`   | `src/Infrastructure/Runtime/`   | Request/session/server boundary adapters                                |
 | `Darkheim\Infrastructure\Security\*`  | `src/Infrastructure/Security/`  | IpBlocker                                                               |
 
-## Global function shim (`compat.php`)
+## Helper policy
 
-`includes/bootstrap/compat.php` is a **backward-compatibility layer** — it declares the global
-procedural functions that legacy modules call, but contains no logic itself. Each function is a
-one-to-three-line wrapper that casts arguments and delegates to the matching `src/` class.
+Global bootstrap helper wrappers were removed. Runtime code now calls namespaced classes directly.
 
-> **Rule:** never add business logic to `compat.php`. If you need a new helper, create a class in
-> `src/` and add a thin wrapper here only if legacy call-sites need it.
-
-| Global function                                                                                                                                           | Delegates to                                                  |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------|
-| `check_value()`                                                                                                                                           | `Validator::hasValue()`                                       |
-| `redirect()`                                                                                                                                              | `Redirector::go()`                                            |
-| `isLoggedIn()`                                                                                                                                             | `SessionManager`                                              |
-| `message()` / `inline_message()`                                                                                                                          | `MessageRenderer::toast()` / `::inline()`                     |
-| `lang()` / `langf()`                                                                                                                                      | `Translator::phrase()` / `::phraseFmt()`                      |
-| `config()`                                                                                                                                                 | `ConfigProvider::cms()`                                       |
-| `mconfig()`                                                                                                                                                | `ConfigProvider` + `RuntimeState`                             |
-| `enabledisableCheckboxes()`                                                                                                                                | compatibility-only HTML helper for remaining config partials  |
+| Legacy helper | Class-based replacement |
+|:--------------|:------------------------|
+| `check_value()` | `Validator::hasValue()` |
+| `redirect()` | `Redirector::go()` |
+| `isLoggedIn()` | `SessionManager::websiteAuthenticated()` |
+| `message()` / `inline_message()` | `MessageRenderer::toast()` / `MessageRenderer::inline()` |
+| `lang()` / `langf()` | `Translator::phrase()` / `Translator::phraseFmt()` |
+| `config()` | `BootstrapContext::cmsValue()` |
+| `mconfig()` | `BootstrapContext::moduleValue()` |
+| `loadModuleConfigs()` | `BootstrapContext::loadModuleConfig()` |
+| `enabledisableCheckboxes()` | `FormFieldRenderer::enabledisableCheckboxes()` |
 
 ## What to edit vs. what not to touch
 
@@ -364,8 +355,7 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 | `public/themes/{theme}/views/`            |   ✅   | Optional per-theme template overrides (only when markup must differ) |
 | `public/themes/default/index.php`         |   ✅   | Keep logic-light — render prepared layout data only                  |
 | `public/themes/default/inc/modules/*.php` |   ✅   | Pure partials only; no runtime/config/service calls                  |
-| `includes/bootstrap/compat.php`           |  ⚠️   | Add wrappers only; no logic — logic goes in `src/`                   |
-| `includes/bootstrap/boot.php`             |   ❌   | Entry point — do not add logic here                                  |
+| `src/Infrastructure/Bootstrap/EntrypointBootstrapper.php` | ✅ | Entrypoint coordinator used by web/admincp/cron front scripts |
 | `config/config.json`                      |   ✅   | Main config: DB credentials, server name, feature toggles            |
 | `config/admincp-layout.php`               |   ✅   | AdminCP shell/sidebar metadata                                       |
 | `config/routes.admincp.php`               |   ✅   | AdminCP controller route table                                       |
@@ -393,8 +383,8 @@ over already-prepared values.
 Do **not** add these directly to `views/` or `public/themes/default/` templates:
 
 - `$_GET`, `$_POST`, `$_REQUEST`, `$_SESSION`
-- `config()`, `mconfig()`, `loadCache()`, `LoadCacheData()`
-- `message()`, `redirect()`, `loadModuleConfigs()`
+- `BootstrapContext::cmsValue()`, `BootstrapContext::moduleValue()`, cache reads/writes
+- `MessageRenderer::toast()`, `Redirector::go()`, `BootstrapContext::loadModuleConfig()`
 - `new ServiceClass(...)`
 
 Examples already following this rule:
@@ -465,21 +455,21 @@ When adding another shared template:
 
 ## Legacy helper migration status
 
-The following global helper functions have been **removed from `src/`** and replaced with direct class calls:
+The following global helper functions were replaced with direct class calls across runtime paths:
 
 | Helper | Replacement | Status |
 |--------|-------------|--------|
-| `check_value()` | `Validator::hasValue()` | ✅ Removed from `src/` entirely |
-| `lang()` | `Translator::phrase()` | ✅ Removed from `src/` entirely |
-| `langf()` | `Translator::phraseFmt()` | ✅ Removed from `src/` entirely |
-| `admincp_base()` | `AdmincpUrlGenerator::base()` | ✅ Removed from `src/` entirely |
-| `message()` | `MessageRenderer::toast()` | ✅ Not used in `src/` |
-| `inline_message()` | `MessageRenderer::inline()` | ✅ Not used in `src/` |
-| `mconfig()` | `BootstrapContext::runtimeState()->moduleConfig()` | Still in `compat.php` for legacy modules |
-| `config()` | `BootstrapContext::configProvider()->cms()` | Still in `compat.php` for legacy modules |
-| `loadModuleConfigs()` | Direct calls to `RuntimeState::setModuleConfig()` | Still in `compat.php` for legacy modules |
-| `isLoggedIn()` | `SessionManager::isAuthenticated()` + timeout check | Still in `compat.php` for legacy modules |
-| `redirect()` | `Redirector::go()` | Still in `compat.php` for legacy modules |
+| `check_value()` | `Validator::hasValue()` | ✅ Replaced |
+| `lang()` | `Translator::phrase()` | ✅ Replaced |
+| `langf()` | `Translator::phraseFmt()` | ✅ Replaced |
+| `admincp_base()` | `AdmincpUrlGenerator::base()` | ✅ Replaced |
+| `message()` | `MessageRenderer::toast()` | ✅ Replaced |
+| `inline_message()` | `MessageRenderer::inline()` | ✅ Replaced |
+| `mconfig()` | `BootstrapContext::moduleValue()` | ✅ Replaced |
+| `config()` | `BootstrapContext::cmsValue()` | ✅ Replaced |
+| `loadModuleConfigs()` | `BootstrapContext::loadModuleConfig()` | ✅ Replaced |
+| `isLoggedIn()` | `SessionManager::websiteAuthenticated()` | ✅ Replaced |
+| `redirect()` | `Redirector::go()` | ✅ Replaced |
 
-These wrappers remain in `includes/bootstrap/compat.php` **only for backward compatibility with legacy theme modules and plugins**. New code in `src/` must call the class methods directly.
+`includes/bootstrap/compat.php` and `includes/bootstrap/boot.php` were removed; entrypoints now call `EntrypointBootstrapper::boot()` directly.
 

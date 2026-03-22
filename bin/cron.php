@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 use Darkheim\Domain\Validator;
+use Darkheim\Infrastructure\Bootstrap\EntrypointBootstrapper;
 use Darkheim\Infrastructure\Cron\CronExecutor;
 
 if (PHP_SAPI !== 'cli') {
@@ -14,8 +15,10 @@ if (PHP_SAPI !== 'cli') {
 define('access', 'cron');
 
 $rootPath = rtrim(str_replace('\\', '/', dirname(__DIR__)), '/');
-$bootPath = $rootPath . '/includes/bootstrap/boot.php';
-if (! @include $bootPath) {
+require_once $rootPath . '/vendor/autoload.php';
+try {
+    EntrypointBootstrapper::boot($rootPath);
+} catch (Throwable) {
     fwrite(STDERR, "Could not load Darkheim CMS.\n");
     exit(1);
 }

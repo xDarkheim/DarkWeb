@@ -3,13 +3,13 @@
 // Define CMS access
 define('access', 'index');
 
-try {
-    $bootFile = __DIR__ . '/../includes/bootstrap/boot.php';
-    if (! @include($bootFile)) {
-        throw new RuntimeException('Could not load CMS.');
-    }
+use Darkheim\Infrastructure\Bootstrap\EntrypointBootstrapper;
 
-} catch (Exception $ex) {
+try {
+    require_once __DIR__ . '/../vendor/autoload.php';
+    EntrypointBootstrapper::boot(dirname(__DIR__));
+
+} catch (Throwable $ex) {
     if (ob_get_level() > 0) {
         ob_clean();
     }

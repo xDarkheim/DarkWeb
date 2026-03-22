@@ -10,9 +10,8 @@ use Darkheim\Infrastructure\Runtime\SessionStore;
 
 /**
  * Read/write interface for the CMS session state.
- * Intentionally does NOT start or destroy the session — that belongs to the
- * legacy bootstrap (includes/bootstrap/boot.php).  This class works with the already-started
- * PHP session.
+ * Intentionally does NOT start or destroy the session — bootstrap wiring owns
+ * that lifecycle. This class works with the already-started PHP session.
  */
 final class SessionManager
 {

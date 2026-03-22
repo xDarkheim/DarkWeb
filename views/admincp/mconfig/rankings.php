@@ -6,12 +6,12 @@ if(!$moduleConfig instanceof \SimpleXMLElement) {
 	return;
 }
 ?>
-<form action="" method="post">
+<form action="<?php echo htmlspecialchars((string) ($selectedConfigFormAction ?? ""), ENT_QUOTES, "UTF-8"); ?>" method="post">
 	<table class="table table-striped table-bordered table-hover module_config_tables">
 		<tr>
 			<th>Status<br/><span>Enable/disable the ranking system.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_1',$moduleConfig->active,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_1',$moduleConfig->active,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
@@ -25,7 +25,7 @@ if(!$moduleConfig instanceof \SimpleXMLElement) {
 		<tr>
 			<th>Display Last Update Date<br/><span>Show at the bottom of the rankings the date each ranking was last updated.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_3',$moduleConfig->rankings_show_date,'Yes','No'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_3',$moduleConfig->rankings_show_date,'Yes','No'); ?>
 			</td>
 		</tr>
 		<tr>
@@ -39,55 +39,55 @@ if(!$moduleConfig instanceof \SimpleXMLElement) {
 		<tr>
 			<th>Display Position Number<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_5',$moduleConfig->rankings_show_place_number,'Yes','No'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_5',$moduleConfig->rankings_show_place_number,'Yes','No'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Level Rankings<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_6',$moduleConfig->rankings_enable_level,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_6',$moduleConfig->rankings_enable_level,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Reset Rankings<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_7',$moduleConfig->rankings_enable_resets,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_7',$moduleConfig->rankings_enable_resets,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Killer Rankings<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_8',$moduleConfig->rankings_enable_pk,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_8',$moduleConfig->rankings_enable_pk,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Grand Reset Rankings<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_9',$moduleConfig->rankings_enable_gr,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_9',$moduleConfig->rankings_enable_gr,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Online Rankings<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_10',$moduleConfig->rankings_enable_online,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_10',$moduleConfig->rankings_enable_online,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Master Level Rankings<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_12',$moduleConfig->rankings_enable_master,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_12',$moduleConfig->rankings_enable_master,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Gens Rankings<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_14',$moduleConfig->rankings_enable_gens,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_14',$moduleConfig->rankings_enable_gens,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Vote Rankings<br/></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_15',$moduleConfig->rankings_enable_votes,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_15',$moduleConfig->rankings_enable_votes,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
@@ -101,31 +101,31 @@ if(!$moduleConfig instanceof \SimpleXMLElement) {
 		<tr>
 			<th>Combine Level + Master Level<br /><span>If enabled, the player's level and master level will be combined as one in the rankings.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_17',$moduleConfig->combine_level_masterlevel,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_17',$moduleConfig->combine_level_masterlevel,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Country Flags<br /><span>If enabled, the character's country flag will be displayed in the rankings.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_18',$moduleConfig->show_country_flags,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_18',$moduleConfig->show_country_flags,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Character Last Location<br /><span>If enabled, the character's last known location will be displayed in the rankings.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_19',$moduleConfig->show_location,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_19',$moduleConfig->show_location,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Character Online Status<br /><span>If enabled, the character's online status will be displayed in the rankings.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_20',$moduleConfig->show_online_status,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_20',$moduleConfig->show_online_status,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
 			<th>Character Class Filter<br /><span>If enabled, the character's class filter menu will be displayed in the rankings.</span></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_24',$moduleConfig->rankings_class_filter,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_24',$moduleConfig->rankings_class_filter,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 	</table>
@@ -135,7 +135,7 @@ if(!$moduleConfig instanceof \SimpleXMLElement) {
 		<tr>
 			<th>Guild Rankings<br /></th>
 			<td>
-				<?php enabledisableCheckboxes('setting_11',$moduleConfig->rankings_enable_guilds,'Enabled','Disabled'); ?>
+				<?php \Darkheim\Application\View\FormFieldRenderer::enabledisableCheckboxes('setting_11',$moduleConfig->rankings_enable_guilds,'Enabled','Disabled'); ?>
 			</td>
 		</tr>
 		<tr>
