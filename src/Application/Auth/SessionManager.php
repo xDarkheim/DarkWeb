@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Auth;
 
+use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Runtime\NativeSessionStore;
 use Darkheim\Infrastructure\Runtime\SessionStore;
 
@@ -29,6 +30,36 @@ final class SessionManager
             && $this->session->has('userid')
             && $this->session->has('username')
             && $this->session->has('timeout');
+    }
+
+    /**
+     * Mirrors the legacy website login check: validates required session keys,
+     * enforces the configured idle timeout, refreshes activity on success.
+     *
+     * @param array<string,mixed>|null $loginConfigs
+     */
+    public function isWebsiteAuthenticated(?array $loginConfigs = null): bool
+    {
+        if (! $this->isAuthenticated()) {
+            return false;
+        }
+
+        if (
+            is_array($loginConfigs)
+            && ($loginConfigs['enable_session_timeout'] ?? false)
+            && $this->hasTimedOut((int) ($loginConfigs['session_timeout'] ?? 0))
+        ) {
+            $this->clearSession();
+            return false;
+        }
+
+        $this->refreshTimeout();
+        return true;
+    }
+
+    public static function websiteAuthenticated(?SessionStore $session = null): bool
+    {
+        return (new self($session))->isWebsiteAuthenticated(BootstrapContext::configProvider()?->moduleConfig('login'));
     }
 
     public function userId(): ?int

@@ -59,7 +59,7 @@ class CronManager
 
     public function setId($id): void
     {
-        if (!Validator::UnsignedNumber($id)) throw new \Exception(lang('error_49'));
+        if (!Validator::UnsignedNumber($id)) throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_49'));
         $this->_id = $id;
     }
 
@@ -67,7 +67,7 @@ class CronManager
 
     public function setFile($file): void
     {
-        if (!$this->_cronFileExists($file)) throw new \Exception(lang('error_50'));
+        if (!$this->_cronFileExists($file)) throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_50'));
         $this->_file = $file;
     }
 
@@ -96,7 +96,7 @@ class CronManager
 
     public function resetCronLastRun(): bool
     {
-        if (!check_value($this->_id)) return false;
+        if (!\Darkheim\Domain\Validator::hasValue($this->_id)) return false;
         $result = $this->muonline->query("UPDATE " . Cron . " SET cron_last_run = NULL WHERE cron_id = ?", array($this->_id));
         if (!$result) throw new \Exception($this->muonline->error);
         return true;
@@ -104,7 +104,7 @@ class CronManager
 
     public function deleteCron(): bool
     {
-        if (!check_value($this->_id)) return false;
+        if (!\Darkheim\Domain\Validator::hasValue($this->_id)) return false;
         $result = $this->muonline->query("DELETE FROM " . Cron . " WHERE cron_id = ?", array($this->_id));
         if (!$result) throw new \Exception($this->muonline->error);
         return true;
@@ -113,10 +113,10 @@ class CronManager
 
     public function addCron(): bool
     {
-        if (!check_value($this->_name)) throw new \Exception(lang('error_106'));
-        if (!check_value($this->_file)) throw new \Exception(lang('error_106'));
-        if (!check_value($this->_interval)) throw new \Exception(lang('error_106'));
-        if ($this->_cronAlreadyExists()) throw new \Exception(lang('error_107'));
+        if (!\Darkheim\Domain\Validator::hasValue($this->_name)) throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_106'));
+        if (!\Darkheim\Domain\Validator::hasValue($this->_file)) throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_106'));
+        if (!\Darkheim\Domain\Validator::hasValue($this->_interval)) throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_106'));
+        if ($this->_cronAlreadyExists()) throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_107'));
 
         $data   = [$this->_name, $this->_file, $this->_interval, 1, 0, $this->_cronFileMd5($this->_file)];
         $result = $this->muonline->query("INSERT INTO " . Cron . " (cron_name, cron_file_run, cron_run_time, cron_status, cron_protected, cron_file_md5) VALUES (?, ?, ?, ?, ?, ?)", $data);
@@ -151,7 +151,7 @@ class CronManager
         $return = [];
         while (($file = readdir($dir)) !== false) {
             if (filetype(__PATH_CRON__ . $file) == "file" && $file != ".htaccess" && $file != "cron.php") {
-                if (check_value($selected) && $selected == $file) {
+                if (\Darkheim\Domain\Validator::hasValue($selected) && $selected == $file) {
                     $return[] = "<option value=\"$file\" selected=\"selected\">$file</option>";
                 } else {
                     $return[] = "<option value=\"$file\">$file</option>";
@@ -169,7 +169,7 @@ class CronManager
 
     protected function _setCronStatus($status = 1): bool
     {
-        if (!check_value($this->_id)) return false;
+        if (!\Darkheim\Domain\Validator::hasValue($this->_id)) return false;
         $result = $this->muonline->query("UPDATE " . Cron . " SET cron_status = ? WHERE cron_id = ?", array($status, $this->_id));
         if (!$result) throw new \Exception($this->muonline->error);
         return true;

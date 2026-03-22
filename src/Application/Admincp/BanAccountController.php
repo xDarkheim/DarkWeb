@@ -95,9 +95,9 @@ final class BanAccountController
                 if (!$banAccount) {
                     throw new \RuntimeException('Could not ban account.');
                 }
-                message('success', 'Account Banned');
+                \Darkheim\Application\View\MessageRenderer::toast('success', 'Account Banned');
             } catch (\Exception $ex) {
-                message('error', $ex->getMessage());
+                \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
             }
         }
 

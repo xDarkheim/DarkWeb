@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Page;
 
+use Darkheim\Application\Language\Translator;
 use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Email\Email;
@@ -21,8 +22,8 @@ final class ContactController
     public function render(): void
     {
         try {
-            if (!mconfig('active')) {
-                inline_message('error', lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                \Darkheim\Application\View\MessageRenderer::inline('error', Translator::phrase('error_47'));
                 return;
             }
 
@@ -30,29 +31,29 @@ final class ContactController
                 try {
                     $emailVal = $_POST['contact_email']   ?? '';
                     $msgVal   = $_POST['contact_message'] ?? '';
-                    if (!Validator::Email($emailVal))           throw new \Exception(lang('error_9',  true));
-                    if (!Validator::Length($msgVal, 300, 10))   throw new \Exception(lang('error_57', true));
+                    if (!Validator::Email($emailVal))           throw new \Exception(Translator::phrase('error_9'));
+                    if (!Validator::Length($msgVal, 300, 10))   throw new \Exception(Translator::phrase('error_57'));
 
                     $emailConfigs = BootstrapContext::configProvider()?->globalXml('email-templates');
-                    if (!is_array($emailConfigs)) throw new \Exception(lang('error_21', true));
+                    if (!is_array($emailConfigs)) throw new \Exception(Translator::phrase('error_21'));
 
                     $mail = new Email();
-                    $mail->_subject = mconfig('subject');
+                    $mail->_subject = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('subject');
                     $mail->setFrom($emailConfigs['send_from'], $emailConfigs['send_name'] . ' - Contact Form');
                     $mail->setReplyTo($emailVal);
                     $mail->_message = $msgVal;
-                    $mail->addAddress(mconfig('sendto'));
+                    $mail->addAddress(\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('sendto'));
                     $mail->send();
 
-                    message('success', lang('success_22', true));
+                    \Darkheim\Application\View\MessageRenderer::toast('success', Translator::phrase('success_22'));
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
             $this->view->render('contact');
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }

@@ -19,10 +19,10 @@ final class EditNewsController
     public function render(): void
     {
         $newsService = new News();
-        loadModuleConfigs('news');
+        \Darkheim\Infrastructure\Bootstrap\BootstrapContext::loadModuleConfig('news');
 
         if (!$newsService->isNewsDirWritable()) {
-            message('error', 'The news cache folder is not writable.');
+            \Darkheim\Application\View\MessageRenderer::toast('error', 'The news cache folder is not writable.');
             return;
         }
 
@@ -30,12 +30,12 @@ final class EditNewsController
             $newsService->editNews($_REQUEST['id'], $_POST['news_title'], $_POST['news_content'], $_POST['news_author'], 0, $_POST['news_date']);
             $newsService->cacheNews();
             $newsService->updateNewsCacheIndex();
-            redirect(1, 'admincp/?module=managenews');
+            \Darkheim\Infrastructure\Http\Redirector::go(1, 'admincp/?module=managenews');
         }
 
         $editNews = $newsService->loadNewsData($_REQUEST['id']);
         if (!$editNews) {
-            message('error', 'Could not load news data.');
+            \Darkheim\Application\View\MessageRenderer::toast('error', 'Could not load news data.');
             return;
         }
 

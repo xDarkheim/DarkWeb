@@ -25,7 +25,8 @@ final class CacheManagerController
     {
         try {
             $cacheManager = new CacheManager();
-            $this->handleAction($cacheManager);
+            $admincpUrl = new AdmincpUrlGenerator();
+            $this->handleAction($cacheManager, $admincpUrl);
 
             $cacheFileList = $cacheManager->getCacheFileListAndData();
             if (!is_array($cacheFileList)) {
@@ -34,15 +35,15 @@ final class CacheManagerController
 
             $this->view->render('admincp/cachemanager', [
                 'pageTitle' => 'Cache Manager',
-                'cacheRows' => $this->cacheRows($cacheFileList),
-                'profileCards' => $this->profileCards($cacheManager),
+                'cacheRows' => $this->cacheRows($cacheFileList, $admincpUrl),
+                'profileCards' => $this->profileCards($cacheManager, $admincpUrl),
             ]);
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 
-    private function handleAction(CacheManager $cacheManager): void
+    private function handleAction(CacheManager $cacheManager, AdmincpUrlGenerator $admincpUrl): void
     {
         $action = (string) $this->query->get('action', '');
         if ($action === '') {
@@ -65,9 +66,9 @@ final class CacheManagerController
                     throw new \RuntimeException('Invalid action.');
             }
 
-            redirect(3, admincp_base('cachemanager'));
+            \Darkheim\Infrastructure\Http\Redirector::go(3, $admincpUrl->base('cachemanager'));
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 
@@ -75,7 +76,7 @@ final class CacheManagerController
      * @param array<int,array<string,mixed>> $cacheFileList
      * @return array<int,array{file:string,size:string,lastModified:string,writableLabel:string,writableClass:string,clearUrl:string}>
      */
-    private function cacheRows(array $cacheFileList): array
+    private function cacheRows(array $cacheFileList, AdmincpUrlGenerator $admincpUrl): array
     {
         $rows = [];
         foreach ($cacheFileList as $row) {
@@ -87,7 +88,7 @@ final class CacheManagerController
                 'lastModified' => (string) ($row['edit'] ?? ''),
                 'writableLabel' => $isWritable ? 'Yes' : 'Not Writable',
                 'writableClass' => $isWritable ? 'badge-status on' : 'badge-status off',
-                'clearUrl' => admincp_base('cachemanager&action=clear&file=' . urlencode($file)),
+                'clearUrl' => $admincpUrl->base('cachemanager&action=clear&file=' . urlencode($file)),
             ];
         }
 
@@ -97,7 +98,7 @@ final class CacheManagerController
     /**
      * @return array<int,array{label:string,fileCount:string,totalSize:string,deleteUrl:string,showDelete:bool,deleteLabel:string}>
      */
-    private function profileCards(CacheManager $cacheManager): array
+    private function profileCards(CacheManager $cacheManager, AdmincpUrlGenerator $admincpUrl): array
     {
         $cards = [];
         foreach (['guild' => 'Guild Profiles', 'player' => 'Player Profiles'] as $type => $label) {
@@ -119,7 +120,7 @@ final class CacheManagerController
                 'label' => $label,
                 'fileCount' => number_format($count),
                 'totalSize' => FileHelper::readableSize($size),
-                'deleteUrl' => admincp_base('cachemanager&action=' . $action),
+                'deleteUrl' => $admincpUrl->base('cachemanager&action=' . $action),
                 'showDelete' => $count > 0,
                 'deleteLabel' => 'Delete ' . $label . ' Cache',
             ];

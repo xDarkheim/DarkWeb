@@ -10,12 +10,12 @@
 ?>
 <?php if ($showSingle): ?>
 
-<div class="page-title"><span><?php echo lang('news_txt_4', true); ?></span></div>
+<div class="page-title"><span><?php echo \Darkheim\Application\Language\Translator::phrase('news_txt_4', true); ?></span></div>
 
 <?php foreach ($viewItems as $entry): ?>
 <article class="news-single">
     <header class="news-single-header">
-        <div class="news-single-badge"><?php echo lang('news_txt_6', true); ?></div>
+        <div class="news-single-badge"><?php echo \Darkheim\Application\Language\Translator::phrase('news_txt_6', true); ?></div>
         <h1 class="news-single-title"><?php echo htmlspecialchars($entry['newsTitle'], ENT_QUOTES, 'UTF-8'); ?></h1>
         <div class="news-single-meta">
             <span class="news-meta-item news-meta-date">
@@ -45,7 +45,7 @@
             <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" width="12" height="12">
                 <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <?php echo lang('news_txt_4', true); ?>
+            <?php echo \Darkheim\Application\Language\Translator::phrase('news_txt_4', true); ?>
         </a>
     </footer>
 </article>
@@ -55,7 +55,7 @@
 
 <div class="news-page-header">
     <div class="news-page-header-left">
-        <div class="news-page-header-title"><?php echo lang('news_txt_4', true); ?></div>
+        <div class="news-page-header-title"><?php echo \Darkheim\Application\Language\Translator::phrase('news_txt_4', true); ?></div>
         <div class="news-page-header-sub">Latest announcements &amp; server updates</div>
     </div>
     <div class="news-page-header-count"><span><?php echo $totalCount; ?></span>posts</div>
@@ -94,7 +94,7 @@
             <div class="news-card-body"><?php echo $entry['content']; ?></div>
             <footer class="news-card-footer">
                 <a href="<?php echo $entry['newsUrl']; ?>" class="news-readmore">
-                    <?php echo lang('news_txt_3'); ?> →
+                    <?php echo \Darkheim\Application\Language\Translator::phrase('news_txt_3'); ?> →
                 </a>
             </footer>
             <?php else: ?>

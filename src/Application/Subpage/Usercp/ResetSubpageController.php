@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Darkheim\Application\Subpage\Usercp;
 
 use Darkheim\Application\Character\Character;
+use Darkheim\Application\Language\Translator;
 
 final class ResetSubpageController extends AbstractCharacterActionTableSubpageController
 {
-    protected function pageTitle(): string { return lang('module_titles_txt_12', true); }
-    protected function cardTitle(): string { return lang('module_titles_txt_12', true); }
+    protected function pageTitle(): string { return Translator::phrase('module_titles_txt_12'); }
+    protected function cardTitle(): string { return Translator::phrase('module_titles_txt_12'); }
     protected function cardIconClass(): string { return 'bi bi-person-dash-fill'; }
 
     protected function tableHeaders(): array
     {
-        return ['', lang('resetcharacter_txt_1', true), lang('resetcharacter_txt_2', true), lang('resetcharacter_txt_3', true), lang('resetcharacter_txt_4', true), ''];
+        return ['', Translator::phrase('resetcharacter_txt_1'), Translator::phrase('resetcharacter_txt_2'), Translator::phrase('resetcharacter_txt_3'), Translator::phrase('resetcharacter_txt_4'), ''];
     }
 
     protected function buildRow(Character $characterService, string $characterName): ?array
@@ -33,7 +34,7 @@ final class ResetSubpageController extends AbstractCharacterActionTableSubpageCo
                 number_format((float) $data[_CLMN_CHR_ZEN_]),
                 number_format((float) $data[_CLMN_CHR_RSTS_]),
             ],
-            'buttonLabel' => lang('resetcharacter_txt_5', true),
+            'buttonLabel' => Translator::phrase('resetcharacter_txt_5'),
         ];
     }
 
@@ -48,23 +49,23 @@ final class ResetSubpageController extends AbstractCharacterActionTableSubpageCo
     protected function requirementsLines(): array
     {
         $lines = [];
-        if (mconfig('required_level') >= 1) {
-            $lines[] = langf('resetcharacter_txt_6', [(string) mconfig('required_level')]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_level') >= 1) {
+            $lines[] = Translator::phraseFmt('resetcharacter_txt_6', [(string) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_level')]);
         }
-        if (mconfig('zen_cost') >= 1) {
-            $lines[] = langf('resetcharacter_txt_7', [number_format((float) mconfig('zen_cost'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost') >= 1) {
+            $lines[] = Translator::phraseFmt('resetcharacter_txt_7', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost'))]);
         }
-        if (mconfig('credit_cost') >= 1) {
-            $lines[] = langf('resetcharacter_txt_9', [number_format((float) mconfig('credit_cost'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost') >= 1) {
+            $lines[] = Translator::phraseFmt('resetcharacter_txt_9', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost'))]);
         }
-        if (mconfig('maximum_resets') >= 1) {
-            $lines[] = langf('resetcharacter_txt_10', [number_format((float) mconfig('maximum_resets'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('maximum_resets') >= 1) {
+            $lines[] = Translator::phraseFmt('resetcharacter_txt_10', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('maximum_resets'))]);
         }
-        if (mconfig('credit_reward') >= 1) {
-            $lines[] = langf('resetcharacter_txt_8', [number_format((float) mconfig('credit_reward'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_reward') >= 1) {
+            $lines[] = Translator::phraseFmt('resetcharacter_txt_8', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_reward'))]);
         }
-        if (mconfig('clear_inventory') == 1) {
-            $lines[] = lang('resetcharacter_txt_11');
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('clear_inventory') == 1) {
+            $lines[] = Translator::phrase('resetcharacter_txt_11');
         }
         return $lines;
     }

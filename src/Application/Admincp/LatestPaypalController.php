@@ -24,6 +24,7 @@ final class LatestPaypalController
 
         try {
             $db     = Connection::Database('MuOnline');
+            $admincpUrl = new AdmincpUrlGenerator();
             $common = new Common();
             $data   = $db->query_fetch('SELECT * FROM ' . PayPal_Transactions . ' ORDER BY id DESC');
             if (!is_array($data)) {
@@ -34,7 +35,7 @@ final class LatestPaypalController
                 $rows[]   = [
                     'transactionId'  => (string) ($tx['transaction_id'] ?? ''),
                     'username'       => (string) ($userData[_CLMN_USERNM_] ?? ''),
-                    'accountInfoUrl' => admincp_base('accountinfo&id=' . ($tx['user_id'] ?? '')),
+                    'accountInfoUrl' => $admincpUrl->base('accountinfo&id=' . ($tx['user_id'] ?? '')),
                     'amount'         => (string) ($tx['payment_amount'] ?? ''),
                     'paypalEmail'    => (string) ($tx['paypal_email'] ?? ''),
                     'date'           => date('Y-m-d H:i', (int) ($tx['transaction_date'] ?? 0)),

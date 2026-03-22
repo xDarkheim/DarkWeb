@@ -41,6 +41,6 @@
     </form>
 </div>
 <?php else: ?>
-    <?php message('error', 'Admins list is empty.'); ?>
+    <?php \Darkheim\Application\View\MessageRenderer::toast('error', 'Admins list is empty.'); ?>
 <?php endif; ?>
 

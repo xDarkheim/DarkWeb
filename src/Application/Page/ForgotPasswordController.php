@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Darkheim\Application\Page;
 
 use Darkheim\Application\Account\Account;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 final class ForgotPasswordController
@@ -18,14 +19,14 @@ final class ForgotPasswordController
 
     public function render(): void
     {
-        if (isLoggedIn()) {
-            redirect();
+        if (\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+            \Darkheim\Infrastructure\Http\Redirector::go();
             return;
         }
 
         try {
-            if (!mconfig('active')) {
-                inline_message('error', lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                \Darkheim\Application\View\MessageRenderer::inline('error', Translator::phrase('error_47'));
                 return;
             }
 
@@ -38,7 +39,7 @@ final class ForgotPasswordController
                         $_GET['key']
                     );
                 } catch (\Exception $ex) {
-                    inline_message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
                 }
                 return;
             }
@@ -51,7 +52,7 @@ final class ForgotPasswordController
                         $_SERVER['REMOTE_ADDR']
                     );
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
@@ -60,7 +61,7 @@ final class ForgotPasswordController
                 'loginUrl' => __BASE_URL__ . 'login',
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Infrastructure\View;
 
+use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
+
 /**
  * Renders a named view template.
  *
@@ -24,17 +26,18 @@ final class ViewRenderer
     private ?string $viewsPath;
 
     /**
-     * @param string|null $theme      Active theme name; defaults to config('website_theme').
+     * @param string|null $theme      Active theme name; defaults to \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('website_theme').
      * @param string|null $themesPath Absolute path to themes/ dir (trailing slash). Defaults to __PATH_THEMES__.
      * @param string|null $viewsPath  Absolute path to views/  dir (trailing slash). Defaults to __PATH_VIEWS__.
      *                                Inject custom paths in tests to avoid redefining constants.
      */
     public function __construct(
-        ?string $theme      = null,
+        ?string $theme = null,
         ?string $themesPath = null,
-        ?string $viewsPath  = null,
+        ?string $viewsPath = null,
     ) {
-        $this->theme      = $theme      ?? (string) config('website_theme', true);
+        $defaultTheme     = BootstrapContext::configProvider()?->cms()['website_theme'] ?? 'default';
+        $this->theme      = $theme                                                      ?? (string) $defaultTheme;
         $this->themesPath = $themesPath;
         $this->viewsPath  = $viewsPath;
     }
@@ -50,7 +53,7 @@ final class ViewRenderer
         if ($file === null) {
             throw new \RuntimeException(
                 "View template '{$template}' not found. "
-                . "Checked theme override and views/ directory."
+                . "Checked theme override and views/ directory.",
             );
         }
 

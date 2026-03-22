@@ -6,6 +6,7 @@ namespace Darkheim\Application\Vote;
 
 use Darkheim\Application\Auth\Common;
 use Darkheim\Application\Credits\CreditSystem;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Database\Connection;
 
@@ -37,7 +38,7 @@ class Vote
             file_get_contents(__PATH_MODULE_CONFIGS_USERCP__ . $this->_configXml),
         );
         if (! $this->xml) {
-            throw new \Exception(lang('error_100'));
+            throw new \Exception(Translator::phrase('error_100'));
         }
 
         $xmlConfig           = self::xmlToArray($this->xml);
@@ -48,16 +49,16 @@ class Vote
 
     public function setUserid($userid): void
     {
-        if (! check_value($userid)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($userid)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
         if (! Validator::UnsignedNumber($userid)) {
-            throw new \Exception(lang('error_23', true));
+            throw new \Exception(Translator::phrase('error_23'));
         }
 
         $accountInfo = $this->common->accountInformation($userid);
         if (! is_array($accountInfo)) {
-            throw new \Exception(lang('error_23', true));
+            throw new \Exception(Translator::phrase('error_23'));
         }
 
         $_accountInfo    = $accountInfo;
@@ -67,56 +68,56 @@ class Vote
 
     public function setVotesiteId($votesiteid): void
     {
-        if (! check_value($votesiteid)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($votesiteid)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
         if (! Validator::UnsignedNumber($votesiteid)) {
-            throw new \Exception(lang('error_23', true));
+            throw new \Exception(Translator::phrase('error_23'));
         }
         if (! $this->_siteExists($votesiteid)) {
-            throw new \Exception(lang('error_23', true));
+            throw new \Exception(Translator::phrase('error_23'));
         }
         $this->_votesideId = $votesiteid;
     }
 
     public function setIp($ip): void
     {
-        if (! check_value($ip)) {
-            throw new \Exception(lang('error_101'));
+        if (! Validator::hasValue($ip)) {
+            throw new \Exception(Translator::phrase('error_101'));
         }
         if (! Validator::Ip($ip)) {
-            throw new \Exception(lang('error_101'));
+            throw new \Exception(Translator::phrase('error_101'));
         }
         $this->_ip = $ip;
     }
 
     public function vote(): void
     {
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
-        if (! check_value($this->_ip)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_ip)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
-        if (! check_value($this->_votesideId)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_votesideId)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
         if (! $this->_active) {
-            throw new \Exception(lang('error_47', true));
+            throw new \Exception(Translator::phrase('error_47'));
         }
         if ($this->_creditConfig == 0) {
-            throw new \Exception(lang('error_102'));
+            throw new \Exception(Translator::phrase('error_102'));
         }
         if (! $this->_canUserVote()) {
-            throw new \Exception(lang('error_15', true));
+            throw new \Exception(Translator::phrase('error_15'));
         }
         if (! $this->_canIPVote()) {
-            throw new \Exception(lang('error_16', true));
+            throw new \Exception(Translator::phrase('error_16'));
         }
 
         $voteSite = $this->retrieveVotesite($this->_votesideId);
         if (! is_array($voteSite)) {
-            throw new \Exception(lang('error_23', true));
+            throw new \Exception(Translator::phrase('error_23'));
         }
 
         $creditsReward = $voteSite['votesite_reward'];
@@ -130,7 +131,7 @@ class Vote
                 break;
             case 'username': $creditSystem->setIdentifier($this->_username);
                 break;
-            default:         throw new \Exception(lang('error_73'));
+            default:         throw new \Exception(Translator::phrase('error_73'));
         }
 
         $creditSystem->addCredits($creditsReward);
@@ -139,18 +140,18 @@ class Vote
             $this->_logVote();
         }
 
-        redirect(3, $voteSite['votesite_link']);
+        \Darkheim\Infrastructure\Http\Redirector::go(3, $voteSite['votesite_link']);
     }
 
     // ─── Private helpers ──────────────────────────────────────────────────────
 
     private function _canUserVote(): bool
     {
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
-        if (! check_value($this->_votesideId)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_votesideId)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
 
         $check = $this->muonline->query_fetch_single(
@@ -171,11 +172,11 @@ class Vote
 
     private function _canIPVote(): bool
     {
-        if (! check_value($this->_ip)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_ip)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
-        if (! check_value($this->_votesideId)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_votesideId)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
 
         $check = $this->muonline->query_fetch_single(
@@ -196,19 +197,19 @@ class Vote
 
     private function _addRecord(): void
     {
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
-        if (! check_value($this->_ip)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_ip)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
-        if (! check_value($this->_votesideId)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_votesideId)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
 
         $voteSiteInfo = $this->retrieveVotesite($this->_votesideId);
         if (! is_array($voteSiteInfo)) {
-            throw new \Exception(lang('error_23', true));
+            throw new \Exception(Translator::phrase('error_23'));
         }
 
         $timestamp = time() + $voteSiteInfo['votesite_time'] * 60 * 60;
@@ -217,7 +218,7 @@ class Vote
             [$this->_userid, $this->_ip, $this->_votesideId, $timestamp],
         );
         if (! $add) {
-            throw new \Exception(lang('error_23', true));
+            throw new \Exception(Translator::phrase('error_23'));
         }
     }
 
@@ -233,7 +234,7 @@ class Vote
 
     private function _siteExists($id): bool
     {
-        if (! check_value($id)) {
+        if (! Validator::hasValue($id)) {
             return false;
         }
         $check = $this->muonline->query_fetch_single("SELECT * FROM " . Vote_Sites . " WHERE votesite_id = ?", [$id]);
@@ -242,11 +243,11 @@ class Vote
 
     private function _logVote(): void
     {
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
-        if (! check_value($this->_votesideId)) {
-            throw new \Exception(lang('error_23', true));
+        if (! Validator::hasValue($this->_votesideId)) {
+            throw new \Exception(Translator::phrase('error_23'));
         }
 
         $this->muonline->query(

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Darkheim\Application\Page;
 
 use Darkheim\Application\Auth\AuthService;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 final class LoginController
@@ -18,14 +19,14 @@ final class LoginController
 
     public function render(): void
     {
-        if (isLoggedIn()) {
-            redirect();
+        if (\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+            \Darkheim\Infrastructure\Http\Redirector::go();
             return;
         }
 
         try {
-            if (!mconfig('active')) {
-                inline_message('error', lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                \Darkheim\Application\View\MessageRenderer::inline('error', Translator::phrase('error_47'));
                 return;
             }
 
@@ -36,7 +37,7 @@ final class LoginController
                         $_POST['darkheimLogin_pwd']  ?? ''
                     );
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
@@ -46,7 +47,7 @@ final class LoginController
                 'registerUrl'   => __BASE_URL__ . 'register',
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }

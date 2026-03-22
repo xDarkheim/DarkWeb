@@ -36,7 +36,7 @@
             </tbody>
         </table>
         <?php else: ?>
-        <div class="p-3"><?php inline_message('info', 'No temporal bans logged.'); ?></div>
+        <div class="p-3"><?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No temporal bans logged.'); ?></div>
         <?php endif; ?>
     </div>
 
@@ -60,7 +60,7 @@
             </tbody>
         </table>
         <?php else: ?>
-        <div class="p-3"><?php inline_message('info', 'No permanent bans logged.'); ?></div>
+        <div class="p-3"><?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No permanent bans logged.'); ?></div>
         <?php endif; ?>
     </div>
 </div>

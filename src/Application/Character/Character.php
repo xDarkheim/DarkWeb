@@ -8,6 +8,7 @@ use Darkheim\Application\Account\Account;
 use Darkheim\Application\Auth\Common;
 use Darkheim\Application\Credits\CreditSystem;
 use Darkheim\Application\Game\GameHelper;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Database\Connection;
@@ -50,7 +51,7 @@ class Character
 
         $classData = $this->customValue('character_class');
         if (! is_array($classData)) {
-            throw new \Exception(lang('error_108'));
+            throw new \Exception(Translator::phrase('error_108'));
         }
         $this->_classData = $classData;
     }
@@ -60,7 +61,7 @@ class Character
     public function setUserid($userid): void
     {
         if (! Validator::UnsignedNumber($userid)) {
-            throw new \Exception(lang('error_111'));
+            throw new \Exception(Translator::phrase('error_111'));
         }
         $this->_userid = $userid;
     }
@@ -68,7 +69,7 @@ class Character
     public function setUsername($username): void
     {
         if (! Validator::UsernameLength($username)) {
-            throw new \Exception(lang('error_112'));
+            throw new \Exception(Translator::phrase('error_112'));
         }
         $this->_username = $username;
     }
@@ -76,7 +77,7 @@ class Character
     public function setStrength($value): void
     {
         if (! Validator::UnsignedNumber($value)) {
-            throw new \Exception(lang('error_122'));
+            throw new \Exception(Translator::phrase('error_122'));
         }
         $this->_strength = (int) $value;
     }
@@ -84,7 +85,7 @@ class Character
     public function setAgility($value): void
     {
         if (! Validator::UnsignedNumber($value)) {
-            throw new \Exception(lang('error_122'));
+            throw new \Exception(Translator::phrase('error_122'));
         }
         $this->_agility = (int) $value;
     }
@@ -92,7 +93,7 @@ class Character
     public function setVitality($value): void
     {
         if (! Validator::UnsignedNumber($value)) {
-            throw new \Exception(lang('error_122'));
+            throw new \Exception(Translator::phrase('error_122'));
         }
         $this->_vitality = (int) $value;
     }
@@ -100,7 +101,7 @@ class Character
     public function setEnergy($value): void
     {
         if (! Validator::UnsignedNumber($value)) {
-            throw new \Exception(lang('error_122'));
+            throw new \Exception(Translator::phrase('error_122'));
         }
         $this->_energy = (int) $value;
     }
@@ -108,7 +109,7 @@ class Character
     public function setCommand($value): void
     {
         if (! Validator::UnsignedNumber($value)) {
-            throw new \Exception(lang('error_122'));
+            throw new \Exception(Translator::phrase('error_122'));
         }
         $this->_command = (int) $value;
     }
@@ -117,66 +118,66 @@ class Character
 
     public function CharacterReset(): void
     {
-        if (! check_value($this->_username)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_username)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_character)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_character)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
         if (! $this->CharacterExists($this->_character)) {
-            throw new \Exception(lang('error_32'));
+            throw new \Exception(Translator::phrase('error_32'));
         }
         if (! $this->CharacterBelongsToAccount($this->_character, $this->_username)) {
-            throw new \Exception(lang('error_32'));
+            throw new \Exception(Translator::phrase('error_32'));
         }
 
         $account = new Account();
         if ($account->accountOnline($this->_username)) {
-            throw new \Exception(lang('error_14'));
+            throw new \Exception(Translator::phrase('error_14'));
         }
 
         $characterData = $this->CharacterData($this->_character);
         $resetNumber   = $characterData[_CLMN_CHR_RSTS_] + 1;
 
-        if ((mconfig('required_level') >= 1)
-            && $characterData[_CLMN_CHR_LVL_] < mconfig('required_level')
+        if ((\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_level') >= 1)
+            && $characterData[_CLMN_CHR_LVL_] < \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_level')
         ) {
-            throw new \Exception(lang('error_33'));
+            throw new \Exception(Translator::phrase('error_33'));
         }
 
-        $maxResets = mconfig('maximum_resets');
+        $maxResets = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('maximum_resets');
         if ($maxResets > 0 && $resetNumber > $maxResets) {
-            throw new \Exception(lang('error_127'));
+            throw new \Exception(Translator::phrase('error_127'));
         }
 
-        $clearStats       = mconfig('keep_stats') != 1;
-        $newLevelUpPoints = mconfig('points_reward') >= 1 ? (int) mconfig('points_reward') : 0;
-        if (mconfig('multiply_points_by_resets') == 1) {
+        $clearStats       = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('keep_stats') != 1;
+        $newLevelUpPoints = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('points_reward') >= 1 ? (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('points_reward') : 0;
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('multiply_points_by_resets') == 1) {
             $newLevelUpPoints *= $resetNumber;
         }
         if (! $clearStats) {
             $newLevelUpPoints += $characterData[_CLMN_CHR_LVLUP_POINT_];
         }
 
-        $revertClass = mconfig('revert_class_evolution') == 1;
+        $revertClass = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('revert_class_evolution') == 1;
         if ($revertClass) {
             if (! array_key_exists('class_group', $this->_classData[$characterData[_CLMN_CHR_CLASS_]])) {
-                throw new \Exception(lang('error_128'));
+                throw new \Exception(Translator::phrase('error_128'));
             }
             $classGroup = $this->_classData[$characterData[_CLMN_CHR_CLASS_]]['class_group'];
         }
 
-        $zenRequirement = mconfig('zen_cost');
+        $zenRequirement = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost');
         if ($zenRequirement > 0 && $characterData[_CLMN_CHR_ZEN_] < $zenRequirement) {
-            throw new \Exception(lang('error_34'));
+            throw new \Exception(Translator::phrase('error_34'));
         }
         $newZen = $characterData[_CLMN_CHR_ZEN_] - $zenRequirement;
 
-        $creditConfig = mconfig('credit_config');
-        $creditCost   = mconfig('credit_cost');
+        $creditConfig = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_config');
+        $creditCost   = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost');
         $creditSystem = null;
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem = new CreditSystem();
@@ -184,12 +185,12 @@ class Character
             $configSettings = $creditSystem->showConfigs(true);
             $this->_setCreditIdentifier($creditSystem, $configSettings['config_user_col_id']);
             if ($creditSystem->getCredits() < $creditCost) {
-                throw new \Exception(langf('error_126', [$configSettings['config_title']]));
+                throw new \Exception(Translator::phraseFmt('error_126', [$configSettings['config_title']]));
             }
         }
 
         $base_stats     = $this->_getClassBaseStats($characterData[_CLMN_CHR_CLASS_]);
-        $clearInventory = mconfig('clear_inventory') == 1;
+        $clearInventory = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('clear_inventory') == 1;
 
         $data = [];
         if ($revertClass) {
@@ -225,15 +226,15 @@ class Character
 
         $result = $this->muonline->query($query, $data);
         if (! $result) {
-            throw new \Exception(lang('error_23'));
+            throw new \Exception(Translator::phrase('error_23'));
         }
 
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem->subtractCredits($creditCost);
         }
 
-        $creditRewardConfig = mconfig('credit_reward_config');
-        $creditReward       = mconfig('credit_reward');
+        $creditRewardConfig = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_reward_config');
+        $creditReward       = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_reward');
         if ($creditReward > 0 && $creditRewardConfig != 0) {
             $rewardSystem = new CreditSystem();
             $rewardSystem->setConfigId($creditRewardConfig);
@@ -242,37 +243,37 @@ class Character
             $rewardSystem->addCredits($creditReward);
         }
 
-        message('success', lang('success_8'));
+        \Darkheim\Application\View\MessageRenderer::toast('success', Translator::phrase('success_8'));
     }
 
     public function CharacterResetStats(): void
     {
-        if (! check_value($this->_username)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_username)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_character)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_character)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
         if (! $this->CharacterExists($this->_character)) {
-            throw new \Exception(lang('error_35'));
+            throw new \Exception(Translator::phrase('error_35'));
         }
         if (! $this->CharacterBelongsToAccount($this->_character, $this->_username)) {
-            throw new \Exception(lang('error_35'));
+            throw new \Exception(Translator::phrase('error_35'));
         }
 
         $account = new Account();
         if ($account->accountOnline($this->_username)) {
-            throw new \Exception(lang('error_14'));
+            throw new \Exception(Translator::phrase('error_14'));
         }
 
         $characterData  = $this->CharacterData($this->_character);
-        $zenRequirement = mconfig('zen_cost');
+        $zenRequirement = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost');
 
-        $creditConfig = mconfig('credit_config');
-        $creditCost   = mconfig('credit_cost');
+        $creditConfig = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_config');
+        $creditCost   = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost');
         $creditSystem = null;
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem = new CreditSystem();
@@ -280,12 +281,12 @@ class Character
             $configSettings = $creditSystem->showConfigs(true);
             $this->_setCreditIdentifier($creditSystem, $configSettings['config_user_col_id']);
             if ($creditSystem->getCredits() < $creditCost) {
-                throw new \Exception(langf('error_113', [$configSettings['config_title']]));
+                throw new \Exception(Translator::phraseFmt('error_113', [$configSettings['config_title']]));
             }
         }
 
         if ($zenRequirement > 0 && $characterData[_CLMN_CHR_ZEN_] < $zenRequirement) {
-            throw new \Exception(lang('error_34'));
+            throw new \Exception(Translator::phrase('error_34'));
         }
 
         $base_stats        = $this->_getClassBaseStats($characterData[_CLMN_CHR_CLASS_]);
@@ -313,48 +314,48 @@ class Character
 
         $result = $this->muonline->query($query, $data);
         if (! $result) {
-            throw new \Exception(lang('error_21'));
+            throw new \Exception(Translator::phrase('error_21'));
         }
 
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem->subtractCredits($creditCost);
         }
 
-        message('success', lang('success_9'));
+        \Darkheim\Application\View\MessageRenderer::toast('success', Translator::phrase('success_9'));
     }
 
     public function CharacterClearPK(): void
     {
-        if (! check_value($this->_username)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_username)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_character)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_character)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
         if (! $this->CharacterExists($this->_character)) {
-            throw new \Exception(lang('error_36'));
+            throw new \Exception(Translator::phrase('error_36'));
         }
         if (! $this->CharacterBelongsToAccount($this->_character, $this->_username)) {
-            throw new \Exception(lang('error_36'));
+            throw new \Exception(Translator::phrase('error_36'));
         }
 
         $account = new Account();
         if ($account->accountOnline($this->_username)) {
-            throw new \Exception(lang('error_14'));
+            throw new \Exception(Translator::phrase('error_14'));
         }
 
         $characterData = $this->CharacterData($this->_character);
         if ($characterData[_CLMN_CHR_PK_LEVEL_] == $this->_clearPkLevel) {
-            throw new \Exception(lang('error_117'));
+            throw new \Exception(Translator::phrase('error_117'));
         }
 
-        $zenRequirement = mconfig('zen_cost');
+        $zenRequirement = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost');
 
-        $creditConfig = mconfig('credit_config');
-        $creditCost   = mconfig('credit_cost');
+        $creditConfig = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_config');
+        $creditCost   = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost');
         $creditSystem = null;
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem = new CreditSystem();
@@ -362,12 +363,12 @@ class Character
             $configSettings = $creditSystem->showConfigs(true);
             $this->_setCreditIdentifier($creditSystem, $configSettings['config_user_col_id']);
             if ($creditSystem->getCredits() < $creditCost) {
-                throw new \Exception(langf('error_116', [$configSettings['config_title']]));
+                throw new \Exception(Translator::phraseFmt('error_116', [$configSettings['config_title']]));
             }
         }
 
         if ($zenRequirement > 0 && $characterData[_CLMN_CHR_ZEN_] < $zenRequirement) {
-            throw new \Exception(lang('error_34'));
+            throw new \Exception(Translator::phrase('error_34'));
         }
 
         $data  = ['player' => $characterData[_CLMN_CHR_NAME_], 'pklevel' => $this->_clearPkLevel, 'zen' => $zenRequirement];
@@ -375,37 +376,37 @@ class Character
 
         $result = $this->muonline->query($query, $data);
         if (! $result) {
-            throw new \Exception(lang('error_21'));
+            throw new \Exception(Translator::phrase('error_21'));
         }
 
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem->subtractCredits($creditCost);
         }
 
-        message('success', lang('success_10'));
+        \Darkheim\Application\View\MessageRenderer::toast('success', Translator::phrase('success_10'));
     }
 
     public function CharacterUnstick(): void
     {
-        if (! check_value($this->_username)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_username)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_character)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_character)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
         if (! $this->CharacterExists($this->_character)) {
-            throw new \Exception(lang('error_37'));
+            throw new \Exception(Translator::phrase('error_37'));
         }
         if (! $this->CharacterBelongsToAccount($this->_character, $this->_username)) {
-            throw new \Exception(lang('error_37'));
+            throw new \Exception(Translator::phrase('error_37'));
         }
 
         $account = new Account();
         if ($account->accountOnline($this->_username)) {
-            throw new \Exception(lang('error_14'));
+            throw new \Exception(Translator::phrase('error_14'));
         }
 
         $characterData = $this->CharacterData($this->_character);
@@ -413,13 +414,13 @@ class Character
             && $characterData[_CLMN_CHR_MAP_X_] == $this->_unstickCoordX
             && $characterData[_CLMN_CHR_MAP_Y_] == $this->_unstickCoordY
         ) {
-            throw new \Exception(lang('error_115'));
+            throw new \Exception(Translator::phrase('error_115'));
         }
 
-        $zenRequirement = mconfig('zen_cost');
+        $zenRequirement = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost');
 
-        $creditConfig = mconfig('credit_config');
-        $creditCost   = mconfig('credit_cost');
+        $creditConfig = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_config');
+        $creditCost   = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost');
         $creditSystem = null;
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem = new CreditSystem();
@@ -427,64 +428,64 @@ class Character
             $configSettings = $creditSystem->showConfigs(true);
             $this->_setCreditIdentifier($creditSystem, $configSettings['config_user_col_id']);
             if ($creditSystem->getCredits() < $creditCost) {
-                throw new \Exception(langf('error_114', [$configSettings['config_title']]));
+                throw new \Exception(Translator::phraseFmt('error_114', [$configSettings['config_title']]));
             }
         }
 
         if ($zenRequirement > 0 && $characterData[_CLMN_CHR_ZEN_] < $zenRequirement) {
-            throw new \Exception(lang('error_34'));
+            throw new \Exception(Translator::phrase('error_34'));
         }
         if ($zenRequirement > 0 && ! $this->DeductZEN($this->_character, $zenRequirement)) {
-            throw new \Exception(lang('error_34'));
+            throw new \Exception(Translator::phrase('error_34'));
         }
 
         $update = $this->_moveCharacter($this->_character, $this->_unstickMap, $this->_unstickCoordX, $this->_unstickCoordY);
         if (! $update) {
-            throw new \Exception(lang('error_21'));
+            throw new \Exception(Translator::phrase('error_21'));
         }
 
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem->subtractCredits($creditCost);
         }
 
-        message('success', lang('success_11'));
+        \Darkheim\Application\View\MessageRenderer::toast('success', Translator::phrase('success_11'));
     }
 
     public function CharacterClearSkillTree(): void
     {
-        if (! check_value($this->_username)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_username)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_character)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_character)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
         if (! $this->CharacterExists($this->_character)) {
-            throw new \Exception(lang('error_38'));
+            throw new \Exception(Translator::phrase('error_38'));
         }
         if (! $this->CharacterBelongsToAccount($this->_character, $this->_username)) {
-            throw new \Exception(lang('error_38'));
+            throw new \Exception(Translator::phrase('error_38'));
         }
 
         $account = new Account();
         if ($account->accountOnline($this->_username)) {
-            throw new \Exception(lang('error_14'));
+            throw new \Exception(Translator::phrase('error_14'));
         }
 
         $characterData = $this->CharacterData($this->_character);
-        if ($characterData[_CLMN_CHR_LVL_] < mconfig('required_level')) {
-            throw new \Exception(lang('error_120'));
+        if ($characterData[_CLMN_CHR_LVL_] < \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_level')) {
+            throw new \Exception(Translator::phrase('error_120'));
         }
 
         /** @phpstan-ignore notEqual.alwaysTrue */
         $characterMasterLvlData = _TBL_CHR_ != _TBL_MASTERLVL_ ? $this->getMasterLevelInfo($this->_character) : $characterData;
         if (! is_array($characterMasterLvlData)) {
-            throw new \Exception(lang('error_119'));
+            throw new \Exception(Translator::phrase('error_119'));
         }
-        if ($characterMasterLvlData[_CLMN_ML_LVL_] < mconfig('required_master_level')) {
-            throw new \Exception(lang('error_121'));
+        if ($characterMasterLvlData[_CLMN_ML_LVL_] < \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_master_level')) {
+            throw new \Exception(Translator::phrase('error_121'));
         }
 
         $characterLevel = $characterData[_CLMN_CHR_LVL_] + $characterMasterLvlData[_CLMN_ML_LVL_];
@@ -500,10 +501,10 @@ class Character
             $skillEnhancementPoints = $characterLevel - $this->_skilEnhanceTreeLevel;
         }
 
-        $zenRequirement = mconfig('zen_cost');
+        $zenRequirement = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost');
 
-        $creditConfig = mconfig('credit_config');
-        $creditCost   = mconfig('credit_cost');
+        $creditConfig = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_config');
+        $creditCost   = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost');
         $creditSystem = null;
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem = new CreditSystem();
@@ -511,12 +512,12 @@ class Character
             $configSettings = $creditSystem->showConfigs(true);
             $this->_setCreditIdentifier($creditSystem, $configSettings['config_user_col_id']);
             if ($creditSystem->getCredits() < $creditCost) {
-                throw new \Exception(langf('error_118', [$configSettings['config_title']]));
+                throw new \Exception(Translator::phraseFmt('error_118', [$configSettings['config_title']]));
             }
         }
 
         if ($zenRequirement > 0 && $characterData[_CLMN_CHR_ZEN_] < $zenRequirement) {
-            throw new \Exception(lang('error_34'));
+            throw new \Exception(Translator::phrase('error_34'));
         }
 
         $data = ['player' => $this->_character, 'masterpoints' => $characterMasterLvlData[_CLMN_ML_LVL_] - $skillEnhancementPoints];
@@ -540,53 +541,53 @@ class Character
         $query .= " WHERE " . _CLMN_ML_NAME_ . " = :player";
 
         if (! $this->_resetMagicList($this->_character)) {
-            throw new \Exception(lang('error_21'));
+            throw new \Exception(Translator::phrase('error_21'));
         }
         if (! $this->muonline->query($query, $data)) {
-            throw new \Exception(lang('error_21'));
+            throw new \Exception(Translator::phrase('error_21'));
         }
         if ($zenRequirement > 0 && ! $this->DeductZEN($this->_character, $zenRequirement)) {
-            throw new \Exception(lang('error_34'));
+            throw new \Exception(Translator::phrase('error_34'));
         }
 
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem->subtractCredits($creditCost);
         }
 
-        message('success', lang('success_12'));
+        \Darkheim\Application\View\MessageRenderer::toast('success', Translator::phrase('success_12'));
     }
 
     public function CharacterAddStats(): void
     {
-        if (! check_value($this->_username)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_username)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_character)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_character)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
-        if (! check_value($this->_userid)) {
-            throw new \Exception(lang('error_21'));
+        if (! Validator::hasValue($this->_userid)) {
+            throw new \Exception(Translator::phrase('error_21'));
         }
         if (! $this->CharacterExists($this->_character)) {
-            throw new \Exception(lang('error_64'));
+            throw new \Exception(Translator::phrase('error_64'));
         }
         if (! $this->CharacterBelongsToAccount($this->_character, $this->_username)) {
-            throw new \Exception(lang('error_64'));
+            throw new \Exception(Translator::phrase('error_64'));
         }
 
         $pointsTotal = $this->_strength + $this->_agility + $this->_vitality + $this->_energy + $this->_command;
-        if ($pointsTotal < mconfig('minimum_limit')) {
-            throw new \Exception(langf('error_54', [mconfig('minimum_limit')]));
+        if ($pointsTotal < \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('minimum_limit')) {
+            throw new \Exception(Translator::phraseFmt('error_54', [\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('minimum_limit')]));
         }
 
         $account = new Account();
         if ($account->accountOnline($this->_username)) {
-            throw new \Exception(lang('error_14'));
+            throw new \Exception(Translator::phrase('error_14'));
         }
 
         $characterData = $this->CharacterData($this->_character);
         if ($characterData[_CLMN_CHR_LVLUP_POINT_] < $pointsTotal) {
-            throw new \Exception(lang('error_51'));
+            throw new \Exception(Translator::phrase('error_51'));
         }
 
         $str = $characterData[_CLMN_CHR_STAT_STR_] + $this->_strength;
@@ -594,17 +595,17 @@ class Character
         $vit = $characterData[_CLMN_CHR_STAT_VIT_] + $this->_vitality;
         $ene = $characterData[_CLMN_CHR_STAT_ENE_] + $this->_energy;
 
-        if ($str > mconfig('max_stats')) {
-            throw new \Exception(langf('error_53', [number_format(mconfig('max_stats'))]));
+        if ($str > \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats')) {
+            throw new \Exception(Translator::phraseFmt('error_53', [number_format(\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats'))]));
         }
-        if ($agi > mconfig('max_stats')) {
-            throw new \Exception(langf('error_53', [number_format(mconfig('max_stats'))]));
+        if ($agi > \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats')) {
+            throw new \Exception(Translator::phraseFmt('error_53', [number_format(\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats'))]));
         }
-        if ($vit > mconfig('max_stats')) {
-            throw new \Exception(langf('error_53', [number_format(mconfig('max_stats'))]));
+        if ($vit > \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats')) {
+            throw new \Exception(Translator::phraseFmt('error_53', [number_format(\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats'))]));
         }
-        if ($ene > mconfig('max_stats')) {
-            throw new \Exception(langf('error_53', [number_format(mconfig('max_stats'))]));
+        if ($ene > \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats')) {
+            throw new \Exception(Translator::phraseFmt('error_53', [number_format(\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats'))]));
         }
 
         $cmd = 0;
@@ -615,36 +616,36 @@ class Character
                 true,
             )
             ) {
-                throw new \Exception(lang('error_52'));
+                throw new \Exception(Translator::phrase('error_52'));
             }
             $cmd = $characterData[_CLMN_CHR_STAT_CMD_] + $this->_command;
-            if ($cmd > mconfig('max_stats')) {
-                throw new \Exception(langf('error_53', [number_format(mconfig('max_stats'))]));
+            if ($cmd > \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats')) {
+                throw new \Exception(Translator::phraseFmt('error_53', [number_format(\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_stats'))]));
             }
         }
 
-        if ($characterData[_CLMN_CHR_LVL_] < mconfig('required_level')) {
-            throw new \Exception(lang('error_123'));
+        if ($characterData[_CLMN_CHR_LVL_] < \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_level')) {
+            throw new \Exception(Translator::phrase('error_123'));
         }
 
-        if (mconfig('required_master_level') >= 1) {
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_master_level') >= 1) {
             /** @phpstan-ignore notEqual.alwaysTrue */
             $characterMasterLvlData = _TBL_CHR_ != _TBL_MASTERLVL_ ? $this->getMasterLevelInfo($this->_character) : $characterData;
             if (! is_array($characterMasterLvlData)) {
-                throw new \Exception(lang('error_119'));
+                throw new \Exception(Translator::phrase('error_119'));
             }
-            if ($characterMasterLvlData[_CLMN_ML_LVL_] < mconfig('required_master_level')) {
-                throw new \Exception(lang('error_124'));
+            if ($characterMasterLvlData[_CLMN_ML_LVL_] < \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_master_level')) {
+                throw new \Exception(Translator::phrase('error_124'));
             }
         }
 
-        $zenRequirement = mconfig('zen_cost');
+        $zenRequirement = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost');
         if ($zenRequirement > 0 && $characterData[_CLMN_CHR_ZEN_] < $zenRequirement) {
-            throw new \Exception(lang('error_34'));
+            throw new \Exception(Translator::phrase('error_34'));
         }
 
-        $creditConfig = mconfig('credit_config');
-        $creditCost   = mconfig('credit_cost');
+        $creditConfig = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_config');
+        $creditCost   = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_cost');
         $creditSystem = null;
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem = new CreditSystem();
@@ -652,12 +653,12 @@ class Character
             $configSettings = $creditSystem->showConfigs(true);
             $this->_setCreditIdentifier($creditSystem, $configSettings['config_user_col_id']);
             if ($creditSystem->getCredits() < $creditCost) {
-                throw new \Exception(langf('error_125', [$configSettings['config_title']]));
+                throw new \Exception(Translator::phraseFmt('error_125', [$configSettings['config_title']]));
             }
         }
 
         if ($zenRequirement > 0 && ! $this->DeductZEN($this->_character, $zenRequirement)) {
-            throw new \Exception(lang('error_34'));
+            throw new \Exception(Translator::phrase('error_34'));
         }
 
         $data = ['str' => $str, 'agi' => $agi, 'vit' => $vit, 'ene' => $ene, 'total' => $pointsTotal, 'player' => $characterData[_CLMN_CHR_NAME_]];
@@ -674,21 +675,21 @@ class Character
 
         $result = $this->muonline->query($query, $data);
         if (! $result) {
-            throw new \Exception(lang('error_21'));
+            throw new \Exception(Translator::phrase('error_21'));
         }
 
         if ($creditCost > 0 && $creditConfig != 0) {
             $creditSystem->subtractCredits($creditCost);
         }
 
-        message('success', lang('success_17'));
+        \Darkheim\Application\View\MessageRenderer::toast('success', Translator::phrase('success_17'));
     }
 
     // ─── Data retrieval ───────────────────────────────────────────────────────
 
     public function AccountCharacter($username)
     {
-        if (! check_value($username)) {
+        if (! Validator::hasValue($username)) {
             return;
         }
         if (! Validator::UsernameLength($username)) {
@@ -708,7 +709,7 @@ class Character
 
         $return = [];
         foreach ($result as $row) {
-            if (! check_value($row[_CLMN_CHR_NAME_])) {
+            if (! Validator::hasValue($row[_CLMN_CHR_NAME_])) {
                 continue;
             }
             $return[] = $row[_CLMN_CHR_NAME_];
@@ -719,7 +720,7 @@ class Character
 
     public function CharacterData($character_name)
     {
-        if (! check_value($character_name)) {
+        if (! Validator::hasValue($character_name)) {
             return;
         }
         $result = $this->muonline->query_fetch_single(
@@ -731,10 +732,10 @@ class Character
 
     public function CharacterBelongsToAccount($character_name, $username)
     {
-        if (! check_value($character_name)) {
+        if (! Validator::hasValue($character_name)) {
             return;
         }
-        if (! check_value($username)) {
+        if (! Validator::hasValue($username)) {
             return;
         }
         if (! Validator::UsernameLength($username)) {
@@ -755,7 +756,7 @@ class Character
 
     public function CharacterExists($character_name)
     {
-        if (! check_value($character_name)) {
+        if (! Validator::hasValue($character_name)) {
             return;
         }
         $check = $this->muonline->query_fetch_single(
@@ -767,10 +768,10 @@ class Character
 
     public function DeductZEN($character_name, $zen_amount)
     {
-        if (! check_value($character_name)) {
+        if (! Validator::hasValue($character_name)) {
             return;
         }
-        if (! check_value($zen_amount)) {
+        if (! Validator::hasValue($zen_amount)) {
             return;
         }
         if (! Validator::UnsignedNumber($zen_amount)) {
@@ -798,7 +799,7 @@ class Character
 
     public function AccountCharacterIDC($username)
     {
-        if (! check_value($username)) {
+        if (! Validator::hasValue($username)) {
             return;
         }
         if (! Validator::UsernameLength($username)) {
@@ -822,7 +823,7 @@ class Character
 
     public function getMasterLevelInfo($character_name)
     {
-        if (! check_value($character_name)) {
+        if (! Validator::hasValue($character_name)) {
             return;
         }
         if (! $this->CharacterExists($character_name)) {
@@ -839,7 +840,7 @@ class Character
 
     protected function _moveCharacter($character_name, int $map = 0, int $x = 125, int $y = 125)
     {
-        if (! check_value($character_name)) {
+        if (! Validator::hasValue($character_name)) {
             return;
         }
         $move = $this->muonline->query(
@@ -861,13 +862,13 @@ class Character
     protected function _getClassBaseStats($class): array
     {
         if (! array_key_exists($class, $this->_classData)) {
-            throw new \Exception(lang('error_109'));
+            throw new \Exception(Translator::phrase('error_109'));
         }
         if (! array_key_exists('base_stats', $this->_classData[$class])) {
-            throw new \Exception(lang('error_110'));
+            throw new \Exception(Translator::phrase('error_110'));
         }
         if (! is_array($this->_classData[$class]['base_stats'])) {
-            throw new \Exception(lang('error_110'));
+            throw new \Exception(Translator::phrase('error_110'));
         }
         return $this->_classData[$class]['base_stats'];
     }

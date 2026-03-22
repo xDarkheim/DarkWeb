@@ -31,19 +31,19 @@
             </div>
         </div>
         <div class="ma-banner-actions">
-            <a href="<?php echo $myEmailUrl; ?>" class="ma-action-btn"><i class="bi bi-envelope-fill"></i> <?php echo lang('myaccount_txt_3'); ?></a>
-            <a href="<?php echo $myPasswordUrl; ?>" class="ma-action-btn"><i class="bi bi-key-fill"></i> <?php echo lang('myaccount_txt_4'); ?></a>
+            <a href="<?php echo $myEmailUrl; ?>" class="ma-action-btn"><i class="bi bi-envelope-fill"></i> <?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_3'); ?></a>
+            <a href="<?php echo $myPasswordUrl; ?>" class="ma-action-btn"><i class="bi bi-key-fill"></i> <?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_4'); ?></a>
         </div>
     </div>
 </div>
 
 <div class="ma-info-strip">
     <div class="ma-info-cell">
-        <span class="ma-info-label"><i class="bi bi-envelope"></i> <?php echo lang('myaccount_txt_3'); ?></span>
+        <span class="ma-info-label"><i class="bi bi-envelope"></i> <?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_3'); ?></span>
         <span class="ma-info-value"><?php echo $email; ?></span>
     </div>
     <div class="ma-info-cell">
-        <span class="ma-info-label"><i class="bi bi-shield-lock"></i> <?php echo lang('myaccount_txt_4'); ?></span>
+        <span class="ma-info-label"><i class="bi bi-shield-lock"></i> <?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_4'); ?></span>
         <span class="ma-info-value ma-dots">&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;</span>
     </div>
     <?php foreach ($creditRows as $row): ?>
@@ -54,7 +54,7 @@
     <?php endforeach; ?>
 </div>
 
-<div class="ma-section-title"><i class="bi bi-person-badge-fill"></i><?php echo lang('myaccount_txt_15'); ?></div>
+<div class="ma-section-title"><i class="bi bi-person-badge-fill"></i><?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_15'); ?></div>
 
 <?php if ($hasCharacters): ?>
 <div class="ma-chars-grid">
@@ -76,16 +76,16 @@
 <?php endif; ?>
 
 <?php if ($hasConnectionHistory): ?>
-<div class="ma-section-title" style="margin-top:24px;"><i class="bi bi-clock-history"></i><?php echo lang('myaccount_txt_16'); ?></div>
+<div class="ma-section-title" style="margin-top:24px;"><i class="bi bi-clock-history"></i><?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_16'); ?></div>
 <div class="ucp-card">
     <div class="ucp-card-body" style="padding:0;">
         <table class="table general-table-ui" style="margin-bottom:0;">
             <thead>
                 <tr>
-                    <th><?php echo lang('myaccount_txt_13'); ?></th>
-                    <th><?php echo lang('myaccount_txt_17'); ?></th>
-                    <th><?php echo lang('myaccount_txt_18'); ?></th>
-                    <th><?php echo lang('myaccount_txt_19'); ?></th>
+                    <th><?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_13'); ?></th>
+                    <th><?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_17'); ?></th>
+                    <th><?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_18'); ?></th>
+                    <th><?php echo \Darkheim\Application\Language\Translator::phrase('myaccount_txt_19'); ?></th>
                 </tr>
             </thead>
             <tbody>

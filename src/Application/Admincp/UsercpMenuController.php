@@ -59,7 +59,7 @@ final class UsercpMenuController
                 'rows' => $rows,
             ]);
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 
@@ -75,9 +75,9 @@ final class UsercpMenuController
             }
             unset($cfg[$id]);
             $this->saveConfig($cfg);
-            message('success', 'Changes successfully saved!');
+            \Darkheim\Application\View\MessageRenderer::toast('success', 'Changes successfully saved!');
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 
@@ -121,9 +121,9 @@ final class UsercpMenuController
 
             usort($cfg, static fn(array $a, array $b): int => ((int) ($a['order'] ?? 0)) - ((int) ($b['order'] ?? 0)));
             $this->saveConfig($cfg);
-            message('success', $isEdit ? 'Changes successfully saved!' : 'Usercp successfully updated!');
+            \Darkheim\Application\View\MessageRenderer::toast('success', $isEdit ? 'Changes successfully saved!' : 'Usercp successfully updated!');
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 

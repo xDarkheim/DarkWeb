@@ -11,7 +11,7 @@
 <h1 class="page-header"><i class="bi bi-translate me-2"></i>Language Phrases</h1>
 
 <?php if ($error !== null): ?>
-    <?php message('error', $error); ?>
+    <?php \Darkheim\Application\View\MessageRenderer::toast('error', $error); ?>
 <?php else: ?>
 <div class="acp-card">
     <div class="acp-card-header">Current Language Phrases (<?php echo $count; ?>)</div>

@@ -2,7 +2,7 @@
 <?php
 $moduleConfig = $rankingsModuleConfig ?? null;
 if(!$moduleConfig instanceof \SimpleXMLElement) {
-	message('error', 'There has been an error while loading module settings.');
+	\Darkheim\Application\View\MessageRenderer::toast('error', 'There has been an error while loading module settings.');
 	return;
 }
 ?>

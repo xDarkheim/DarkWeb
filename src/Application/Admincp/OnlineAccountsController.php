@@ -19,6 +19,7 @@ final class OnlineAccountsController
     public function render(): void
     {
         $account = new Account();
+        $admincpUrl = new AdmincpUrlGenerator();
         $serverList = $account->getServerList();
         $statBoxes = [];
 
@@ -48,7 +49,7 @@ final class OnlineAccountsController
                 }
                 $memberId = (string) ($row[_CLMN_MS_MEMBID_] ?? '');
                 $rows[] = [
-                    'accountHtml' => '<a href="' . htmlspecialchars(admincp_base('accountinfo&u=' . $memberId), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($memberId, ENT_QUOTES, 'UTF-8') . '</a>',
+                    'accountHtml' => '<a href="' . htmlspecialchars($admincpUrl->base('accountinfo&u=' . $memberId), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($memberId, ENT_QUOTES, 'UTF-8') . '</a>',
                     'ipAddress' => (string) ($row[_CLMN_MS_IP_] ?? ''),
                     'server' => (string) ($row[_CLMN_MS_GS_] ?? ''),
                 ];

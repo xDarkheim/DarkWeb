@@ -78,7 +78,7 @@
                 </tbody>
             </table>
             <?php else: ?>
-            <div class="p-3"><?php inline_message('info', 'No logs found.'); ?></div>
+            <div class="p-3"><?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No logs found.'); ?></div>
             <?php endif; ?>
         </div>
     </div>

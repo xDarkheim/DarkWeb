@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Darkheim\Application\Subpage\Usercp;
 
 use Darkheim\Application\Character\Character;
+use Darkheim\Application\Language\Translator;
 
 final class UnstickSubpageController extends AbstractCharacterActionTableSubpageController
 {
-    protected function pageTitle(): string { return lang('module_titles_txt_16', true); }
-    protected function cardTitle(): string { return lang('module_titles_txt_16', true); }
+    protected function pageTitle(): string { return Translator::phrase('module_titles_txt_16'); }
+    protected function cardTitle(): string { return Translator::phrase('module_titles_txt_16'); }
     protected function cardIconClass(): string { return 'bi bi-geo-alt-fill'; }
 
     protected function tableHeaders(): array
     {
-        return ['', lang('unstickcharacter_txt_1', true), lang('unstickcharacter_txt_2', true), ''];
+        return ['', Translator::phrase('unstickcharacter_txt_1'), Translator::phrase('unstickcharacter_txt_2'), ''];
     }
 
     protected function buildRow(Character $characterService, string $characterName): ?array
@@ -31,7 +32,7 @@ final class UnstickSubpageController extends AbstractCharacterActionTableSubpage
                 htmlspecialchars((string) $data[_CLMN_CHR_NAME_], ENT_QUOTES, 'UTF-8'),
                 number_format((float) $data[_CLMN_CHR_ZEN_]),
             ],
-            'buttonLabel' => lang('unstickcharacter_txt_3', true),
+            'buttonLabel' => Translator::phrase('unstickcharacter_txt_3'),
         ];
     }
 
@@ -46,8 +47,8 @@ final class UnstickSubpageController extends AbstractCharacterActionTableSubpage
     protected function requirementsLines(): array
     {
         $lines = [];
-        if (mconfig('zen_cost') > 0) {
-            $lines[] = langf('unstickcharacter_txt_4', [number_format((float) mconfig('zen_cost'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost') > 0) {
+            $lines[] = Translator::phraseFmt('unstickcharacter_txt_4', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost'))]);
         }
         return $lines;
     }

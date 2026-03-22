@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Infrastructure\Plugins;
 
+use Darkheim\Application\View\MessageRenderer;
+use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Cache\CacheBuilder;
 use Darkheim\Infrastructure\Cache\CacheRepository;
 use Darkheim\Infrastructure\Database\Connection;
@@ -35,27 +37,27 @@ class Plugins
                         if ($this->checkFiles($pluginDATA['files'], $pluginDATA['folder'])) {
                             $install = $this->installPlugin($pluginDATA);
                             if ($install) {
-                                message('success', 'Plugin successfully imported!');
+                                MessageRenderer::toast('success', 'Plugin successfully imported!');
                             } else {
-                                message('error', 'Could not import plugin.');
+                                MessageRenderer::toast('error', 'Could not import plugin.');
                             }
                             if (! $this->rebuildPluginsCache()) {
-                                message('error', 'Could not update plugins cache data, make sure the file exists and it\'s writable!');
+                                MessageRenderer::toast('error', 'Could not update plugins cache data, make sure the file exists and it\'s writable!');
                             }
                         } else {
-                            message('error', 'Plugin file(s) missing.');
+                            MessageRenderer::toast('error', 'Plugin file(s) missing.');
                         }
                     } else {
-                        message('error', 'Plugin folder not found, please make sure you upload it to the correct path.');
+                        MessageRenderer::toast('error', 'Plugin folder not found, please make sure you upload it to the correct path.');
                     }
                 } else {
-                    message('error', 'The plugin is not compatible with your current version.');
+                    MessageRenderer::toast('error', 'The plugin is not compatible with your current version.');
                 }
             } else {
-                message('error', 'Invalid file or missing data.');
+                MessageRenderer::toast('error', 'Invalid file or missing data.');
             }
         } else {
-            message('error', 'Invalid file type (only XML).');
+            MessageRenderer::toast('error', 'Invalid file type (only XML).');
         }
     }
 
@@ -67,10 +69,10 @@ class Plugins
             && array_key_exists('compatibility', $array)
             && array_key_exists('folder', $array)
             && array_key_exists('files', $array)
-            && check_value($array['name'])
-            && check_value($array['author'])
-            && check_value($array['version'])
-            && check_value($array['folder'])
+            && Validator::hasValue($array['name'])
+            && Validator::hasValue($array['author'])
+            && Validator::hasValue($array['version'])
+            && Validator::hasValue($array['folder'])
             && is_array($array['compatibility'])
             && is_array($array['files']);
     }
@@ -146,7 +148,7 @@ class Plugins
     {
         $this->db->query("UPDATE " . Plugins . " SET status = ? WHERE id = ?", [$new_status, $plugin_id]);
         if (! $this->rebuildPluginsCache()) {
-            message('error', 'Could not update plugins cache data, make sure the file exists and it\'s writable!');
+            MessageRenderer::toast('error', 'Could not update plugins cache data, make sure the file exists and it\'s writable!');
         }
     }
 

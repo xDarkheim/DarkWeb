@@ -33,5 +33,28 @@ final class BootstrapContext
     {
         return self::$handler;
     }
+
+    public static function cmsValue(string $key, mixed $default = null): mixed
+    {
+        $config = self::$configProvider?->cms() ?? [];
+        return array_key_exists($key, $config) ? $config[$key] : $default;
+    }
+
+    public static function moduleValue(string $key, mixed $default = null): mixed
+    {
+        $config = self::$runtimeState?->moduleConfig() ?? [];
+        return array_key_exists($key, $config) ? $config[$key] : $default;
+    }
+
+    public static function loadModuleConfig(string $module): void
+    {
+        if ($module === '') {
+            self::$runtimeState?->setModuleConfig([]);
+            return;
+        }
+
+        $result = self::$configProvider?->moduleConfig($module);
+        self::$runtimeState?->setModuleConfig(is_array($result) ? $result : []);
+    }
 }
 

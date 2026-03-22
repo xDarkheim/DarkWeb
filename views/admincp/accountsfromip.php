@@ -24,7 +24,7 @@
 </div>
 
 <?php if ($error !== null): ?>
-    <?php message('error', $error); ?>
+    <?php \Darkheim\Application\View\MessageRenderer::toast('error', $error); ?>
 <?php elseif ($results !== null): ?>
     <div class="acp-card">
         <div class="acp-card-header">
@@ -46,7 +46,7 @@
             </tbody>
         </table>
         <?php else: ?>
-        <div class="p-3"><?php inline_message('info', 'No accounts found linked to this IP.'); ?></div>
+        <div class="p-3"><?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No accounts found linked to this IP.'); ?></div>
         <?php endif; ?>
     </div>
 <?php endif; ?>

@@ -3,8 +3,8 @@
  * AdminCP modules manager view.
  *
  * Variables:
- * - array<int,array{0:string,1:string}> $globalModules
- * - array<int,array{0:string,1:string}> $usercpModules
+ * - array<int,array{label:string,key:string,url:string}> $globalModules
+ * - array<int,array{label:string,key:string,url:string}> $usercpModules
  * - string|null $selectedConfigKey
  * - string|null $selectedConfigFilePath
  */
@@ -17,8 +17,8 @@
             <div class="acp-card-header">Global Modules</div>
             <div class="p-2">
                 <?php foreach ($globalModules as $m): ?>
-                <a href="<?php echo htmlspecialchars(admincp_base('modules_manager&config=' . $m[1]), ENT_QUOTES, 'UTF-8'); ?>" class="acp-module-link">
-                    <?php echo htmlspecialchars($m[0], ENT_QUOTES, 'UTF-8'); ?>
+                <a href="<?php echo htmlspecialchars($m['url'], ENT_QUOTES, 'UTF-8'); ?>" class="acp-module-link">
+                    <?php echo htmlspecialchars($m['label'], ENT_QUOTES, 'UTF-8'); ?>
                 </a>
                 <?php endforeach; ?>
             </div>
@@ -30,8 +30,8 @@
             <div class="acp-card-header">UserCP Modules</div>
             <div class="p-2">
                 <?php foreach ($usercpModules as $m): ?>
-                <a href="<?php echo htmlspecialchars(admincp_base('modules_manager&config=' . $m[1]), ENT_QUOTES, 'UTF-8'); ?>" class="acp-module-link">
-                    <?php echo htmlspecialchars($m[0], ENT_QUOTES, 'UTF-8'); ?>
+                <a href="<?php echo htmlspecialchars($m['url'], ENT_QUOTES, 'UTF-8'); ?>" class="acp-module-link">
+                    <?php echo htmlspecialchars($m['label'], ENT_QUOTES, 'UTF-8'); ?>
                 </a>
                 <?php endforeach; ?>
             </div>

@@ -25,10 +25,10 @@ final class CastleSiegeController
             $siegeData   = $castleSiege->siegeData();
 
             if (! is_array($siegeData)) {
-                throw new \Exception(lang('error_103'));
+                throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_103'));
             }
             if (! $castleSiege->moduleEnabled()) {
-                throw new \Exception(lang('error_47'));
+                throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_47'));
             }
 
             $castleData       = is_array($siegeData['castle_data'] ?? null) ? $siegeData['castle_data'] : [];
@@ -139,7 +139,7 @@ final class CastleSiegeController
                 'scheduleRows',
             ));
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }

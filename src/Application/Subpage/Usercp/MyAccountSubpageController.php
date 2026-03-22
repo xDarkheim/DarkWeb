@@ -8,6 +8,7 @@ use Darkheim\Application\Auth\Common;
 use Darkheim\Application\Character\Character;
 use Darkheim\Application\Credits\CreditSystem;
 use Darkheim\Application\Game\GameHelper;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Application\Profile\ProfileRenderer;
 use Darkheim\Infrastructure\Cache\CacheRepository;
 use Darkheim\Infrastructure\Database\Connection;
@@ -24,20 +25,20 @@ final class MyAccountSubpageController
 
     public function render(): void
     {
-        if (! isLoggedIn()) {
-            redirect(1, 'login');
+        if (! \Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+            \Darkheim\Infrastructure\Http\Redirector::go(1, 'login');
             return;
         }
 
-        if (! mconfig('active')) {
-            inline_message('error', lang('error_12'));
+        if (! \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+            \Darkheim\Application\View\MessageRenderer::inline('error', Translator::phrase('error_12'));
             return;
         }
 
         $common      = new Common();
         $accountInfo = $common->accountInformation($_SESSION['userid']);
         if (! is_array($accountInfo)) {
-            inline_message('error', lang('error_12'));
+            \Darkheim\Application\View\MessageRenderer::inline('error', Translator::phrase('error_12'));
             return;
         }
 
@@ -141,16 +142,16 @@ final class MyAccountSubpageController
         $this->view->render('subpages/usercp/myaccount', [
             'username'               => htmlspecialchars((string) ($accountInfo[_CLMN_USERNM_] ?? ''), ENT_QUOTES, 'UTF-8'),
             'statusPillClass'        => $isBlocked ? 'ma-pill-banned' : 'ma-pill-active',
-            'statusPillText'         => $isBlocked ? lang('myaccount_txt_8') : lang('myaccount_txt_7'),
+            'statusPillText'         => $isBlocked ? Translator::phrase('myaccount_txt_8') : Translator::phrase('myaccount_txt_7'),
             'onlinePillClass'        => $isOnlineAccount ? 'ma-pill-online' : 'ma-pill-offline',
-            'onlinePillText'         => $isOnlineAccount ? lang('myaccount_txt_9') : lang('myaccount_txt_10'),
+            'onlinePillText'         => $isOnlineAccount ? Translator::phrase('myaccount_txt_9') : Translator::phrase('myaccount_txt_10'),
             'email'                  => htmlspecialchars((string) ($accountInfo[_CLMN_EMAIL_] ?? ''), ENT_QUOTES, 'UTF-8'),
             'creditRows'             => $creditRows,
             'myEmailUrl'             => __BASE_URL__ . 'usercp/myemail/',
             'myPasswordUrl'          => __BASE_URL__ . 'usercp/mypassword/',
             'characterCards'         => $characterCards,
             'hasCharacters'          => $characterCards !== [],
-            'emptyCharactersMessage' => lang('error_46', true),
+            'emptyCharactersMessage' => Translator::phrase('error_46'),
             'hasConnectionHistory'   => $hasConnectionHistory,
             'connectionHistoryRows'  => $connectionHistoryRows,
         ]);

@@ -6,6 +6,7 @@ namespace Darkheim\Application\Subpage\Usercp;
 
 use Darkheim\Application\Account\Account;
 use Darkheim\Application\Auth\Common;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 final class MyPasswordSubpageController
@@ -19,32 +20,32 @@ final class MyPasswordSubpageController
 
     public function render(): void
     {
-        if (!isLoggedIn()) {
-            redirect(1, 'login');
+        if (! \Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+            \Darkheim\Infrastructure\Http\Redirector::go(1, 'login');
             return;
         }
 
         try {
-            if (!mconfig('active')) {
-                throw new \Exception(lang('error_47', true));
+            if (! \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                throw new \Exception(Translator::phrase('error_47'));
             }
 
             $common = new Common();
-            if (mconfig('change_password_email_verification') && $common->hasActivePasswordChangeRequest($_SESSION['userid'])) {
-                throw new \Exception(lang('error_19', true));
+            if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('change_password_email_verification') && $common->hasActivePasswordChangeRequest($_SESSION['userid'])) {
+                throw new \Exception(Translator::phrase('error_19'));
             }
 
             if (isset($_POST['darkheimPassword_submit'])) {
                 try {
                     $account = new Account();
-                    if (mconfig('change_password_email_verification')) {
+                    if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('change_password_email_verification')) {
                         $account->changePasswordProcess_verifyEmail(
                             $_SESSION['userid'],
                             $_SESSION['username'],
                             (string) ($_POST['darkheimPassword_current'] ?? ''),
                             (string) ($_POST['darkheimPassword_new'] ?? ''),
                             (string) ($_POST['darkheimPassword_newconfirm'] ?? ''),
-                            (string) ($_SERVER['REMOTE_ADDR'] ?? '')
+                            (string) ($_SERVER['REMOTE_ADDR'] ?? ''),
                         );
                     } else {
                         $account->changePasswordProcess(
@@ -52,25 +53,24 @@ final class MyPasswordSubpageController
                             $_SESSION['username'],
                             (string) ($_POST['darkheimPassword_current'] ?? ''),
                             (string) ($_POST['darkheimPassword_new'] ?? ''),
-                            (string) ($_POST['darkheimPassword_newconfirm'] ?? '')
+                            (string) ($_POST['darkheimPassword_newconfirm'] ?? ''),
                         );
                     }
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
             $this->view->render('subpages/usercp/mypassword', [
-                'pageTitle'          => lang('module_titles_txt_6', true),
-                'cardTitle'          => lang('module_titles_txt_6', true),
-                'currentLabel'       => lang('changepassword_txt_1', true),
-                'newLabel'           => lang('changepassword_txt_2', true),
-                'confirmLabel'       => lang('changepassword_txt_3', true),
-                'submitLabel'        => lang('changepassword_txt_4', true),
+                'pageTitle'    => Translator::phrase('module_titles_txt_6'),
+                'cardTitle'    => Translator::phrase('module_titles_txt_6'),
+                'currentLabel' => Translator::phrase('changepassword_txt_1'),
+                'newLabel'     => Translator::phrase('changepassword_txt_2'),
+                'confirmLabel' => Translator::phrase('changepassword_txt_3'),
+                'submitLabel'  => Translator::phrase('changepassword_txt_4'),
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }
-

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Page;
 
+use Darkheim\Application\Language\Translator;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 final class DonationController
@@ -18,8 +19,8 @@ final class DonationController
     public function render(): void
     {
         try {
-            if (!mconfig('active')) {
-                inline_message('error', lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                \Darkheim\Application\View\MessageRenderer::inline('error', Translator::phrase('error_47'));
                 return;
             }
             $this->view->render('donation', [
@@ -27,7 +28,7 @@ final class DonationController
                 'paypalUrl'      => __BASE_URL__ . 'donation/paypal/',
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }

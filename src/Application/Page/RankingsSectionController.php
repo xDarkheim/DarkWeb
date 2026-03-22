@@ -28,34 +28,34 @@ final class RankingsSectionController
             $subpage = (string) ($_REQUEST['subpage'] ?? '');
             $config  = $this->subpageConfig($subpage);
             if ($config === null) {
-                throw new \Exception(lang('error_58', true));
+                throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_58', true));
             }
 
-            if (! mconfig('active') || ! mconfig($config['featureFlag'])) {
-                throw new \Exception(lang('error_44', true));
+            if (! \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active') || ! \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue($config['featureFlag'])) {
+                throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_44', true));
             }
 
             $rankings   = new RankingsService();
             $repository = new RankingRepository(new CacheRepository(__PATH_CACHE__));
             $rankCache  = $repository->load($config['cacheFile']);
             if (! $rankCache instanceof RankingCache) {
-                throw new \Exception(lang('error_58', true));
+                throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_58', true));
             }
 
-            $showCountry        = $config['supportsCountry'] && (bool) mconfig('show_country_flags');
+            $showCountry        = $config['supportsCountry'] && (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('show_country_flags');
             $characterCountries = $showCountry ? $repository->loadCharacterCountries() : [];
             if ($characterCountries === []) {
                 $showCountry = false;
             }
 
-            $showOnlineStatus = (bool) mconfig('show_online_status');
+            $showOnlineStatus = (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('show_online_status');
             $onlineCharacters = $showOnlineStatus ? $repository->loadOnlineCharacters() : [];
-            $showPlaceNumber  = (bool) mconfig('rankings_show_place_number');
-            $showLocation     = $config['supportsLocation'] && (bool) mconfig('show_location');
-            $showFilter       = $config['supportsFilter']   && (bool) mconfig('rankings_class_filter');
+            $showPlaceNumber  = (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_show_place_number');
+            $showLocation     = $config['supportsLocation'] && (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('show_location');
+            $showFilter       = $config['supportsFilter']   && (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_class_filter');
 
             $this->view->render('ranking', [
-                'pageTitle'    => lang('module_titles_txt_10', true),
+                'pageTitle'    => \Darkheim\Application\Language\Translator::phrase('module_titles_txt_10', true),
                 'menuItems'    => $rankings->menuItems($subpage),
                 'filterItems'  => $showFilter ? $this->buildFilterItems($rankings) : [],
                 'tableHeaders' => $this->buildHeaders($config['columns'], $showPlaceNumber, $showCountry, $showLocation),
@@ -69,12 +69,12 @@ final class RankingsSectionController
                     $characterCountries,
                     $onlineCharacters,
                 ),
-                'updatedAtText' => (bool) mconfig('rankings_show_date')
-                    ? lang('rankings_txt_20', true) . ' ' . date('m/d/Y - h:i A', $rankCache->timestamp)
+                'updatedAtText' => (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_show_date')
+                    ? \Darkheim\Application\Language\Translator::phrase('rankings_txt_20', true) . ' ' . date('m/d/Y - h:i A', $rankCache->timestamp)
                     : null,
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 
@@ -171,34 +171,34 @@ final class RankingsSectionController
             $headers[] = '';
         }
         if ($showCountry) {
-            $headers[] = lang('rankings_txt_33');
+            $headers[] = \Darkheim\Application\Language\Translator::phrase('rankings_txt_33');
         }
 
         foreach ($columns as $column) {
             $headers[] = match ($column) {
-                'avatar'       => lang('rankings_txt_11'),
-                'player'       => lang('rankings_txt_10'),
-                'level'        => lang('rankings_txt_12'),
-                'resets'       => lang('rankings_txt_13'),
-                'kills'        => lang('rankings_txt_14'),
-                'hours'        => lang('rankings_txt_15'),
-                'guild'        => lang('rankings_txt_17', true),
-                'master'       => lang('rankings_txt_18', true),
-                'score'        => lang('rankings_txt_19', true),
-                'grand_resets' => lang('rankings_txt_21'),
-                'master_level' => lang('rankings_txt_23'),
-                'gens'         => lang('rankings_txt_29'),
-                'rank'         => lang('rankings_txt_30'),
-                'contribution' => lang('rankings_txt_31'),
-                'votes'        => lang('rankings_txt_32', true),
-                'pk_status'    => lang('rankings_txt_35'),
-                'logo'         => lang('rankings_txt_28', true),
+                'avatar'       => \Darkheim\Application\Language\Translator::phrase('rankings_txt_11'),
+                'player'       => \Darkheim\Application\Language\Translator::phrase('rankings_txt_10'),
+                'level'        => \Darkheim\Application\Language\Translator::phrase('rankings_txt_12'),
+                'resets'       => \Darkheim\Application\Language\Translator::phrase('rankings_txt_13'),
+                'kills'        => \Darkheim\Application\Language\Translator::phrase('rankings_txt_14'),
+                'hours'        => \Darkheim\Application\Language\Translator::phrase('rankings_txt_15'),
+                'guild'        => \Darkheim\Application\Language\Translator::phrase('rankings_txt_17', true),
+                'master'       => \Darkheim\Application\Language\Translator::phrase('rankings_txt_18', true),
+                'score'        => \Darkheim\Application\Language\Translator::phrase('rankings_txt_19', true),
+                'grand_resets' => \Darkheim\Application\Language\Translator::phrase('rankings_txt_21'),
+                'master_level' => \Darkheim\Application\Language\Translator::phrase('rankings_txt_23'),
+                'gens'         => \Darkheim\Application\Language\Translator::phrase('rankings_txt_29'),
+                'rank'         => \Darkheim\Application\Language\Translator::phrase('rankings_txt_30'),
+                'contribution' => \Darkheim\Application\Language\Translator::phrase('rankings_txt_31'),
+                'votes'        => \Darkheim\Application\Language\Translator::phrase('rankings_txt_32', true),
+                'pk_status'    => \Darkheim\Application\Language\Translator::phrase('rankings_txt_35'),
+                'logo'         => \Darkheim\Application\Language\Translator::phrase('rankings_txt_28', true),
                 default        => $column,
             };
         }
 
         if ($showLocation) {
-            $headers[] = lang('rankings_txt_34');
+            $headers[] = \Darkheim\Application\Language\Translator::phrase('rankings_txt_34');
         }
 
         return $headers;
@@ -212,7 +212,7 @@ final class RankingsSectionController
         $items = [[
             'onclick'    => 'rankingsFilterRemove()',
             'avatarHtml' => GameHelper::playerClassAvatar(-1, true, false, 'rankings-class-filter-image'),
-            'label'      => lang('rankings_filter_1'),
+            'label'      => \Darkheim\Application\Language\Translator::phrase('rankings_filter_1'),
             'linkClass'  => 'rankings-class-filter-selection',
         ]];
 
@@ -337,7 +337,7 @@ final class RankingsSectionController
             return null;
         }
 
-        $multiplier = (int) mconfig('guild_score_formula') === 1 ? 1 : (int) mconfig('guild_score_multiplier');
+        $multiplier = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('guild_score_formula') === 1 ? 1 : (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('guild_score_multiplier');
         $cells      = [];
         if ($showPlaceNumber) {
             $cells[] = '<span class="rankings-table-place">' . $position . '</span>';
@@ -383,7 +383,7 @@ final class RankingsSectionController
         $name    = (string) $entry[0];
         $classId = (int) $entry[2];
         $cells   = $this->characterCells($position, $name, $classId, $showPlaceNumber, $showCountry, $showOnlineStatus, $characterCountries, $onlineCharacters);
-        $cells[] = number_format((int) round(((float) $entry[1]) / 60 / 60)) . ' ' . lang('rankings_txt_16', true);
+        $cells[] = number_format((int) round(((float) $entry[1]) / 60 / 60)) . ' ' . \Darkheim\Application\Language\Translator::phrase('rankings_txt_16', true);
         if ($showLocation) {
             $cells[] = GameHelper::mapName((int) ($entry[3] ?? 0));
         }
@@ -494,8 +494,8 @@ final class RankingsSectionController
 
     private function gensTypeHtml(int $influence): string
     {
-        $duprian   = htmlspecialchars(strip_tags((string) lang('rankings_txt_26', true)), ENT_QUOTES, 'UTF-8');
-        $vantarion = htmlspecialchars(strip_tags((string) lang('rankings_txt_27', true)), ENT_QUOTES, 'UTF-8');
+        $duprian   = htmlspecialchars(strip_tags((string) \Darkheim\Application\Language\Translator::phrase('rankings_txt_26', true)), ENT_QUOTES, 'UTF-8');
+        $vantarion = htmlspecialchars(strip_tags((string) \Darkheim\Application\Language\Translator::phrase('rankings_txt_27', true)), ENT_QUOTES, 'UTF-8');
 
         if ($influence === 1) {
             return '<img class="rankings-gens-img" src="' . __PATH_THEME_IMG__ . 'gens_1.png" title="' . $duprian . '" alt="' . $duprian . '"/>';

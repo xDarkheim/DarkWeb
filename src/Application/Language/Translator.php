@@ -9,7 +9,7 @@ use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 /**
  * Language translation service.
  *
- * Replaces the inline logic inside the global lang() / langf() helpers.
+ * Replaces the inline logic inside the global \Darkheim\Application\Language\Translator::phrase() / \Darkheim\Application\Language\Translator::phraseFmt() helpers.
  * Use those helpers for backward-compatible call-sites; call this class
  * directly in new code.
  */

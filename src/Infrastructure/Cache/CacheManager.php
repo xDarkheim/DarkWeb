@@ -63,7 +63,7 @@ class CacheManager
 
     public function clearCacheData(): void
     {
-        if (!check_value($this->_file)) return;
+        if (!\Darkheim\Domain\Validator::hasValue($this->_file)) return;
         if (!in_array($this->_file, $this->_getCacheFileList(), true)) throw new RuntimeException('The requested cache file is not valid.');
         $filePath = __PATH_CACHE__ . $this->_file;
         $fileData = $this->_isJsonArrayFile($this->_file) ? '[]' : '';

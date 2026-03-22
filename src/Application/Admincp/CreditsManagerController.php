@@ -29,9 +29,9 @@ final class CreditsManagerController
                     'subtract' => $creditSystem->subtractCredits($_POST['credits']),
                     default    => throw new \RuntimeException('Invalid transaction.'),
                 };
-                message('success', $_POST['transaction'] === 'add' ? 'Credits added.' : 'Credits subtracted.');
+                \Darkheim\Application\View\MessageRenderer::toast('success', $_POST['transaction'] === 'add' ? 'Credits added.' : 'Credits subtracted.');
             } catch (\Exception $ex) {
-                message('error', $ex->getMessage());
+                \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
             }
         }
 

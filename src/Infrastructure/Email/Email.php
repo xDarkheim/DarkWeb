@@ -49,8 +49,11 @@ class Email
     {
         $configs = BootstrapContext::configProvider()?->globalXml('email-templates');
         if (! is_array($configs)) {
-            throw new \Exception(lang('error_90'));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_90'));
         }
+
+        $cmsConfig = BootstrapContext::configProvider()?->cms() ?? [];
+        $serverName = (string) ($cmsConfig['server_name'] ?? '');
 
         $this->_active   = $configs['active'];
         $this->_smtp     = $configs['smtp_active'];
@@ -67,10 +70,10 @@ class Email
 
         $templates = [];
         foreach ($configs['email_templates']['template'] as $template) {
-            $templates[$template['filename']] = str_replace("{SERVER_NAME}", config('server_name', true), $template['subject']);
+            $templates[$template['filename']] = str_replace("{SERVER_NAME}", $serverName, $template['subject']);
         }
 
-        $this->addVariable("{SERVER_NAME}", config('server_name', true));
+        $this->addVariable("{SERVER_NAME}", $serverName);
         $this->_templates = $templates;
         $this->mail       = new PHPMailer(true);
     }
@@ -84,7 +87,7 @@ class Email
     public function setTemplate($template): void
     {
         if (! array_key_exists($template, $this->_templates)) {
-            throw new \Exception(lang('error_91'));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_91'));
         }
         $this->_template = $template;
         $this->_subject  = $this->_templates[$template];
@@ -99,7 +102,7 @@ class Email
     public function addAddress($email): void
     {
         if (! Validator::Email($email)) {
-            throw new \Exception(lang('error_92'));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_92'));
         }
         $this->_to[] = $email;
     }
@@ -107,7 +110,7 @@ class Email
     public function setReplyTo($email, $name = ''): void
     {
         if (! Validator::Email($email)) {
-            throw new \Exception(lang('error_92'));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_92'));
         }
         $this->_replyTo = [$email, $name];
     }
@@ -115,16 +118,16 @@ class Email
     private function _loadTemplate(): string
     {
         if (! $this->_template) {
-            throw new \Exception(lang('error_93'));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_93'));
         }
         if ($this->_isCustomTemplate) {
             if (! file_exists($this->_template)) {
-                throw new \Exception(lang('error_94'));
+                throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_94'));
             }
             return file_get_contents($this->_template);
         }
         if (! file_exists($this->_templatesPath . $this->_template . '.txt')) {
-            throw new \Exception(lang('error_91'));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_91'));
         }
         return file_get_contents($this->_templatesPath . $this->_template . '.txt');
     }
@@ -137,13 +140,13 @@ class Email
     public function send(): bool
     {
         if (! $this->_active) {
-            throw new \Exception(lang('error_48', true));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_48', true));
         }
         if (! $this->_message && ! $this->_template) {
-            throw new \Exception(lang('error_95'));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_95'));
         }
         if (! is_array($this->_to)) {
-            throw new \Exception(lang('error_96'));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_96'));
         }
 
         if ($this->_smtp) {
@@ -162,7 +165,7 @@ class Email
         }
 
         if (! $this->_subject) {
-            throw new \Exception(lang('error_97'));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_97'));
         }
         $this->mail->Subject = $this->_subject;
 

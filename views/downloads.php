@@ -1,4 +1,4 @@
-<div class="page-title"><span><?php echo lang('module_titles_txt_8', true); ?></span></div>
+<div class="page-title"><span><?php echo \Darkheim\Application\Language\Translator::phrase('module_titles_txt_8', true); ?></span></div>
 
 <!-- ══════════════════════════════════════════
      HERO
@@ -110,17 +110,17 @@
      CLIENT DOWNLOADS
 ══════════════════════════════════════════ -->
 <?php if ($showClients): ?>
-<div class="info-section-title"><i class="bi bi-box-arrow-down"></i> <?php echo lang('downloads_txt_6', true); ?></div>
+<div class="info-section-title"><i class="bi bi-box-arrow-down"></i> <?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_6', true); ?></div>
 <?php if (!empty($clients)): ?>
 <div class="panel panel-downloads">
 	<div class="panel-body">
-		<div class="panel-title"><?php echo lang('downloads_txt_6', true); ?></div>
+		<div class="panel-title"><?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_6', true); ?></div>
 		<table class="table">
 			<?php foreach ($clients as $download): ?>
 			<tr>
 				<td style="width:60%"><?php echo htmlspecialchars($download['download_title']); ?><br><span class="download-description"><?php echo htmlspecialchars($download['download_description']); ?></span></td>
-				<td style="width:20%" class="text-center"><?php echo round($download['download_size'], 2); ?> <?php echo lang('downloads_txt_4', true); ?></td>
-				<td style="width:20%" class="text-center"><a href="<?php echo $download['download_link']; ?>" class="btn btn-primary btn-xs" target="_blank"><?php echo lang('downloads_txt_5', true); ?></a></td>
+				<td style="width:20%" class="text-center"><?php echo round($download['download_size'], 2); ?> <?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_4', true); ?></td>
+				<td style="width:20%" class="text-center"><a href="<?php echo $download['download_link']; ?>" class="btn btn-primary btn-xs" target="_blank"><?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_5', true); ?></a></td>
 			</tr>
 			<?php endforeach; ?>
 		</table>
@@ -139,17 +139,17 @@
      PATCH DOWNLOADS
 ══════════════════════════════════════════ -->
 <?php if ($showPatches): ?>
-<div class="info-section-title"><i class="bi bi-arrow-repeat"></i> <?php echo lang('downloads_txt_7', true); ?></div>
+<div class="info-section-title"><i class="bi bi-arrow-repeat"></i> <?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_7', true); ?></div>
 <?php if (!empty($patches)): ?>
 <div class="panel panel-downloads">
 	<div class="panel-body">
-		<div class="panel-title"><?php echo lang('downloads_txt_7', true); ?></div>
+		<div class="panel-title"><?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_7', true); ?></div>
 		<table class="table">
 			<?php foreach ($patches as $download): ?>
 			<tr>
 				<td style="width:60%"><?php echo htmlspecialchars($download['download_title']); ?><br><span class="download-description"><?php echo htmlspecialchars($download['download_description']); ?></span></td>
-				<td style="width:20%" class="text-center"><?php echo round($download['download_size'], 2); ?> <?php echo lang('downloads_txt_4', true); ?></td>
-				<td style="width:20%" class="text-center"><a href="<?php echo $download['download_link']; ?>" class="btn btn-primary btn-xs" target="_blank"><?php echo lang('downloads_txt_5', true); ?></a></td>
+				<td style="width:20%" class="text-center"><?php echo round($download['download_size'], 2); ?> <?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_4', true); ?></td>
+				<td style="width:20%" class="text-center"><a href="<?php echo $download['download_link']; ?>" class="btn btn-primary btn-xs" target="_blank"><?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_5', true); ?></a></td>
 			</tr>
 			<?php endforeach; ?>
 		</table>
@@ -168,17 +168,17 @@
      TOOLS DOWNLOADS
 ══════════════════════════════════════════ -->
 <?php if ($showTools): ?>
-<div class="info-section-title"><i class="bi bi-wrench-adjustable"></i> <?php echo lang('downloads_txt_8', true); ?></div>
+<div class="info-section-title"><i class="bi bi-wrench-adjustable"></i> <?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_8', true); ?></div>
 <?php if (!empty($tools)): ?>
 <div class="panel panel-downloads">
 	<div class="panel-body">
-		<div class="panel-title"><?php echo lang('downloads_txt_8', true); ?></div>
+		<div class="panel-title"><?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_8', true); ?></div>
 		<table class="table">
 			<?php foreach ($tools as $download): ?>
 			<tr>
 				<td style="width:60%"><?php echo htmlspecialchars($download['download_title']); ?><br><span class="download-description"><?php echo htmlspecialchars($download['download_description']); ?></span></td>
-				<td style="width:20%" class="text-center"><?php echo round($download['download_size'], 2); ?> <?php echo lang('downloads_txt_4', true); ?></td>
-				<td style="width:20%" class="text-center"><a href="<?php echo $download['download_link']; ?>" class="btn btn-primary btn-xs" target="_blank"><?php echo lang('downloads_txt_5', true); ?></a></td>
+				<td style="width:20%" class="text-center"><?php echo round($download['download_size'], 2); ?> <?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_4', true); ?></td>
+				<td style="width:20%" class="text-center"><a href="<?php echo $download['download_link']; ?>" class="btn btn-primary btn-xs" target="_blank"><?php echo \Darkheim\Application\Language\Translator::phrase('downloads_txt_5', true); ?></a></td>
 			</tr>
 			<?php endforeach; ?>
 		</table>

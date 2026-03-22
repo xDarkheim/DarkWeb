@@ -90,7 +90,7 @@ $yesNoOptions = ['1' => 'Yes', '0' => 'No'];
             </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div class="p-3"><?php inline_message('info', 'No configurations created yet.'); ?></div>
+            <div class="p-3"><?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No configurations created yet.'); ?></div>
         <?php endif; ?>
     </div>
 </div>

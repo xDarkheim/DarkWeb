@@ -55,7 +55,7 @@
                     <tr><td>Server:</td><td><?php echo htmlspecialchars($status['server'], ENT_QUOTES, 'UTF-8'); ?></td></tr>
                 </table>
                 <?php else: ?>
-                    <?php inline_message('info', 'No data found in ' . _TBL_MS_ . ' for this account.'); ?>
+                    <?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No data found in ' . _TBL_MS_ . ' for this account.'); ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -77,7 +77,7 @@
                     <?php endforeach; ?>
                 </table>
                 <?php else: ?>
-                    <?php inline_message('info', 'No characters found.'); ?>
+                    <?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No characters found.'); ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -140,7 +140,7 @@
                     <?php endforeach; ?>
                 </table>
                 <?php else: ?>
-                    <?php inline_message('info', 'No IP address found.'); ?>
+                    <?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No IP address found.'); ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -164,7 +164,7 @@
                     <?php endforeach; ?>
                 </table>
                 <?php else: ?>
-                    <?php inline_message('info', 'No IP addresses found in the database.'); ?>
+                    <?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No IP addresses found in the database.'); ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -186,7 +186,7 @@
                     <?php endforeach; ?>
                 </table>
                 <?php else: ?>
-                    <?php inline_message('info', 'No connection history found for account.'); ?>
+                    <?php \Darkheim\Application\View\MessageRenderer::inline('info', 'No connection history found for account.'); ?>
                 <?php endif; ?>
             </div>
         </div>

@@ -10,11 +10,11 @@ final class LogoutController
 {
     public function render(): void
     {
-        if (!isLoggedIn()) {
-            redirect();
+        if (!\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+            \Darkheim\Infrastructure\Http\Redirector::go();
             return;
         }
         (new AuthService())->logout();
-        redirect();
+        \Darkheim\Infrastructure\Http\Redirector::go();
     }
 }

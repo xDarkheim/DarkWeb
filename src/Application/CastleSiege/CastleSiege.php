@@ -213,7 +213,7 @@ class CastleSiege
         $warfareStage           = $this->getWarfareStage();
         $warfareDurationSeconds = $warfareStage['end_timestamp'] - $warfareStage['start_timestamp'];
         $warfareDuration        = TimeHelper::secToHms($warfareDurationSeconds);
-        return langf('castlesiege_battle_duration', [$warfareDuration[0], $warfareDuration[1]]);
+        return \Darkheim\Application\Language\Translator::phraseFmt('castlesiege_battle_duration', [$warfareDuration[0], $warfareDuration[1]]);
     }
 
     public function updateSiegeCache(): void
@@ -258,7 +258,7 @@ class CastleSiege
                 $end_timestamp   = strtotime('next ' . $stage['end_day'] . ' ' . $stage['end_time'], $scheduleStartingDay);
             }
 
-            $schedule[$key]['title']           = lang($stage['title']);
+            $schedule[$key]['title']           = \Darkheim\Application\Language\Translator::phrase($stage['title']);
             $schedule[$key]['start_timestamp'] = $start_timestamp;
             $schedule[$key]['end_timestamp']   = $end_timestamp;
             $schedule[$key]['start_date']      = date($this->_dateFormat, $start_timestamp);
@@ -330,15 +330,15 @@ class CastleSiege
     {
         $timeleft = TimeHelper::secToDhms($seconds);
         if ($timeleft[0] > 0) {
-            return langf('castlesiege_time_1', [$timeleft[0], $timeleft[1]]);
+            return \Darkheim\Application\Language\Translator::phraseFmt('castlesiege_time_1', [$timeleft[0], $timeleft[1]]);
         }
         if ($timeleft[1] > 0) {
-            return langf('castlesiege_time_2', [$timeleft[1], $timeleft[2]]);
+            return \Darkheim\Application\Language\Translator::phraseFmt('castlesiege_time_2', [$timeleft[1], $timeleft[2]]);
         }
         if ($timeleft[2] > 0) {
-            return langf('castlesiege_time_3', [$timeleft[2]]);
+            return \Darkheim\Application\Language\Translator::phraseFmt('castlesiege_time_3', [$timeleft[2]]);
         }
-        return lang('castlesiege_time_4');
+        return \Darkheim\Application\Language\Translator::phrase('castlesiege_time_4');
     }
 
     protected function _returnCastleData(): ?array

@@ -348,7 +348,6 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 | `check_value()`                                                                                                                                           | `Validator::hasValue()`                                       |
 | `redirect()`                                                                                                                                              | `Redirector::go()`                                            |
 | `isLoggedIn()`                                                                                                                                             | `SessionManager`                                              |
-| `admincp_base()`                                                                                                                                          | `AdmincpUrlGenerator::base()`                                 |
 | `message()` / `inline_message()`                                                                                                                          | `MessageRenderer::toast()` / `::inline()`                     |
 | `lang()` / `langf()`                                                                                                                                      | `Translator::phrase()` / `::phraseFmt()`                      |
 | `config()`                                                                                                                                                 | `ConfigProvider::cms()`                                       |
@@ -463,4 +462,24 @@ When adding another shared template:
 2. If the theme needs new data, add it to `Darkheim\Infrastructure\Theme\DefaultThemeLayoutBuilder`.
 3. Do not read request/session/config/cache directly from theme templates.
 4. Keep optional per-theme view overrides in `public/themes/{theme}/views/` only when the markup must differ from `views/`.
+
+## Legacy helper migration status
+
+The following global helper functions have been **removed from `src/`** and replaced with direct class calls:
+
+| Helper | Replacement | Status |
+|--------|-------------|--------|
+| `check_value()` | `Validator::hasValue()` | ✅ Removed from `src/` entirely |
+| `lang()` | `Translator::phrase()` | ✅ Removed from `src/` entirely |
+| `langf()` | `Translator::phraseFmt()` | ✅ Removed from `src/` entirely |
+| `admincp_base()` | `AdmincpUrlGenerator::base()` | ✅ Removed from `src/` entirely |
+| `message()` | `MessageRenderer::toast()` | ✅ Not used in `src/` |
+| `inline_message()` | `MessageRenderer::inline()` | ✅ Not used in `src/` |
+| `mconfig()` | `BootstrapContext::runtimeState()->moduleConfig()` | Still in `compat.php` for legacy modules |
+| `config()` | `BootstrapContext::configProvider()->cms()` | Still in `compat.php` for legacy modules |
+| `loadModuleConfigs()` | Direct calls to `RuntimeState::setModuleConfig()` | Still in `compat.php` for legacy modules |
+| `isLoggedIn()` | `SessionManager::isAuthenticated()` + timeout check | Still in `compat.php` for legacy modules |
+| `redirect()` | `Redirector::go()` | Still in `compat.php` for legacy modules |
+
+These wrappers remain in `includes/bootstrap/compat.php` **only for backward compatibility with legacy theme modules and plugins**. New code in `src/` must call the class methods directly.
 

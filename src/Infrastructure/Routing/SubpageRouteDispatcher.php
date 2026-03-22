@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Infrastructure\Routing;
 
+use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
+
 final class SubpageRouteDispatcher
 {
     private SubpageRouteRegistry $registry;
@@ -24,7 +26,7 @@ final class SubpageRouteDispatcher
 
         $moduleConfig = $route['module_config'] ?? null;
         if (is_string($moduleConfig) && $moduleConfig !== '') {
-            @loadModuleConfigs($moduleConfig);
+            BootstrapContext::loadModuleConfig($moduleConfig);
         }
 
         $controllerClass = $route['controller'] ?? null;

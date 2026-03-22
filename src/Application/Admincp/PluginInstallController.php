@@ -18,11 +18,11 @@ final class PluginInstallController
 
     public function render(): void
     {
-        $systemEnabled = (bool) config('plugins_system_enable', true);
+        $systemEnabled = (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('plugins_system_enable', true);
 
         if (isset($_POST['submit'])) {
             if ($_FILES['file']['error'] > 0) {
-                message('error', 'There has been an error uploading the file.');
+                \Darkheim\Application\View\MessageRenderer::toast('error', 'There has been an error uploading the file.');
             } else {
                 $plugin = new Plugins();
                 $plugin->importPlugin($_FILES);

@@ -97,7 +97,7 @@ class Validator
 
     /**
      * Returns true when a value is considered non-empty.
-     * Mirrors the legacy check_value() global helper:
+     * Mirrors the legacy \Darkheim\Domain\Validator::hasValue() global helper:
      *   – non-empty arrays/objects/strings are truthy
      *   – the literal string '0' is also truthy (explicit zero is valid)
      */
@@ -108,12 +108,12 @@ class Validator
 
     public static function UsernameLength(string $string): bool
     {
-        return !(strlen($string) < config('username_min_len', true) || strlen($string) > config('username_max_len', true));
+        return !(strlen($string) < \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('username_min_len', true) || strlen($string) > \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('username_max_len', true));
     }
 
     public static function PasswordLength(string $string): bool
     {
-        return !(strlen($string) < config('password_min_len', true) || strlen($string) > config('password_max_len', true));
+        return !(strlen($string) < \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('password_min_len', true) || strlen($string) > \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('password_max_len', true));
     }
 }
 

@@ -5,24 +5,25 @@ declare(strict_types=1);
 namespace Darkheim\Application\Subpage\Usercp;
 
 use Darkheim\Application\Character\Character;
+use Darkheim\Application\Language\Translator;
 
 final class ResetStatsSubpageController extends AbstractCharacterActionTableSubpageController
 {
-    protected function pageTitle(): string { return lang('module_titles_txt_18', true); }
-    protected function cardTitle(): string { return lang('module_titles_txt_18', true); }
+    protected function pageTitle(): string { return Translator::phrase('module_titles_txt_18'); }
+    protected function cardTitle(): string { return Translator::phrase('module_titles_txt_18'); }
     protected function cardIconClass(): string { return 'bi bi-bar-chart-fill'; }
 
     protected function tableHeaders(): array
     {
         return [
             '',
-            lang('resetstats_txt_1', true),
-            lang('resetstats_txt_2', true),
-            lang('resetstats_txt_3', true),
-            lang('resetstats_txt_4', true),
-            lang('resetstats_txt_5', true),
-            lang('resetstats_txt_6', true),
-            lang('resetstats_txt_7', true),
+            Translator::phrase('resetstats_txt_1'),
+            Translator::phrase('resetstats_txt_2'),
+            Translator::phrase('resetstats_txt_3'),
+            Translator::phrase('resetstats_txt_4'),
+            Translator::phrase('resetstats_txt_5'),
+            Translator::phrase('resetstats_txt_6'),
+            Translator::phrase('resetstats_txt_7'),
             '',
         ];
     }
@@ -46,7 +47,7 @@ final class ResetStatsSubpageController extends AbstractCharacterActionTableSubp
                 number_format((float) $data[_CLMN_CHR_STAT_ENE_]),
                 number_format((float) $data[_CLMN_CHR_STAT_CMD_]),
             ],
-            'buttonLabel' => lang('resetstats_txt_8', true),
+            'buttonLabel' => Translator::phrase('resetstats_txt_8'),
         ];
     }
 
@@ -61,8 +62,8 @@ final class ResetStatsSubpageController extends AbstractCharacterActionTableSubp
     protected function requirementsLines(): array
     {
         $lines = [];
-        if (mconfig('zen_cost') > 0) {
-            $lines[] = langf('resetstats_txt_9', [number_format((float) mconfig('zen_cost'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost') > 0) {
+            $lines[] = Translator::phraseFmt('resetstats_txt_9', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost'))]);
         }
         return $lines;
     }

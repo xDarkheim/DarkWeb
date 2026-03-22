@@ -7,6 +7,7 @@ namespace Darkheim\Application\Rankings;
 use Darkheim\Application\Auth\Common;
 use Darkheim\Application\Character\Character;
 use Darkheim\Application\Game\GameHelper;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Cache\CacheBuilder;
 use Darkheim\Infrastructure\Database\Connection;
@@ -34,26 +35,26 @@ class RankingsService
         $this->request = $request ?? new NativeRequestStore();
         $this->config  = BootstrapContext::configProvider()?->cms() ?? [];
 
-        loadModuleConfigs('rankings');
-        $this->_results = check_value(mconfig('rankings_results')) ? (int) mconfig('rankings_results') : 25;
+        \Darkheim\Infrastructure\Bootstrap\BootstrapContext::loadModuleConfig('rankings');
+        $this->_results = \Darkheim\Domain\Validator::hasValue(\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_results')) ? (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_results') : 25;
 
-        if (check_value(mconfig('rankings_excluded_characters'))) {
-            $this->_excludedCharacters = explode(',', mconfig('rankings_excluded_characters'));
+        if (\Darkheim\Domain\Validator::hasValue(\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_excluded_characters'))) {
+            $this->_excludedCharacters = explode(',', \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_excluded_characters'));
         }
-        if (check_value(mconfig('rankings_excluded_guilds'))) {
-            $this->_excludedGuilds = explode(',', mconfig('rankings_excluded_guilds'));
+        if (\Darkheim\Domain\Validator::hasValue(\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_excluded_guilds'))) {
+            $this->_excludedGuilds = explode(',', \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_excluded_guilds'));
         }
 
         $this->_rankingsMenu = [
-            [lang('rankings_txt_1', true), 'level',        mconfig('rankings_enable_level')],
-            [lang('rankings_txt_2', true), 'resets',       mconfig('rankings_enable_resets')],
-            [lang('rankings_txt_3', true), 'killers',      mconfig('rankings_enable_pk')],
-            [lang('rankings_txt_4', true), 'guilds',       mconfig('rankings_enable_guilds')],
-            [lang('rankings_txt_5', true), 'grandresets',  mconfig('rankings_enable_gr')],
-            [lang('rankings_txt_6', true), 'online',       mconfig('rankings_enable_online')],
-            [lang('rankings_txt_7', true), 'votes',        mconfig('rankings_enable_votes')],
-            [lang('rankings_txt_8', true), 'gens',         mconfig('rankings_enable_gens')],
-            [lang('rankings_txt_22', true), 'master',       mconfig('rankings_enable_master')],
+            [Translator::phrase('rankings_txt_1'), 'level',       \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_level')],
+            [Translator::phrase('rankings_txt_2'), 'resets',      \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_resets')],
+            [Translator::phrase('rankings_txt_3'), 'killers',     \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_pk')],
+            [Translator::phrase('rankings_txt_4'), 'guilds',      \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_guilds')],
+            [Translator::phrase('rankings_txt_5'), 'grandresets', \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_gr')],
+            [Translator::phrase('rankings_txt_6'), 'online',      \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_online')],
+            [Translator::phrase('rankings_txt_7'), 'votes',       \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_votes')],
+            [Translator::phrase('rankings_txt_8'), 'gens',        \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_gens')],
+            [Translator::phrase('rankings_txt_22'), 'master',     \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('rankings_enable_master')],
         ];
 
         $extraMenuLinks = $this->rankingMenuLinks();
@@ -137,7 +138,7 @@ class RankingsService
         echo '<ul class="rankings-class-filter">';
         echo '<li><a onclick="rankingsFilterRemove()" class="rankings-class-filter-selection">'
             . GameHelper::playerClassAvatar(-1, true, false, 'rankings-class-filter-image')
-            . '<br />' . lang('rankings_filter_1') . '</a></li>';
+            . '<br />' . Translator::phrase('rankings_filter_1') . '</a></li>';
         foreach ($filterData as $row) {
             $classGroup  = (int) ($row[0] ?? 0);
             $classIds    = (string) ($row[1] ?? '');
@@ -181,7 +182,7 @@ class RankingsService
 
     private function _levelsRanking(): void
     {
-        $result = $this->_getLevelRankingData((bool) mconfig('combine_level_masterlevel'));
+        $result = $this->_getLevelRankingData((bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('combine_level_masterlevel'));
         if (! is_array($result)) {
             return;
         }
@@ -190,7 +191,7 @@ class RankingsService
 
     private function _resetsRanking(): void
     {
-        $result = $this->_getResetRankingData((bool) mconfig('combine_level_masterlevel'));
+        $result = $this->_getResetRankingData((bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('combine_level_masterlevel'));
         if (! is_array($result)) {
             return;
         }
@@ -199,7 +200,7 @@ class RankingsService
 
     private function _killersRanking(): void
     {
-        $result = $this->_getKillersRankingData((bool) mconfig('combine_level_masterlevel'));
+        $result = $this->_getKillersRankingData((bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('combine_level_masterlevel'));
         if (! is_array($result)) {
             return;
         }
@@ -221,7 +222,7 @@ class RankingsService
     private function _guildsRanking(): void
     {
         $this->mu = Connection::Database('MuOnline');
-        $result   = match (mconfig('guild_score_formula')) {
+        $result   = match (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('guild_score_formula')) {
             2 => $this->mu->query_fetch(
                 "SELECT " . _TBL_GUILDMEMB_ . "." . _CLMN_GUILDMEMB_NAME_ . ", (SELECT "
                 . _CLMN_GUILD_MASTER_ . " FROM " . _TBL_GUILD_ . " WHERE "
@@ -331,7 +332,7 @@ class RankingsService
                 continue;
             }
             $characterName = $character->AccountCharacterIDC($accountInfo[_CLMN_USERNM_]);
-            if (! check_value($characterName)) {
+            if (! \Darkheim\Domain\Validator::hasValue($characterName)) {
                 continue;
             }
             $characterData = $character->CharacterData($characterName);
@@ -494,7 +495,7 @@ class RankingsService
         $result    = [];
         foreach ($accounts as $row) {
             $playerIDC = $character->AccountCharacterIDC($row[_CLMN_MS_MEMBID_]);
-            if (! check_value($playerIDC)) {
+            if (! \Darkheim\Domain\Validator::hasValue($playerIDC)) {
                 continue;
             }
             $playerData = $character->CharacterData($playerIDC);
@@ -520,7 +521,8 @@ class RankingsService
             if (! array_key_exists($class, $classesData)) {
                 continue;
             }
-            $filterName     = lang($phrase) == 'ERROR' ? $phrase : lang($phrase);
+            $translatedName = Translator::phrase((string) $phrase);
+            $filterName     = $translatedName === 'ERROR' ? (string) $phrase : $translatedName;
             $classGroupList = [];
             foreach ($classesData as $key => $row) {
                 if ($row['class_group'] == $class) {

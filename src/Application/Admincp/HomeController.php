@@ -19,9 +19,10 @@ final class HomeController
     public function render(): void
     {
         $database = Connection::Database('MuOnline');
+        $admincpUrl = new AdmincpUrlGenerator();
 
         if ($this->shouldWarnAboutInstallDirectory()) {
-            message('warning', 'public/install/ directory still exists — rename or delete it.', 'WARNING');
+            \Darkheim\Application\View\MessageRenderer::toast('warning', 'public/install/ directory still exists — rename or delete it.', 'WARNING');
         }
 
         $this->view->render('admincp/home', [
@@ -64,17 +65,17 @@ final class HomeController
                 ['label' => 'Server Time', 'value' => date('Y-m-d H:i'), 'valueClass' => ''],
                 [
                     'label' => 'Plugin System',
-                    'value' => (bool) config('plugins_system_enable', true) ? 'Enabled' : 'Disabled',
-                    'valueClass' => (bool) config('plugins_system_enable', true) ? 'badge-status on' : 'badge-status off',
+                    'value' => (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('plugins_system_enable', true) ? 'Enabled' : 'Disabled',
+                    'valueClass' => (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('plugins_system_enable', true) ? 'badge-status on' : 'badge-status off',
                 ],
             ],
             'quickActions' => [
-                ['url' => admincp_base('addnews'), 'iconClass' => 'bi bi-newspaper', 'label' => 'Publish News'],
-                ['url' => admincp_base('searchaccount'), 'iconClass' => 'bi bi-search', 'label' => 'Search Account'],
-                ['url' => admincp_base('banaccount'), 'iconClass' => 'bi bi-slash-circle', 'label' => 'Ban Account'],
-                ['url' => admincp_base('creditsmanager'), 'iconClass' => 'bi bi-cash-coin', 'label' => 'Credits Manager'],
-                ['url' => admincp_base('cachemanager'), 'iconClass' => 'bi bi-arrow-clockwise', 'label' => 'Clear Cache'],
-                ['url' => admincp_base('website_settings'), 'iconClass' => 'bi bi-gear', 'label' => 'Settings'],
+                ['url' => $admincpUrl->base('addnews'), 'iconClass' => 'bi bi-newspaper', 'label' => 'Publish News'],
+                ['url' => $admincpUrl->base('searchaccount'), 'iconClass' => 'bi bi-search', 'label' => 'Search Account'],
+                ['url' => $admincpUrl->base('banaccount'), 'iconClass' => 'bi bi-slash-circle', 'label' => 'Ban Account'],
+                ['url' => $admincpUrl->base('creditsmanager'), 'iconClass' => 'bi bi-cash-coin', 'label' => 'Credits Manager'],
+                ['url' => $admincpUrl->base('cachemanager'), 'iconClass' => 'bi bi-arrow-clockwise', 'label' => 'Clear Cache'],
+                ['url' => $admincpUrl->base('website_settings'), 'iconClass' => 'bi bi-gear', 'label' => 'Settings'],
             ],
             'admins' => $this->adminRows(),
         ]);
@@ -104,7 +105,7 @@ final class HomeController
     private function installWarningHtml(): string
     {
         ob_start();
-        inline_message('warning', 'Your public/install/ directory still exists. It is strongly recommended that you rename or delete it before going live.');
+        \Darkheim\Application\View\MessageRenderer::inline('warning', 'Your public/install/ directory still exists. It is strongly recommended that you rename or delete it before going live.');
         return (string) ob_get_clean();
     }
 
@@ -127,7 +128,7 @@ final class HomeController
      */
     private function adminRows(): array
     {
-        $admins = config('admins', true);
+        $admins = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('admins', true);
         if (!is_array($admins)) {
             return [];
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Subpage\Usercp;
 
+use Darkheim\Application\Language\Translator;
 use Darkheim\Application\Vote\Vote;
 use Darkheim\Application\Vote\VoteSiteRepository;
 use Darkheim\Infrastructure\View\ViewRenderer;
@@ -19,14 +20,14 @@ final class VoteSubpageController
 
     public function render(): void
     {
-        if (!isLoggedIn()) {
-            redirect(1, 'login');
+        if (!\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+            \Darkheim\Infrastructure\Http\Redirector::go(1, 'login');
             return;
         }
 
         try {
-            if (!mconfig('active')) {
-                throw new \Exception(lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                throw new \Exception(Translator::phrase('error_47'));
             }
 
             $vote = new Vote();
@@ -39,7 +40,7 @@ final class VoteSubpageController
                     $vote->setVotesiteId((string) ($_POST['voting_site_id'] ?? ''));
                     $vote->vote();
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
@@ -59,15 +60,15 @@ final class VoteSubpageController
             }
 
             $this->view->render('subpages/usercp/vote', [
-                'pageTitle'   => lang('module_titles_txt_7', true),
-                'cardTitle'   => lang('module_titles_txt_7', true),
-                'headerTitle' => lang('vfc_txt_1', true),
-                'headerReward'=> lang('vfc_txt_2', true),
-                'buttonLabel' => lang('vfc_txt_3', true),
+                'pageTitle'   => Translator::phrase('module_titles_txt_7'),
+                'cardTitle'   => Translator::phrase('module_titles_txt_7'),
+                'headerTitle' => Translator::phrase('vfc_txt_1'),
+                'headerReward'=> Translator::phrase('vfc_txt_2'),
+                'buttonLabel' => Translator::phrase('vfc_txt_3'),
                 'siteRows'    => $siteRows,
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }

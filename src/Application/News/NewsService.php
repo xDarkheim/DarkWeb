@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\News;
 
+use Darkheim\Application\Language\Translator;
 use Darkheim\Infrastructure\Database\Connection;
 use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Cache\CacheBuilder;
@@ -45,7 +46,7 @@ class NewsService
 
     public function setLanguage($language): void
     {
-        if (!check_value($language)) return;
+        if (!Validator::hasValue($language)) return;
         $languagesList = LanguageRepository::getInstalled();
         if (!is_array($languagesList)) return;
         if (!in_array($language, $languagesList, true)) return;
@@ -54,13 +55,13 @@ class NewsService
 
     public function setTitle($title): void
     {
-        if (!check_value($title)) return;
+        if (!Validator::hasValue($title)) return;
         $this->_title = $title;
     }
 
     public function setContent($content): void
     {
-        if (!check_value($content)) return;
+        if (!Validator::hasValue($content)) return;
         $this->_content = $content;
     }
 
@@ -69,12 +70,12 @@ class NewsService
     public function addNews($title, $content, $author = 'Administrator', $comments = 1): void
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($title) || !check_value($content) || !check_value($author)) {
-            message('error', lang('error_41', true));
+        if (!Validator::hasValue($title) || !Validator::hasValue($content) || !Validator::hasValue($author)) {
+            \Darkheim\Application\View\MessageRenderer::toast('error', Translator::phrase('error_41'));
             return;
         }
-        if (!$this->checkTitle($title)) { message('error', lang('error_42', true)); return; }
-        if (!$this->checkContent($content)) { message('error', lang('error_43', true)); return; }
+        if (!$this->checkTitle($title)) { \Darkheim\Application\View\MessageRenderer::toast('error', Translator::phrase('error_42')); return; }
+        if (!$this->checkContent($content)) { \Darkheim\Application\View\MessageRenderer::toast('error', Translator::phrase('error_43')); return; }
 
         if ($comments < 0 || $comments > 1) $comments = 1;
 
@@ -87,7 +88,7 @@ class NewsService
             [base64_encode($title), $author, time(), base64_encode($content), $comments]
         );
 
-        message($add ? 'success' : 'error', $add ? lang('success_15', true) : lang('error_23', true));
+        \Darkheim\Application\View\MessageRenderer::toast($add ? 'success' : 'error', $add ? Translator::phrase('success_15') : Translator::phrase('error_23'));
     }
 
     public function removeNews($id): bool
@@ -107,7 +108,7 @@ class NewsService
     public function editNews($id, $title, $content, $author, $comments, $date): void
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($id) || !check_value($title) || !check_value($content) || !check_value($author) || !check_value($comments) || !check_value($date)) return;
+        if (!Validator::hasValue($id) || !Validator::hasValue($title) || !Validator::hasValue($content) || !Validator::hasValue($author) || !Validator::hasValue($comments) || !Validator::hasValue($date)) return;
         if (!$this->newsIdExists($id)) return;
         if (!$this->checkTitle($title) || !$this->checkContent($content)) return;
 
@@ -120,19 +121,19 @@ class NewsService
             [base64_encode($title), base64_encode($content), $author, strtotime($date), $comments, $id]
         );
 
-        message($query ? 'success' : 'error', $query ? 'News successfully edited.' : lang('error_99'));
+        \Darkheim\Application\View\MessageRenderer::toast($query ? 'success' : 'error', $query ? 'News successfully edited.' : Translator::phrase('error_99'));
     }
 
     // ─── Validation ───────────────────────────────────────────────────────────
 
     public function checkTitle($title): bool
     {
-        return check_value($title) && strlen($title) >= 4 && strlen($title) <= 255;
+        return Validator::hasValue($title) && strlen($title) >= 4 && strlen($title) <= 255;
     }
 
     public function checkContent($content): bool
     {
-        return check_value($content) && strlen($content) >= 4;
+        return Validator::hasValue($content) && strlen($content) >= 4;
     }
 
     // ─── Read / cache operations ───────────────────────────────────────────────
@@ -237,7 +238,7 @@ class NewsService
     public function loadNewsData($id)
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($id) || !$this->newsIdExists($id)) return;
+        if (!Validator::hasValue($id) || !$this->newsIdExists($id)) return;
         $query = $this->db->query_fetch_single("SELECT * FROM " . \News . " WHERE news_id = ?", [$id]);
         if (!is_array($query)) return;
         $query['news_title']   = base64_decode($query['news_title']);
@@ -250,7 +251,7 @@ class NewsService
     public function getNewsTranslations(): ?array
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($this->_id)) return null;
+        if (!Validator::hasValue($this->_id)) return null;
         $rows = $this->db->query_fetch("SELECT * FROM " . \News_Translations . " WHERE news_id = ?", [$this->_id]);
         if (!is_array($rows)) return null;
         $result = [];
@@ -261,10 +262,10 @@ class NewsService
     public function addNewsTransation(): void
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($this->_id))       throw new \Exception('The provided news id is not valid.');
-        if (!check_value($this->_language)) throw new \Exception('The provided news language is not valid.');
-        if (!check_value($this->_title))    throw new \Exception('The provided news title is not valid.');
-        if (!check_value($this->_content))  throw new \Exception('The provided news content is not valid.');
+        if (!Validator::hasValue($this->_id))       throw new \Exception('The provided news id is not valid.');
+        if (!Validator::hasValue($this->_language)) throw new \Exception('The provided news language is not valid.');
+        if (!Validator::hasValue($this->_title))    throw new \Exception('The provided news title is not valid.');
+        if (!Validator::hasValue($this->_content))  throw new \Exception('The provided news content is not valid.');
 
         $existing = $this->getNewsTranslations();
         if (is_array($existing) && in_array($this->_language, $existing, true)) {
@@ -283,10 +284,10 @@ class NewsService
     public function updateNewsTransation(): void
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($this->_id))       throw new \Exception('The provided news id is not valid.');
-        if (!check_value($this->_language)) throw new \Exception('The provided news language is not valid.');
-        if (!check_value($this->_title))    throw new \Exception('The provided news title is not valid.');
-        if (!check_value($this->_content))  throw new \Exception('The provided news content is not valid.');
+        if (!Validator::hasValue($this->_id))       throw new \Exception('The provided news id is not valid.');
+        if (!Validator::hasValue($this->_language)) throw new \Exception('The provided news language is not valid.');
+        if (!Validator::hasValue($this->_title))    throw new \Exception('The provided news title is not valid.');
+        if (!Validator::hasValue($this->_content))  throw new \Exception('The provided news content is not valid.');
 
         $result = $this->db->query(
             "UPDATE " . \News_Translations . " SET news_title = ?, news_content = ? WHERE news_id = ? AND news_language = ?",
@@ -300,8 +301,8 @@ class NewsService
     public function deleteNewsTranslation(): void
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($this->_id))       throw new \Exception('The provided news id is not valid.');
-        if (!check_value($this->_language)) throw new \Exception('The provided news language is not valid.');
+        if (!Validator::hasValue($this->_id))       throw new \Exception('The provided news id is not valid.');
+        if (!Validator::hasValue($this->_language)) throw new \Exception('The provided news language is not valid.');
 
         $result = $this->db->query(
             "DELETE FROM " . \News_Translations . " WHERE news_id = ? AND news_language = ?",
@@ -317,7 +318,7 @@ class NewsService
     public function loadNewsTranslationData()
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($this->_id) || !check_value($this->_language)) return;
+        if (!Validator::hasValue($this->_id) || !Validator::hasValue($this->_language)) return;
         $result = $this->db->query_fetch_single(
             "SELECT * FROM " . \News_Translations . " WHERE news_id = ? AND news_language = ?",
             [$this->_id, $this->_language]
@@ -328,7 +329,7 @@ class NewsService
     public function getNewsTranslationsDataList(): ?array
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($this->_id)) return null;
+        if (!Validator::hasValue($this->_id)) return null;
         $result = $this->db->query_fetch("SELECT * FROM " . \News_Translations . " WHERE news_id = ?", [$this->_id]);
         return is_array($result) ? $result : null;
     }
@@ -338,7 +339,7 @@ class NewsService
     private function _deleteAllNewsTranslations(): void
     {
         $this->db = Connection::Database('MuOnline');
-        if (!check_value($this->_id)) {
+        if (!Validator::hasValue($this->_id)) {
             return;
         }
         $translations = $this->getNewsTranslations();

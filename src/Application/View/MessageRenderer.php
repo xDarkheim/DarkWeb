@@ -12,7 +12,7 @@ use Darkheim\Domain\Validator;
  * – toast()  outputs a hidden <span> that toast.js picks up on DOMContentLoaded.
  * – inline() outputs a visible styled <div> (use for in-context notices).
  *
- * Replaces the inline logic inside the global message() / inline_message() helpers.
+ * Replaces the inline logic inside the global \Darkheim\Application\View\MessageRenderer::toast() / \Darkheim\Application\View\MessageRenderer::inline() helpers.
  */
 final class MessageRenderer
 {

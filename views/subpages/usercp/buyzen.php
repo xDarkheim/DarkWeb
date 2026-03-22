@@ -19,7 +19,7 @@
         <form action="" method="post">
             <div class="ucp-buyzen-grid">
                 <div class="ucp-form-group">
-                    <label for="buyzen_character"><?php echo lang('buyzen_txt_3', true); ?></label>
+                    <label for="buyzen_character"><?php echo \Darkheim\Application\Language\Translator::phrase('buyzen_txt_3', true); ?></label>
                     <select name="character" id="buyzen_character" class="form-control">
                         <?php foreach ($characterOptions as $character): ?>
                         <option value="<?php echo htmlspecialchars($character['value'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($character['label'], ENT_QUOTES, 'UTF-8'); ?></option>
@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="ucp-form-group">
-                    <label for="buyzen_credits"><?php echo lang('buyzen_txt_4', true); ?></label>
+                    <label for="buyzen_credits"><?php echo \Darkheim\Application\Language\Translator::phrase('buyzen_txt_4', true); ?></label>
                     <select name="credits" id="buyzen_credits" class="form-control">
                         <?php foreach ($buyOptions as $option): ?>
                         <option value="<?php echo $option['credits']; ?>"><?php echo htmlspecialchars($option['label'], ENT_QUOTES, 'UTF-8'); ?></option>

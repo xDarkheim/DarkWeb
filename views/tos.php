@@ -1,6 +1,6 @@
 <div class="page-title">
 	<span>
-		<?php echo lang('module_titles_txt_9'); ?>
+		<?php echo \Darkheim\Application\Language\Translator::phrase('module_titles_txt_9'); ?>
 	</span>
 </div>
 

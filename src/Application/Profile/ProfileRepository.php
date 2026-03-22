@@ -43,7 +43,7 @@ class ProfileRepository
 
         $profileConfig = BootstrapContext::configProvider()?->moduleConfig('profiles');
         if (! is_array($profileConfig)) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_25', true));
         }
         $this->cfg = $profileConfig;
     }
@@ -63,35 +63,35 @@ class ProfileRepository
     {
         if (array_key_exists('encode', $this->cfg) && $this->cfg['encode'] == 1) {
             if (! Validator::Chars($input, ['a-z', 'A-Z', '0-9', '_', '-'])) {
-                throw new \Exception(lang('error_25', true));
+                throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_25', true));
             }
             $decodedReq = Encoder::base64urlDecode((string) $input);
             if (! $decodedReq) {
-                throw new \Exception(lang('error_25', true));
+                throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_25', true));
             }
             $this->_request = $decodedReq;
             return;
         }
 
         if (! Validator::AlphaNumeric($input)) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_25', true));
         }
         if (strlen($input) > $this->_reqMaxLen) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_25', true));
         }
         if (strlen($input) < 4) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_25', true));
         }
         $this->_request = $input;
     }
 
     public function data(): array
     {
-        if (! check_value($this->_type)) {
-            throw new \Exception(lang('error_21', true));
+        if (! Validator::hasValue($this->_type)) {
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_21', true));
         }
-        if (! check_value($this->_request)) {
-            throw new \Exception(lang('error_21', true));
+        if (! Validator::hasValue($this->_request)) {
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_21', true));
         }
         $this->_checkCache();
         return explode('|', $this->_fileData);
@@ -101,19 +101,19 @@ class ProfileRepository
 
     private function _checkCacheDir(string $path): void
     {
-        if (! check_value($path)) {
+        if (! Validator::hasValue($path)) {
             return;
         }
         if (! file_exists($path) || ! is_dir($path)) {
-            $msg = config('error_reporting', true)
+            $msg = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('error_reporting', true)
                 ? "Invalid cache directory ($path)"
-                : lang('error_21', true);
+                : \Darkheim\Application\Language\Translator::phrase('error_21', true);
             throw new \Exception($msg);
         }
         if (! is_writable($path)) {
-            $msg = config('error_reporting', true)
+            $msg = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('error_reporting', true)
                 ? "The cache directory is not writable ($path)"
-                : lang('error_21', true);
+                : \Darkheim\Application\Language\Translator::phrase('error_21', true);
             throw new \Exception($msg);
         }
     }
@@ -149,7 +149,7 @@ class ProfileRepository
             [$this->_request],
         );
         if (! $guildData) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_25', true));
         }
 
         $guildMembers = $this->dB->query_fetch(
@@ -157,7 +157,7 @@ class ProfileRepository
             [$this->_request],
         );
         if (! $guildMembers) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_25', true));
         }
 
         $members = [];
@@ -185,7 +185,7 @@ class ProfileRepository
         $character  = new Character();
         $playerData = $character->CharacterData($this->_request);
         if (! $playerData) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(\Darkheim\Application\Language\Translator::phrase('error_25', true));
         }
 
         /** @phpstan-ignore equal.alwaysFalse */
@@ -217,10 +217,10 @@ class ProfileRepository
             $playerData[_CLMN_CHR_STAT_ENE_],
             $playerData[_CLMN_CHR_STAT_CMD_] ?? 0,
             $playerData[_CLMN_CHR_PK_KILLS_],
-            check_value($playerData[_CLMN_CHR_GRSTS_]) ? $playerData[_CLMN_CHR_GRSTS_] : 0,
+            Validator::hasValue($playerData[_CLMN_CHR_GRSTS_]) ? $playerData[_CLMN_CHR_GRSTS_] : 0,
             $guild,
             0,
-            check_value($playerMasterLevel) ? $playerMasterLevel : 0,
+            Validator::hasValue($playerMasterLevel) ? $playerMasterLevel : 0,
         ];
 
         $reqFile = $this->_playersCachePath . strtolower($this->_request) . '.cache';

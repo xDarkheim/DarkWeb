@@ -20,6 +20,7 @@ final class LatestBansController
     public function render(): void
     {
         $db = Connection::Database('MuOnline');
+        $admincpUrl = new AdmincpUrlGenerator();
 
         if (isset($_GET['liftban'])) {
             try {
@@ -39,9 +40,9 @@ final class LatestBansController
                 }
                 $db->query('DELETE FROM ' . Ban_Log . ' WHERE account_id = ?', [$banInfo['account_id']]);
                 $db->query('DELETE FROM ' . Bans . ' WHERE account_id = ?', [$banInfo['account_id']]);
-                message('success', 'Account ban lifted');
+                \Darkheim\Application\View\MessageRenderer::toast('success', 'Account ban lifted');
             } catch (\Exception $ex) {
-                message('error', $ex->getMessage());
+                \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
             }
         }
 
@@ -50,10 +51,10 @@ final class LatestBansController
         $this->view->render('admincp/latestbans', [
             'temporalBans'  => $this->buildBanRows($db->query_fetch(
                 'SELECT TOP 25 * FROM ' . Ban_Log . " WHERE ban_type = ? ORDER BY id DESC", ['temporal']
-            ), $module),
+            ), $module, $admincpUrl),
             'permanentBans' => $this->buildBanRows($db->query_fetch(
                 'SELECT TOP 25 * FROM ' . Ban_Log . " WHERE ban_type = ? ORDER BY id DESC", ['permanent']
-            ), $module),
+            ), $module, $admincpUrl),
         ]);
     }
 
@@ -61,7 +62,7 @@ final class LatestBansController
      * @param mixed $rows
      * @return array<int,array{account:string,bannedBy:string,banDate:string,banDays:string,banReason:string,liftBanUrl:string}>
      */
-    private function buildBanRows(mixed $rows, string $module): array
+    private function buildBanRows(mixed $rows, string $module, AdmincpUrlGenerator $admincpUrl): array
     {
         if (!is_array($rows)) {
             return [];
@@ -74,7 +75,7 @@ final class LatestBansController
                 'banDate'    => date('Y-m-d H:i', (int) ($ban['ban_date'] ?? 0)),
                 'banDays'    => (string) ($ban['ban_days'] ?? ''),
                 'banReason'  => (string) ($ban['ban_reason'] ?? ''),
-                'liftBanUrl' => admincp_base($module . '&liftban=' . ($ban['id'] ?? '')),
+                'liftBanUrl' => $admincpUrl->base($module . '&liftban=' . ($ban['id'] ?? '')),
             ];
         }
         return $result;

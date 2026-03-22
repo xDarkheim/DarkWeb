@@ -22,9 +22,9 @@ class Common
     public function __construct()
     {
         $this->muonline = Connection::Database('MuOnline');
-        $this->_passwordEncryption = config('SQL_PASSWORD_ENCRYPTION', true);
-        $this->_sha256salt          = config('SQL_SHA256_SALT', true);
-        $this->_debug               = config('error_reporting', true);
+        $this->_passwordEncryption = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('SQL_PASSWORD_ENCRYPTION', true);
+        $this->_sha256salt          = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('SQL_SHA256_SALT', true);
+        $this->_debug               = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('error_reporting', true);
     }
 
     public function emailExists($email)
@@ -132,9 +132,9 @@ class Common
 
     public function addPasswordChangeRequest($userid, $new_password, $auth_code)
     {
-        if (!check_value($userid)) return;
-        if (!check_value($new_password)) return;
-        if (!check_value($auth_code)) return;
+        if (!Validator::hasValue($userid)) return;
+        if (!Validator::hasValue($new_password)) return;
+        if (!Validator::hasValue($auth_code)) return;
         if (!Validator::PasswordLength($new_password)) return;
 
         $data   = [$userid, $new_password, $auth_code, time()];
@@ -145,7 +145,7 @@ class Common
 
     public function hasActivePasswordChangeRequest($userid)
     {
-        if (!check_value($userid)) return;
+        if (!Validator::hasValue($userid)) return;
         $result = $this->muonline->query_fetch_single("SELECT * FROM " . Passchange_Request . " WHERE user_id = ?", array($userid));
         if (!is_array($result)) return;
         $configs = BootstrapContext::configProvider()?->moduleConfig('my-password');
@@ -174,7 +174,7 @@ class Common
 
     public function updateEmail($userid, $newEmail)
     {
-        if (!check_value($userid)) return;
+        if (!Validator::hasValue($userid)) return;
         if (!Validator::Email($newEmail)) return;
         $result = $this->muonline->query("UPDATE " . _TBL_MI_ . " SET " . _CLMN_EMAIL_ . " = ? WHERE " . _CLMN_MEMBID_ . " = ?", array($newEmail, $userid));
         if ($result) return true;
@@ -182,7 +182,7 @@ class Common
 
     public function paypal_transaction($transactionId, $userId, $paymentAmount, $paypalEmail, $orderId): bool
     {
-        if (!check_value($transactionId) || !Validator::UnsignedNumber($userId) || !check_value($paypalEmail) || !check_value($orderId)) {
+        if (!Validator::hasValue($transactionId) || !Validator::UnsignedNumber($userId) || !Validator::hasValue($paypalEmail) || !Validator::hasValue($orderId)) {
             return false;
         }
 
@@ -202,7 +202,7 @@ class Common
 
     public function paypal_transaction_reversed_updatestatus($orderId): bool
     {
-        if (!check_value($orderId)) {
+        if (!Validator::hasValue($orderId)) {
             return false;
         }
 
@@ -232,8 +232,8 @@ class Common
 
     public function blockIpAddress(string $ip, string $blockedBy): bool
     {
-        if (!check_value($ip)) return false;
-        if (!check_value($blockedBy)) return false;
+        if (!Validator::hasValue($ip)) return false;
+        if (!Validator::hasValue($blockedBy)) return false;
         $result = $this->muonline->query(
             "INSERT INTO " . Blocked_IP . " (block_ip, block_by, block_date) VALUES (?, ?, ?)",
             [$ip, $blockedBy, time()]

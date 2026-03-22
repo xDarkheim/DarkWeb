@@ -20,7 +20,7 @@ final class EditNewsTranslationController
     {
         try {
             $newsService = new News();
-            loadModuleConfigs('news');
+            \Darkheim\Infrastructure\Bootstrap\BootstrapContext::loadModuleConfig('news');
 
             if (!$newsService->isNewsDirWritable()) {
                 throw new \RuntimeException('The news cache folder is not writable.');
@@ -33,9 +33,9 @@ final class EditNewsTranslationController
                     $newsService->setTitle($_POST['news_title']);
                     $newsService->setContent($_POST['news_content']);
                     $newsService->updateNewsTransation();
-                    redirect(1, 'admincp/?module=managenews');
+                    \Darkheim\Infrastructure\Http\Redirector::go(1, 'admincp/?module=managenews');
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
@@ -53,7 +53,7 @@ final class EditNewsTranslationController
                 'formContent' => (string) ($_POST['news_content'] ?? base64_decode((string) ($newsData['news_content'] ?? ''))),
             ]);
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 }

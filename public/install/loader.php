@@ -73,7 +73,6 @@ try {
     );
 	if(!is_array($cmsDefaultConfig)) throw new Exception('DarkCore default configuration file could not be decoded.');
 
-		if(!@include(__PATH_INCLUDES__ . 'bootstrap/compat.php')) throw new Exception('Could not load DarkCore functions.');
         if(!@include(__PATH_CONFIGS__ . 'timezone-config.php')) throw new Exception('Could not load DarkCore timezone.');
 
 	$writablePaths = json_decode(

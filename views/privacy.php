@@ -3,7 +3,7 @@
 
 <div class="page-title">
 	<span>
-		<?php echo lang('module_titles_txt_24'); ?>
+		<?php echo \Darkheim\Application\Language\Translator::phrase('module_titles_txt_24'); ?>
 	</span>
 </div>
 

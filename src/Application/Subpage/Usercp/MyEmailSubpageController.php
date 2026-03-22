@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Darkheim\Application\Subpage\Usercp;
 
 use Darkheim\Application\Account\Account;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 final class MyEmailSubpageController
@@ -18,14 +19,14 @@ final class MyEmailSubpageController
 
     public function render(): void
     {
-        if (!isLoggedIn()) {
-            redirect(1, 'login');
+        if (!\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+            \Darkheim\Infrastructure\Http\Redirector::go(1, 'login');
             return;
         }
 
         try {
-            if (!mconfig('active')) {
-                throw new \Exception(lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                throw new \Exception(Translator::phrase('error_47'));
             }
 
             if (isset($_POST['darkheimEmail_submit'])) {
@@ -36,19 +37,19 @@ final class MyEmailSubpageController
                         (string) ($_POST['darkheimEmail_newemail'] ?? ''),
                         (string) ($_SERVER['REMOTE_ADDR'] ?? '')
                     );
-                    message('success', mconfig('require_verification') ? lang('success_19', true) : lang('success_20', true));
+                    \Darkheim\Application\View\MessageRenderer::toast('success', \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('require_verification') ? Translator::phrase('success_19') : Translator::phrase('success_20'));
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
             $this->view->render('subpages/usercp/myemail', [
-                'pageTitle'   => lang('module_titles_txt_5', true),
-                'cardTitle'   => lang('module_titles_txt_5', true),
-                'submitLabel' => lang('changemail_txt_1', true),
+                'pageTitle'   => Translator::phrase('module_titles_txt_5'),
+                'cardTitle'   => Translator::phrase('module_titles_txt_5'),
+                'submitLabel' => Translator::phrase('changemail_txt_1'),
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }

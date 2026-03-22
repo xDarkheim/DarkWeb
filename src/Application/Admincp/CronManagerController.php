@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Admincp;
 
+use Darkheim\Domain\Validator;
+use Darkheim\Application\Helpers\TimeHelper;
 use Darkheim\Infrastructure\Cron\CronManager;
 use Darkheim\Infrastructure\View\ViewRenderer;
-use Darkheim\Application\Helpers\TimeHelper;
 
 final class CronManagerController
 {
@@ -21,22 +22,34 @@ final class CronManagerController
     {
         try {
             $cronManager = new CronManager();
+            $admincpUrl  = new AdmincpUrlGenerator();
 
             if (isset($_GET['action'])) {
                 try {
                     switch ($_GET['action']) {
-                        case 'enable':    $cronManager->setId($_GET['id']); $cronManager->enableCron(); break;
-                        case 'disable':   $cronManager->setId($_GET['id']); $cronManager->disableCron(); break;
-                        case 'delete':    $cronManager->setId($_GET['id']); $cronManager->deleteCron(); break;
-                        case 'reset':     $cronManager->setId($_GET['id']); $cronManager->resetCronLastRun(); break;
-                        case 'allenable':  $cronManager->enableAll(); break;
-                        case 'alldisable': $cronManager->disableAll(); break;
-                        case 'allreset':   $cronManager->resetAllLastRun(); break;
+                        case 'enable':    $cronManager->setId($_GET['id']);
+                            $cronManager->enableCron();
+                            break;
+                        case 'disable':   $cronManager->setId($_GET['id']);
+                            $cronManager->disableCron();
+                            break;
+                        case 'delete':    $cronManager->setId($_GET['id']);
+                            $cronManager->deleteCron();
+                            break;
+                        case 'reset':     $cronManager->setId($_GET['id']);
+                            $cronManager->resetCronLastRun();
+                            break;
+                        case 'allenable':  $cronManager->enableAll();
+                            break;
+                        case 'alldisable': $cronManager->disableAll();
+                            break;
+                        case 'allreset':   $cronManager->resetAllLastRun();
+                            break;
                         default: throw new \RuntimeException('Invalid action.');
                     }
-                    redirect(3, admincp_base('cronmanager'));
+                    \Darkheim\Infrastructure\Http\Redirector::go(3, $admincpUrl->base('cronmanager'));
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
@@ -46,9 +59,9 @@ final class CronManagerController
                     $cronManager->_interval = $_POST['cron_time'];
                     $cronManager->setFile($_POST['cron_file']);
                     $cronManager->addCron();
-                    redirect(3, admincp_base('cronmanager'));
+                    \Darkheim\Infrastructure\Http\Redirector::go(3, $admincpUrl->base('cronmanager'));
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
@@ -58,17 +71,17 @@ final class CronManagerController
                 foreach ($cronList as $row) {
                     $interval = TimeHelper::secToHms((int) ($row['cron_run_time'] ?? 0));
                     $rows[]   = [
-                        'id'          => (string) ($row['cron_id'] ?? ''),
-                        'name'        => (string) ($row['cron_name'] ?? ''),
-                        'file'        => (string) ($row['cron_file_run'] ?? ''),
-                        'interval'    => $interval[0] . 'h ' . $interval[1] . 'm',
-                        'lastRun'     => check_value($row['cron_last_run']) ? date('Y-m-d H:i', (int) $row['cron_last_run']) : null,
-                        'isOn'        => (int) ($row['cron_status'] ?? 0) === 1,
-                        'protected'   => (bool) ($row['cron_protected'] ?? false),
-                        'enableUrl'   => admincp_base('cronmanager&action=enable&id=' . ($row['cron_id'] ?? '')),
-                        'disableUrl'  => admincp_base('cronmanager&action=disable&id=' . ($row['cron_id'] ?? '')),
-                        'resetUrl'    => admincp_base('cronmanager&action=reset&id=' . ($row['cron_id'] ?? '')),
-                        'deleteUrl'   => admincp_base('cronmanager&action=delete&id=' . ($row['cron_id'] ?? '')),
+                        'id'         => (string) ($row['cron_id'] ?? ''),
+                        'name'       => (string) ($row['cron_name'] ?? ''),
+                        'file'       => (string) ($row['cron_file_run'] ?? ''),
+                        'interval'   => $interval[0] . 'h ' . $interval[1] . 'm',
+                        'lastRun'    => Validator::hasValue($row['cron_last_run']) ? date('Y-m-d H:i', (int) $row['cron_last_run']) : null,
+                        'isOn'       => (int) ($row['cron_status'] ?? 0) === 1,
+                        'protected'  => (bool) ($row['cron_protected'] ?? false),
+                        'enableUrl'  => $admincpUrl->base('cronmanager&action=enable&id=' . ($row['cron_id'] ?? '')),
+                        'disableUrl' => $admincpUrl->base('cronmanager&action=disable&id=' . ($row['cron_id'] ?? '')),
+                        'resetUrl'   => $admincpUrl->base('cronmanager&action=reset&id=' . ($row['cron_id'] ?? '')),
+                        'deleteUrl'  => $admincpUrl->base('cronmanager&action=delete&id=' . ($row['cron_id'] ?? '')),
                     ];
                 }
             }
@@ -86,14 +99,13 @@ final class CronManagerController
                 'rows'            => $rows,
                 'intervalOptions' => $intervalOptions,
                 'cronFilesHtml'   => $cronManager->listCronFiles(),
-                'addUrl'          => admincp_base('cronmanager'),
-                'bulkEnableUrl'   => admincp_base('cronmanager&action=allenable'),
-                'bulkDisableUrl'  => admincp_base('cronmanager&action=alldisable'),
-                'bulkResetUrl'    => admincp_base('cronmanager&action=allreset'),
+                'addUrl'          => $admincpUrl->base('cronmanager'),
+                'bulkEnableUrl'   => $admincpUrl->base('cronmanager&action=allenable'),
+                'bulkDisableUrl'  => $admincpUrl->base('cronmanager&action=alldisable'),
+                'bulkResetUrl'    => $admincpUrl->base('cronmanager&action=allreset'),
             ]);
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 }
-

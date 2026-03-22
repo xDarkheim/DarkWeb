@@ -31,6 +31,7 @@ final class SearchCharacterController
                     throw new \RuntimeException('The name can be 3 to 10 characters long.');
                 }
                 $db     = Connection::Database('MuOnline');
+                $admincpUrl = new AdmincpUrlGenerator();
                 $common = new Common();
                 $rows   = $db->query_fetch(
                     'SELECT TOP 10 ' . _CLMN_CHR_NAME_ . ', ' . _CLMN_CHR_ACCID_ . ' FROM ' . _TBL_CHR_ . ' WHERE Name LIKE ?',
@@ -44,8 +45,8 @@ final class SearchCharacterController
                     $accId   = (string) ($character[_CLMN_CHR_ACCID_] ?? '');
                     $results[] = [
                         'name'           => (string) ($character[_CLMN_CHR_NAME_] ?? ''),
-                        'accountInfoUrl' => admincp_base('accountinfo&id=' . $common->retrieveUserID($accId)),
-                        'editCharUrl'    => admincp_base('editcharacter&name=' . ($character[_CLMN_CHR_NAME_] ?? '')),
+                        'accountInfoUrl' => $admincpUrl->base('accountinfo&id=' . $common->retrieveUserID($accId)),
+                        'editCharUrl'    => $admincpUrl->base('editcharacter&name=' . ($character[_CLMN_CHR_NAME_] ?? '')),
                     ];
                 }
             } catch (\Exception $ex) {

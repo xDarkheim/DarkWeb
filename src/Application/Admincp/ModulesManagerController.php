@@ -21,6 +21,8 @@ final class ModulesManagerController
 
     public function render(): void
     {
+        $admincpUrl = new AdmincpUrlGenerator();
+
         $cmsModules = [
             '_global' => [
                 ['News', 'news'], ['Login', 'login'], ['Register', 'register'],
@@ -46,26 +48,51 @@ final class ModulesManagerController
             $this->handleSimpleConfigSave($configKey);
 
             $moduleConfigName = $this->moduleConfigNameFromKey($configKey);
-            loadModuleConfigs($moduleConfigName);
+            \Darkheim\Infrastructure\Bootstrap\BootstrapContext::loadModuleConfig($moduleConfigName);
 
             $subDir   = in_array($configKey, $usercpModules, true) ? 'usercp/' : '';
             $filePath = __PATH_VIEWS__ . 'admincp/mconfig/' . $subDir . $configKey . '.php';
             if (is_file($filePath)) {
                 $configFilePath = $filePath;
             } else {
-                message('error', 'Invalid module.');
+                \Darkheim\Application\View\MessageRenderer::toast('error', 'Invalid module.');
             }
         }
 
         $mconfigData = $this->prepareMconfigData($configKey);
+        $globalModules = $this->buildModuleLinks($cmsModules['_global'], $admincpUrl);
+        $usercpModules = $this->buildModuleLinks($cmsModules['_usercp'], $admincpUrl);
 
         $this->view->render('admincp/modulesmanager', [
-            'globalModules'          => $cmsModules['_global'],
-            'usercpModules'          => $cmsModules['_usercp'],
+            'globalModules'          => $globalModules,
+            'usercpModules'          => $usercpModules,
             'selectedConfigKey'      => $configKey,
             'selectedConfigFilePath' => $configFilePath,
+            'downloadsConfigUrl'     => $admincpUrl->base('modules_manager&config=downloads'),
+            'downloadsDeleteUrlBase' => $admincpUrl->base('modules_manager&config=downloads&deletelink='),
+            'voteConfigUrl'          => $admincpUrl->base('modules_manager&config=vote'),
+            'voteDeleteSiteUrlBase'  => $admincpUrl->base('modules_manager&config=vote&deletesite='),
             ...$mconfigData,
         ]);
+    }
+
+    /**
+     * @param array<int,array{0:string,1:string}> $modules
+     * @return array<int,array{label:string,key:string,url:string}>
+     */
+    private function buildModuleLinks(array $modules, AdmincpUrlGenerator $admincpUrl): array
+    {
+        $links = [];
+        foreach ($modules as $module) {
+            $key = (string) ($module[1] ?? '');
+            $links[] = [
+                'label' => (string) ($module[0] ?? ''),
+                'key'   => $key,
+                'url'   => $admincpUrl->base('modules_manager&config=' . $key),
+            ];
+        }
+
+        return $links;
     }
 
     /**
@@ -143,7 +170,7 @@ final class ModulesManagerController
                     }
                 }
             } catch (\JsonException $e) {
-                message('error', 'Error loading Castle Siege config: ' . $e->getMessage());
+                \Darkheim\Application\View\MessageRenderer::toast('error', 'Error loading Castle Siege config: ' . $e->getMessage());
             }
         }
 
@@ -155,8 +182,17 @@ final class ModulesManagerController
      */
     private function addCreditConfigSelect(array &$data, string $viewKey, string $settingName, string $mconfigKey): void
     {
-        $creditSystem   = new CreditSystem();
-        $data[$viewKey] = $creditSystem->buildSelectInput($settingName, mconfig($mconfigKey), 'form-control');
+        $creditSystem = new CreditSystem();
+        $rawDefault = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue($mconfigKey);
+        if (is_int($rawDefault)) {
+            $default = $rawDefault;
+        } elseif (is_numeric($rawDefault)) {
+            $default = (int) $rawDefault;
+        } else {
+            $default = 0;
+        }
+
+        $data[$viewKey] = $creditSystem->buildSelectInput($settingName, $default, 'form-control');
     }
 
     private function handleConfigActions(string $configKey): void
@@ -189,7 +225,7 @@ final class ModulesManagerController
                 (string) ($_POST['downloads_add_size'] ?? ''),
                 (string) ($_POST['downloads_add_type'] ?? ''),
             );
-            $action ? message('success', 'Your download link has been successfully added!') : message('error', 'There was an error adding the download link.');
+            $action ? \Darkheim\Application\View\MessageRenderer::toast('success', 'Your download link has been successfully added!') : \Darkheim\Application\View\MessageRenderer::toast('error', 'There was an error adding the download link.');
         }
 
         if (isset($_POST['downloads_edit_submit'])) {
@@ -201,12 +237,12 @@ final class ModulesManagerController
                 (string) ($_POST['downloads_edit_size'] ?? ''),
                 (string) ($_POST['downloads_edit_type'] ?? ''),
             );
-            $action ? message('success', 'Your download link has been successfully updated!') : message('error', 'There was an error updating the download link.');
+            $action ? \Darkheim\Application\View\MessageRenderer::toast('success', 'Your download link has been successfully updated!') : \Darkheim\Application\View\MessageRenderer::toast('error', 'There was an error updating the download link.');
         }
 
         if (isset($_REQUEST['deletelink'])) {
             $action = $downloads->delete((string) $_REQUEST['deletelink']);
-            $action ? message('success', 'Your download link has been successfully deleted!') : message('error', 'There was an error deleting the download link.');
+            $action ? \Darkheim\Application\View\MessageRenderer::toast('success', 'Your download link has been successfully deleted!') : \Darkheim\Application\View\MessageRenderer::toast('error', 'There was an error deleting the download link.');
         }
     }
 
@@ -221,12 +257,12 @@ final class ModulesManagerController
                 (string) ($_POST['votesite_add_reward'] ?? ''),
                 (string) ($_POST['votesite_add_time'] ?? ''),
             );
-            $add ? message('success', 'Votesite successfully added.') : message('error', 'There has been an error while adding the topsite.');
+            $add ? \Darkheim\Application\View\MessageRenderer::toast('success', 'Votesite successfully added.') : \Darkheim\Application\View\MessageRenderer::toast('error', 'There has been an error while adding the topsite.');
         }
 
         if (isset($_REQUEST['deletesite'])) {
             $delete = $voteSiteRepository->delete((string) $_REQUEST['deletesite']);
-            $delete ? message('success', 'Votesite successfully deleted.') : message('error', 'There has been an error while deleting the topsite.');
+            $delete ? \Darkheim\Application\View\MessageRenderer::toast('success', 'Votesite successfully deleted.') : \Darkheim\Application\View\MessageRenderer::toast('error', 'There has been an error while deleting the topsite.');
         }
     }
 
@@ -295,9 +331,9 @@ final class ModulesManagerController
                 throw new \RuntimeException('There has been an error while saving changes.');
             }
 
-            message('success', 'Settings successfully saved.');
+            \Darkheim\Application\View\MessageRenderer::toast('success', 'Settings successfully saved.');
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 
@@ -552,14 +588,14 @@ final class ModulesManagerController
         }
 
         foreach ($_POST as $setting) {
-            if (! check_value($setting)) {
-                message('error', 'Missing data (complete all fields).');
+            if (! Validator::hasValue($setting)) {
+                \Darkheim\Application\View\MessageRenderer::toast('error', 'Missing data (complete all fields).');
                 return;
             }
         }
 
         if (in_array($configKey, ['addstats', 'clearskilltree'], true) && isset($_POST['setting_5']) && (int) $_POST['setting_5'] > 400) {
-            message('error', 'The required level setting can have a maximum value of 400.');
+            \Darkheim\Application\View\MessageRenderer::toast('error', 'The required level setting can have a maximum value of 400.');
             return;
         }
 
@@ -568,7 +604,7 @@ final class ModulesManagerController
         $xmlPath  = $basePath . $map['xml'];
         $xml      = simplexml_load_string((string) file_get_contents($xmlPath));
         if (! $xml) {
-            message('error', 'There has been an error while loading module settings.');
+            \Darkheim\Application\View\MessageRenderer::toast('error', 'There has been an error while loading module settings.');
             return;
         }
 
@@ -578,9 +614,9 @@ final class ModulesManagerController
 
         $saved = $xml->asXML($xmlPath);
         if ($saved) {
-            message('success', $map['success'] ?? 'Settings successfully saved.');
+            \Darkheim\Application\View\MessageRenderer::toast('success', $map['success'] ?? 'Settings successfully saved.');
         } else {
-            message('error', $map['error'] ?? 'There has been an error while saving changes.');
+            \Darkheim\Application\View\MessageRenderer::toast('error', $map['error'] ?? 'There has been an error while saving changes.');
         }
     }
 

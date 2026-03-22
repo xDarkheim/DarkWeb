@@ -66,19 +66,19 @@ final class ConnectionSettingsController
                 }
 
                 new ConfigRepository(__PATH_CONFIGS__)->saveCms($cmsConfigurations);
-                message('success', 'Settings successfully saved!');
+                \Darkheim\Application\View\MessageRenderer::toast('success', 'Settings successfully saved!');
             } catch (\Exception $ex) {
-                message('error', $ex->getMessage());
+                \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
             }
         }
 
         $this->view->render('admincp/connectionsettings', [
-            'host'       => (string) config('SQL_DB_HOST', true),
-            'database'   => (string) config('SQL_DB_NAME', true),
-            'user'       => (string) config('SQL_DB_USER', true),
-            'password'   => (string) config('SQL_DB_PASS', true),
-            'port'       => (string) config('SQL_DB_PORT', true),
-            'encryption' => (string) config('SQL_PASSWORD_ENCRYPTION', true),
+            'host'       => (string) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('SQL_DB_HOST', true),
+            'database'   => (string) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('SQL_DB_NAME', true),
+            'user'       => (string) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('SQL_DB_USER', true),
+            'password'   => (string) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('SQL_DB_PASS', true),
+            'port'       => (string) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('SQL_DB_PORT', true),
+            'encryption' => (string) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('SQL_PASSWORD_ENCRYPTION', true),
         ]);
     }
 }

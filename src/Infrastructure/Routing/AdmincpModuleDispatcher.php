@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Infrastructure\Routing;
 
+use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
+
 final class AdmincpModuleDispatcher
 {
     private AdmincpRouteRegistry $registry;
@@ -21,7 +23,7 @@ final class AdmincpModuleDispatcher
         $route = $this->registry->routeFor($module);
         $moduleConfig = is_array($route) ? ($route['module_config'] ?? null) : null;
         if (is_string($moduleConfig) && $moduleConfig !== '') {
-            @loadModuleConfigs($moduleConfig);
+            BootstrapContext::loadModuleConfig($moduleConfig);
         }
 
         $controllerClass = is_array($route) ? ($route['controller'] ?? null) : null;

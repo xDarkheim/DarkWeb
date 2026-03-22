@@ -20,8 +20,8 @@ final class NewsController
     public function render(): void
     {
         try {
-            if (!mconfig('active')) {
-                inline_message('error', lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                \Darkheim\Application\View\MessageRenderer::inline('error', \Darkheim\Application\Language\Translator::phrase('error_47', true));
                 return;
             }
 
@@ -33,11 +33,11 @@ final class NewsController
             $allNews = $newsRepo->findAll();
 
             if (empty($allNews)) {
-                inline_message('error', lang('error_61'));
+                \Darkheim\Application\View\MessageRenderer::inline('error', \Darkheim\Application\Language\Translator::phrase('error_61'));
                 return;
             }
 
-            $language = (config('language_switch_active', true) && isset($_SESSION['language_display']))
+            $language = (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('language_switch_active', true) && isset($_SESSION['language_display']))
                 ? $_SESSION['language_display']
                 : '';
 
@@ -52,9 +52,9 @@ final class NewsController
                 }
             }
 
-            $listLimit   = (int) mconfig('news_list_limit');
-            $short       = (bool) mconfig('news_short');
-            $newsExpanded = (int) mconfig('news_expanded');
+            $listLimit   = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('news_list_limit');
+            $short       = (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('news_short');
+            $newsExpanded = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('news_expanded');
 
             // Build view items — all DB/cache I/O happens here, not in the template.
             $viewItems = [];
@@ -68,7 +68,7 @@ final class NewsController
                     'content'         => $content,
                     'author'          => $singleItem->author,
                     'dateLabel'       => $dateLabel,
-                    'publishedLabel'  => langf('news_txt_1', [$singleItem->author, $dateLabel]),
+                    'publishedLabel'  => \Darkheim\Application\Language\Translator::phraseFmt('news_txt_1', [$singleItem->author, $dateLabel]),
                 ];
             } else {
                 $cardIndex = 0;
@@ -97,7 +97,7 @@ final class NewsController
                 'viewItems'  => $viewItems,
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }

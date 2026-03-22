@@ -30,6 +30,7 @@ final class SearchAccountController
                     throw new \RuntimeException('The username can be 3 to 10 characters long.');
                 }
                 $db   = Connection::Database('MuOnline');
+                $admincpUrl = new AdmincpUrlGenerator();
                 $rows = $db->query_fetch(
                     'SELECT ' . _CLMN_MEMBID_ . ', ' . _CLMN_USERNM_ . ' FROM ' . _TBL_MI_ . ' WHERE ' . _CLMN_USERNM_ . ' LIKE ?',
                     ['%' . $searchRequest . '%']
@@ -41,7 +42,7 @@ final class SearchAccountController
                     return [
                         'id'             => (string) ($account[_CLMN_MEMBID_] ?? ''),
                         'username'       => (string) ($account[_CLMN_USERNM_] ?? ''),
-                        'accountInfoUrl' => admincp_base('accountinfo&id=' . ($account[_CLMN_MEMBID_] ?? '')),
+                        'accountInfoUrl' => $admincpUrl->base('accountinfo&id=' . ($account[_CLMN_MEMBID_] ?? '')),
                     ];
                 }, $rows);
             } catch (\Exception $ex) {

@@ -11,7 +11,7 @@
 <h1 class="page-header"><i class="bi bi-trophy me-2"></i>Top Voters</h1>
 
 <?php if ($error !== null): ?>
-    <?php message('error', $error); ?>
+    <?php \Darkheim\Application\View\MessageRenderer::toast('error', $error); ?>
 <?php else: ?>
 <div class="acp-card">
     <div class="acp-card-header">Top Voters — <?php echo htmlspecialchars($month, ENT_QUOTES, 'UTF-8'); ?></div>

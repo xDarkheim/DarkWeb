@@ -5,8 +5,13 @@
  * Variables:
  * - array<int,array{title:string,icon:string,id:string,links:array<int,array{module:string,label:string,url:string}>}> $sidebarGroups
  * - string $currentModule
+ * - string $admincpHomeUrl
+ * - string $admincpModuleBaseUrl
  * - object $handler
  */
+
+$admincpHomeUrl = (string) ($admincpHomeUrl ?? __PATH_ADMINCP_HOME__);
+$admincpModuleBaseUrl = (string) ($admincpModuleBaseUrl ?? (__PATH_ADMINCP_HOME__ . '?module='));
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -48,7 +53,7 @@
 <nav class="acp-topbar">
     <div class="acp-topbar-left">
         <button class="acp-menu-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
-        <a href="<?php echo admincp_base(); ?>" class="acp-brand">
+        <a href="<?php echo htmlspecialchars($admincpHomeUrl, ENT_QUOTES, 'UTF-8'); ?>" class="acp-brand">
             Dark<span>Core</span>
             <small>Admin Panel</small>
         </a>
@@ -98,7 +103,7 @@
                             continue;
                         }
                         foreach ($p[1] as $sub): ?>
-                    <a href="<?php echo admincp_base($sub[1]); ?>" class="acp-nav-link"><?php echo $sub[0]; ?></a>
+                    <a href="<?php echo htmlspecialchars($admincpModuleBaseUrl . (string) $sub[1], ENT_QUOTES, 'UTF-8'); ?>" class="acp-nav-link"><?php echo $sub[0]; ?></a>
                     <?php endforeach; endforeach; ?>
                 </div>
             </div>

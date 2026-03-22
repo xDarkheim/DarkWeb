@@ -1,4 +1,4 @@
-<div class="page-title"><span><?php echo lang('module_titles_txt_17'); ?></span></div>
+<div class="page-title"><span><?php echo \Darkheim\Application\Language\Translator::phrase('module_titles_txt_17'); ?></span></div>
 
 <!-- HERO BANNER -->
 <div class="info-hero">

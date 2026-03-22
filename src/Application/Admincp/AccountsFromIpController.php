@@ -31,6 +31,7 @@ final class AccountsFromIpController
                     throw new \RuntimeException('You have entered an invalid IP address.');
                 }
                 $db     = Connection::Database('MuOnline');
+                $admincpUrl = new AdmincpUrlGenerator();
                 $common = new Common();
                 $rows   = $db->query_fetch(
                     'SELECT ' . _CLMN_MS_MEMBID_ . ' FROM ' . _TBL_MS_ . ' WHERE ' . _CLMN_MS_IP_ . ' = ? GROUP BY ' . _CLMN_MS_MEMBID_,
@@ -42,7 +43,7 @@ final class AccountsFromIpController
                         $membId   = (string) ($u[_CLMN_MS_MEMBID_] ?? '');
                         $results[] = [
                             'account'        => $membId,
-                            'accountInfoUrl' => admincp_base('accountinfo&id=' . $common->retrieveUserID($membId)),
+                            'accountInfoUrl' => $admincpUrl->base('accountinfo&id=' . $common->retrieveUserID($membId)),
                         ];
                     }
                 }

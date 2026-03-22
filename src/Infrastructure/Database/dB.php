@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Infrastructure\Database;
 
+use Darkheim\Domain\Validator;
 use PDO;
-use PDOException;
-use PDOStatement;
 
 /**
  * PDO database abstraction layer — query, fetch, error logging.
@@ -19,18 +18,18 @@ class dB
 
     private bool $_enableErrorLogs = true;
 
-    protected PDO $db;
+    protected \PDO $db;
 
     public function __construct(string $SQLHOST, string $SQLPORT, string $SQLDB, string $SQLUSER, string $SQLPWD)
     {
         try {
             $pdo_connect = 'dblib:host=' . $SQLHOST . ':' . $SQLPORT . ';dbname=' . $SQLDB;
-            $this->db = new PDO($pdo_connect, $SQLUSER, $SQLPWD);
+            $this->db    = new \PDO($pdo_connect, $SQLUSER, $SQLPWD);
 
-            if (!$this->db->getAttribute(PDO::ATTR_EMULATE_PREPARES)) {
-                $this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+            if (! $this->db->getAttribute(\PDO::ATTR_EMULATE_PREPARES)) {
+                $this->db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, true);
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dead  = true;
             $this->error = 'PDOException: ' . $e->getMessage();
         }
@@ -41,7 +40,7 @@ class dB
         $params = $this->normalizeParams($array);
         $query  = $this->db->prepare($sql);
 
-        if (!$query) {
+        if (! $query) {
             $this->error = $this->trow_error();
             return false;
         }
@@ -60,15 +59,15 @@ class dB
         $params = $this->normalizeParams($array);
         $query  = $this->db->prepare($sql);
 
-        if (!$query) {
+        if (! $query) {
             $this->error = $this->trow_error();
             return false;
         }
 
         if ($query->execute($params)) {
-            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+            $result = $query->fetchAll(\PDO::FETCH_ASSOC);
             $query->closeCursor();
-            return (check_value($result)) ? $result : null;
+            return (Validator::hasValue($result)) ? $result : null;
         }
 
         $this->error = $this->trow_error($query);
@@ -89,10 +88,10 @@ class dB
         return ($array === '') ? [] : [$array];
     }
 
-    private function trow_error(PDOStatement|false $state = false): string
+    private function trow_error(\PDOStatement|false $state = false): string
     {
         $error        = $state ? $state->errorInfo() : $this->db->errorInfo();
-        $errorMessage = '[' . date('Y/m/d h:i:s') . '] [SQL ' . $error[0] . '] [' . $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) . ' ' . $error[1] . '] > ' . $error[2];
+        $errorMessage = '[' . date('Y/m/d h:i:s') . '] [SQL ' . $error[0] . '] [' . $this->db->getAttribute(\PDO::ATTR_DRIVER_NAME) . ' ' . $error[1] . '] > ' . $error[2];
 
         if ($this->_enableErrorLogs) {
             // noinspection ForgottenDebugOutputInspection — intentional persistent error log, not debug output
@@ -102,4 +101,3 @@ class dB
         return $errorMessage;
     }
 }
-

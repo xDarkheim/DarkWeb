@@ -67,15 +67,15 @@ final class WebsiteSettingsController
 
                 new ConfigRepository(__PATH_CONFIGS__)->saveCms($cmsConfigurations);
 
-                message('success', 'Settings successfully saved!');
+                \Darkheim\Application\View\MessageRenderer::toast('success', 'Settings successfully saved!');
             } catch (\Exception $ex) {
-                message('error', $ex->getMessage());
+                \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
             }
         }
 
         $rows = $this->rowsSchema();
         foreach ($rows as &$row) {
-            $rawValue = config((string) $row['key'], true);
+            $rawValue = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue((string) $row['key'], true);
             if ($row['type'] === 'bool') {
                 $row['value'] = in_array($rawValue, [true, 1, '1', 'true'], true) ? '1' : '0';
             } else {
@@ -150,7 +150,7 @@ final class WebsiteSettingsController
             'social_link_instagram' => 'The instagram link setting is not a valid URL.',
             'social_link_discord'   => 'The discord link setting is not a valid URL.',
         ] as $key => $errorMessage) {
-            if (isset($_POST[$key]) && check_value($_POST[$key]) && ! Validator::Url($_POST[$key])) {
+            if (isset($_POST[$key]) && Validator::hasValue($_POST[$key]) && ! Validator::Url($_POST[$key])) {
                 throw new \RuntimeException($errorMessage);
             }
             $setting[$key] = (string) ($_POST[$key] ?? '');
@@ -160,7 +160,7 @@ final class WebsiteSettingsController
             $setting[$name] = (string) ($_POST[$name] ?? '');
         }
 
-        if (isset($_POST['maximum_online']) && check_value($_POST['maximum_online']) && ! Validator::UnsignedNumber($_POST['maximum_online'])) {
+        if (isset($_POST['maximum_online']) && Validator::hasValue($_POST['maximum_online']) && ! Validator::UnsignedNumber($_POST['maximum_online'])) {
             throw new \RuntimeException('Invalid setting (maximum_online)');
         }
         $setting['maximum_online'] = (string) ($_POST['maximum_online'] ?? '');

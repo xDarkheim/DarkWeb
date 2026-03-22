@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Vote;
 
+use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Database\Connection;
 
 /**
@@ -29,7 +30,9 @@ class VoteSiteRepository
 
     public function findById($id): ?array
     {
-        if (!check_value($id)) return null;
+        if (! Validator::hasValue($id)) {
+            return null;
+        }
         $result = $this->muonline->query_fetch_single("SELECT * FROM " . Vote_Sites . " WHERE votesite_id = ?", [$id]);
         return is_array($result) ? $result : null;
     }
@@ -43,13 +46,15 @@ class VoteSiteRepository
     {
         return $this->muonline->query(
             "INSERT INTO " . Vote_Sites . " (votesite_title, votesite_link, votesite_reward, votesite_time) VALUES (?, ?, ?, ?)",
-            [$title, $link, $reward, $time]
+            [$title, $link, $reward, $time],
         );
     }
 
     public function delete($id): bool
     {
-        if (!$this->exists($id)) return false;
+        if (! $this->exists($id)) {
+            return false;
+        }
         return $this->muonline->query("DELETE FROM " . Vote_Sites . " WHERE votesite_id = ?", [$id]);
     }
 
@@ -63,4 +68,3 @@ class VoteSiteRepository
         return is_array($result) ? $result : null;
     }
 }
-

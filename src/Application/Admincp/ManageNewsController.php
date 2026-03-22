@@ -19,9 +19,10 @@ final class ManageNewsController
     public function render(): void
     {
         $newsService = new News();
+        $admincpUrl = new AdmincpUrlGenerator();
 
         if (!$newsService->isNewsDirWritable()) {
-            message('error', 'The news cache folder is not writable.');
+            \Darkheim\Application\View\MessageRenderer::toast('error', 'The news cache folder is not writable.');
             return;
         }
 
@@ -29,7 +30,7 @@ final class ManageNewsController
             $newsService->removeNews($_REQUEST['delete']);
             $newsService->cacheNews();
             $newsService->updateNewsCacheIndex();
-            redirect(1, 'admincp/?module=managenews');
+            \Darkheim\Infrastructure\Http\Redirector::go(1, 'admincp/?module=managenews');
         }
 
         if (isset($_GET['deletetranslation'], $_GET['language'])) {
@@ -38,16 +39,16 @@ final class ManageNewsController
                 $newsService->setLanguage($_GET['language']);
                 $newsService->deleteNewsTranslation();
                 $newsService->updateNewsCacheIndex();
-                redirect(1, 'admincp/?module=managenews');
+                \Darkheim\Infrastructure\Http\Redirector::go(1, 'admincp/?module=managenews');
             } catch (\Exception $ex) {
-                message('error', $ex->getMessage());
+                \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
             }
         }
 
         if (isset($_REQUEST['cache']) && $_REQUEST['cache'] == 1) {
             $newsService->cacheNews()
-                ? message('success', 'News cached successfully')
-                : message('error', 'No news to cache.');
+                ? \Darkheim\Application\View\MessageRenderer::toast('success', 'News cached successfully')
+                : \Darkheim\Application\View\MessageRenderer::toast('error', 'No news to cache.');
             $newsService->updateNewsCacheIndex();
         }
 
@@ -68,17 +69,17 @@ final class ManageNewsController
                     'date'             => date('Y-m-d H:i', (int) ($row['news_date'] ?? 0)),
                     'publicUrl'        => __BASE_URL__ . 'news/' . ($row['news_id'] ?? '') . '/',
                     'translationLangs' => implode(', ', $translationLangs),
-                    'addTransUrl'      => admincp_base('addnewstranslation&id=' . ($row['news_id'] ?? '')),
-                    'editUrl'          => admincp_base('editnews&id=' . ($row['news_id'] ?? '')),
-                    'deleteUrl'        => admincp_base('managenews&delete=' . ($row['news_id'] ?? '')),
+                    'addTransUrl'      => $admincpUrl->base('addnewstranslation&id=' . ($row['news_id'] ?? '')),
+                    'editUrl'          => $admincpUrl->base('editnews&id=' . ($row['news_id'] ?? '')),
+                    'deleteUrl'        => $admincpUrl->base('managenews&delete=' . ($row['news_id'] ?? '')),
                 ];
             }
         }
 
         $this->view->render('admincp/managenews', [
             'items'       => $items,
-            'addUrl'      => admincp_base('addnews'),
-            'cacheUrl'    => admincp_base('managenews&cache=1'),
+            'addUrl'      => $admincpUrl->base('addnews'),
+            'cacheUrl'    => $admincpUrl->base('managenews&cache=1'),
         ]);
     }
 }

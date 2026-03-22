@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Darkheim\Application\Subpage;
 
 use Darkheim\Application\Game\GameHelper;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Application\Profile\ProfileRenderer;
 use Darkheim\Application\Profile\ProfileRepository;
 use Darkheim\Infrastructure\View\ViewRenderer;
@@ -20,14 +21,14 @@ final class ProfileGuildSubpageController
 
     public function render(): void
     {
-        if (! mconfig('active')) {
-            inline_message('error', lang('error_47', true));
+        if (! \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+            \Darkheim\Application\View\MessageRenderer::inline('error', Translator::phrase('error_47'));
             return;
         }
 
         $request = (string) ($_GET['req'] ?? '');
         if ($request === '') {
-            inline_message('error', lang('error_25', true));
+            \Darkheim\Application\View\MessageRenderer::inline('error', Translator::phrase('error_25'));
             return;
         }
 
@@ -64,7 +65,7 @@ final class ProfileGuildSubpageController
                 'hasMembers'      => $memberRows !== [],
             ]);
         } catch (\Exception $e) {
-            inline_message('error', $e->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $e->getMessage());
         }
     }
 }

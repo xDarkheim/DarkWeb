@@ -16,7 +16,7 @@ final class CastleSiegeApiController
             $castleSiege = new CastleSiege();
             $siegeData = $castleSiege->siegeData();
             if (!is_array($siegeData)) {
-                throw new \RuntimeException((string) lang('error_103'));
+                throw new \RuntimeException((string) \Darkheim\Application\Language\Translator::phrase('error_103'));
             }
 
             http_response_code(200);

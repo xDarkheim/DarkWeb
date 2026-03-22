@@ -53,7 +53,7 @@ final class CronExecutor
             }
 
             $runTime = isset($cron['cron_run_time']) ? (int) $cron['cron_run_time'] : 0;
-            $lastRun = check_value($cron['cron_last_run'] ?? null)
+            $lastRun = \Darkheim\Domain\Validator::hasValue($cron['cron_last_run'] ?? null)
                 ? (int) $cron['cron_last_run'] + $runTime
                 : $runTime;
 

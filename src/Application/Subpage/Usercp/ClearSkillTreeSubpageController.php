@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Darkheim\Application\Subpage\Usercp;
 
 use Darkheim\Application\Character\Character;
+use Darkheim\Application\Language\Translator;
 
 final class ClearSkillTreeSubpageController extends AbstractCharacterActionTableSubpageController
 {
-    protected function pageTitle(): string { return lang('module_titles_txt_19', true); }
-    protected function cardTitle(): string { return lang('module_titles_txt_19', true); }
+    protected function pageTitle(): string { return Translator::phrase('module_titles_txt_19'); }
+    protected function cardTitle(): string { return Translator::phrase('module_titles_txt_19'); }
     protected function cardIconClass(): string { return 'bi bi-lightning-fill'; }
 
     protected function tableHeaders(): array
     {
-        return ['', lang('clearst_txt_1', true), lang('clearst_txt_2', true), lang('clearst_txt_5', true), lang('clearst_txt_3', true), ''];
+        return ['', Translator::phrase('clearst_txt_1'), Translator::phrase('clearst_txt_2'), Translator::phrase('clearst_txt_5'), Translator::phrase('clearst_txt_3'), ''];
     }
 
     protected function buildRow(Character $characterService, string $characterName): ?array
@@ -34,7 +35,7 @@ final class ClearSkillTreeSubpageController extends AbstractCharacterActionTable
                 number_format((float) ($mlData[_CLMN_ML_POINT_] ?? 0)),
                 number_format((float) $data[_CLMN_CHR_ZEN_]),
             ],
-            'buttonLabel' => lang('clearst_txt_4', true),
+            'buttonLabel' => Translator::phrase('clearst_txt_4'),
         ];
     }
 
@@ -49,14 +50,14 @@ final class ClearSkillTreeSubpageController extends AbstractCharacterActionTable
     protected function requirementsLines(): array
     {
         $lines = [];
-        if (mconfig('required_level') > 0) {
-            $lines[] = langf('clearst_txt_8', [number_format((float) mconfig('required_level'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_level') > 0) {
+            $lines[] = Translator::phraseFmt('clearst_txt_8', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_level'))]);
         }
-        if (mconfig('required_master_level') > 0) {
-            $lines[] = langf('clearst_txt_6', [number_format((float) mconfig('required_master_level'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_master_level') > 0) {
+            $lines[] = Translator::phraseFmt('clearst_txt_6', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('required_master_level'))]);
         }
-        if (mconfig('zen_cost') > 0) {
-            $lines[] = langf('clearst_txt_7', [number_format((float) mconfig('zen_cost'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost') > 0) {
+            $lines[] = Translator::phraseFmt('clearst_txt_7', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost'))]);
         }
         return $lines;
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Infrastructure\Routing;
 
+use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
+
 final class ControllerRouteDispatcher
 {
     private WebRouteRegistry $registry;
@@ -22,8 +24,8 @@ final class ControllerRouteDispatcher
 
         $moduleConfig = $this->registry->moduleConfigForPage($page);
         if (is_string($moduleConfig) && $moduleConfig !== '') {
-            // Preserve legacy behavior so modules using mconfig() still work.
-            @loadModuleConfigs($moduleConfig);
+            $result = BootstrapContext::configProvider()?->moduleConfig($moduleConfig);
+            BootstrapContext::runtimeState()?->setModuleConfig(is_array($result) ? $result : []);
         }
 
         $controller = new $controllerClass();

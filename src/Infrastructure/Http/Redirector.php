@@ -7,7 +7,7 @@ namespace Darkheim\Infrastructure\Http;
 /**
  * HTTP redirect helper.
  *
- * Centralises all redirect logic previously inlined in the global redirect()
+ * Centralises all redirect logic previously inlined in the global \Darkheim\Infrastructure\Http\Redirector::go()
  * helper function. Use the global helper for backward-compatible call-sites;
  * call this class directly in new code.
  */

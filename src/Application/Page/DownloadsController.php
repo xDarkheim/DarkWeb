@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Page;
 
+use Darkheim\Application\Language\Translator;
 use Darkheim\Infrastructure\View\ViewRenderer;
 use Darkheim\Infrastructure\Cache\CacheRepository;
 
@@ -19,8 +20,8 @@ final class DownloadsController
     public function render(): void
     {
         try {
-            if (!mconfig('active')) {
-                inline_message('error', lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                \Darkheim\Application\View\MessageRenderer::inline('error', Translator::phrase('error_47'));
                 return;
             }
 
@@ -38,15 +39,15 @@ final class DownloadsController
             }
 
             $this->view->render('downloads', [
-                'showClients' => (bool) mconfig('show_client_downloads'),
-                'showPatches' => (bool) mconfig('show_patch_downloads'),
-                'showTools'   => (bool) mconfig('show_tool_downloads'),
+                'showClients' => (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('show_client_downloads'),
+                'showPatches' => (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('show_patch_downloads'),
+                'showTools'   => (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('show_tool_downloads'),
                 'clients'     => $clients,
                 'patches'     => $patches,
                 'tools'       => $tools,
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }

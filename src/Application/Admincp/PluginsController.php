@@ -19,6 +19,7 @@ final class PluginsController
     public function render(): void
     {
         define('PLUGIN_ALLOW_UNINSTALL', true);
+        $admincpUrl = new AdmincpUrlGenerator();
         $plugins = new Plugins();
 
         if (isset($_REQUEST['enable'])) {
@@ -29,12 +30,12 @@ final class PluginsController
         }
         if (isset($_REQUEST['uninstall'])) {
             if ($plugins->uninstallPlugin($_REQUEST['uninstall'])) {
-                message('success', 'Plugin uninstalled.');
+                \Darkheim\Application\View\MessageRenderer::toast('success', 'Plugin uninstalled.');
             } else {
-                message('error', 'Could not uninstall plugin.');
+                \Darkheim\Application\View\MessageRenderer::toast('error', 'Could not uninstall plugin.');
             }
             if (!$plugins->rebuildPluginsCache()) {
-                message('error', 'Could not update plugins cache.');
+                \Darkheim\Application\View\MessageRenderer::toast('error', 'Could not update plugins cache.');
             }
         }
 
@@ -51,17 +52,17 @@ final class PluginsController
                     'compatibility' => implode(', ', explode('|', (string) ($p['compatibility'] ?? ''))),
                     'installDate'   => date('Y-m-d', (int) ($p['install_date'] ?? 0)),
                     'isEnabled'     => $isOn,
-                    'enableUrl'     => admincp_base('plugins&enable=' . ($p['id'] ?? '')),
-                    'disableUrl'    => admincp_base('plugins&disable=' . ($p['id'] ?? '')),
-                    'uninstallUrl'  => admincp_base('plugins&uninstall=' . ($p['id'] ?? '')),
+                    'enableUrl'     => $admincpUrl->base('plugins&enable=' . ($p['id'] ?? '')),
+                    'disableUrl'    => $admincpUrl->base('plugins&disable=' . ($p['id'] ?? '')),
+                    'uninstallUrl'  => $admincpUrl->base('plugins&uninstall=' . ($p['id'] ?? '')),
                     'allowUninstall'=> PLUGIN_ALLOW_UNINSTALL,
                 ];
             }
         }
 
         $this->view->render('admincp/plugins', [
-            'systemEnabled' => (bool) config('plugins_system_enable', true),
-            'importUrl'     => admincp_base('plugin_install'),
+            'systemEnabled' => (bool) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('plugins_system_enable', true),
+            'importUrl'     => $admincpUrl->base('plugin_install'),
             'rows'          => $rows,
         ]);
     }

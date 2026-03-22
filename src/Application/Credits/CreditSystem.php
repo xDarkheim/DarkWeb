@@ -66,7 +66,7 @@ class CreditSystem
 
     public function setIdentifier(string|int $input): void {
         if (!$this->_configId) {
-            throw new Exception(is_string(lang('error_66')) ? lang('error_66') : 'error_66');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_66')) ? \Darkheim\Application\Language\Translator::phrase('error_66') : 'error_66');
         }
         $config = $this->showConfigs(true);
         if (!is_array($config) || !isset($config['config_user_col_id'])) {
@@ -84,7 +84,7 @@ class CreditSystem
     private function _setUserid(int|string $input): void
     {
         if (!Validator::UnsignedNumber($input)) {
-            throw new Exception(is_string(lang('error_67')) ? lang('error_67') : 'error_67');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_67')) ? \Darkheim\Application\Language\Translator::phrase('error_67') : 'error_67');
         }
         $this->_identifier = (string)$input;
     }
@@ -92,10 +92,10 @@ class CreditSystem
     private function _setUsername(string $input): void
     {
         if (!Validator::AlphaNumeric($input)) {
-            throw new Exception(is_string(lang('error_68')) ? lang('error_68') : 'error_68');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_68')) ? \Darkheim\Application\Language\Translator::phrase('error_68') : 'error_68');
         }
         if (!Validator::UsernameLength($input)) {
-            throw new Exception(is_string(lang('error_69')) ? lang('error_69') : 'error_69');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_69')) ? \Darkheim\Application\Language\Translator::phrase('error_69') : 'error_69');
         }
         $this->_identifier = $input;
     }
@@ -103,7 +103,7 @@ class CreditSystem
     private function _setEmail(string $input): void
     {
         if (!Validator::Email($input)) {
-            throw new Exception(is_string(lang('error_70')) ? lang('error_70') : 'error_70');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_70')) ? \Darkheim\Application\Language\Translator::phrase('error_70') : 'error_70');
         }
         $this->_identifier = $input;
     }
@@ -111,7 +111,7 @@ class CreditSystem
     private function _setCharacter(string $input): void
     {
         if (!Validator::AlphaNumeric($input)) {
-            throw new Exception(is_string(lang('error_71')) ? lang('error_71') : 'error_71');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_71')) ? \Darkheim\Application\Language\Translator::phrase('error_71') : 'error_71');
         }
         $this->_identifier = $input;
     }
@@ -120,20 +120,20 @@ class CreditSystem
 
     public function addCredits(int $input): void {
         if (!Validator::UnsignedNumber($input)) {
-            throw new Exception(is_string(lang('error_72')) ? lang('error_72') : 'error_72');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_72')) ? \Darkheim\Application\Language\Translator::phrase('error_72') : 'error_72');
         }
         if (!$this->_configId) {
-            throw new Exception(is_string(lang('error_66')) ? lang('error_66') : 'error_66');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_66')) ? \Darkheim\Application\Language\Translator::phrase('error_66') : 'error_66');
         }
         if (!$this->_identifier) {
-            throw new Exception(is_string(lang('error_73')) ? lang('error_73') : 'error_73');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_73')) ? \Darkheim\Application\Language\Translator::phrase('error_73') : 'error_73');
         }
         $config = $this->showConfigs(true);
         if (!is_array($config) || !isset($config['config_table'], $config['config_credits_col'], $config['config_user_col'])) {
             throw new Exception('invalid config structure');
         }
         if ($config['config_checkonline'] && $this->_isOnline($config['config_user_col_id'])) {
-            throw new Exception((string)lang('error_14'));
+            throw new Exception((string)\Darkheim\Application\Language\Translator::phrase('error_14'));
         }
         $newCredits = $input + $this->getCredits();
         $data       = ['credits' => $newCredits, 'identifier' => $this->_identifier];
@@ -148,7 +148,7 @@ class CreditSystem
         );
         $database = $this->muonline;
         if ($database === null || !$database->query($query, $data)) {
-            throw new Exception(is_string(lang('error_74')) ? lang('error_74') : 'error_74');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_74')) ? \Darkheim\Application\Language\Translator::phrase('error_74') : 'error_74');
         }
         $this->_addLog((string)$config['config_title'], $input, 'add');
     }
@@ -156,13 +156,13 @@ class CreditSystem
     public function subtractCredits(int $input): void
     {
         if (!Validator::UnsignedNumber($input)) {
-            throw new Exception(is_string(lang('error_75')) ? lang('error_75') : 'error_75');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_75')) ? \Darkheim\Application\Language\Translator::phrase('error_75') : 'error_75');
         }
         if (!$this->_configId) {
-            throw new Exception(is_string(lang('error_66')) ? lang('error_66') : 'error_66');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_66')) ? \Darkheim\Application\Language\Translator::phrase('error_66') : 'error_66');
         }
         if (!$this->_identifier) {
-            throw new Exception(is_string(lang('error_73')) ? lang('error_73') : 'error_73');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_73')) ? \Darkheim\Application\Language\Translator::phrase('error_73') : 'error_73');
         }
 
         $config = $this->showConfigs(true);
@@ -170,10 +170,10 @@ class CreditSystem
             throw new Exception('invalid config structure');
         }
         if ($config['config_checkonline'] && $this->_isOnline($config['config_user_col_id'])) {
-            throw new Exception((string)lang('error_14'));
+            throw new Exception((string)\Darkheim\Application\Language\Translator::phrase('error_14'));
         }
         if ($this->getCredits() < $input) {
-            throw new Exception((string)lang('error_40'));
+            throw new Exception((string)\Darkheim\Application\Language\Translator::phrase('error_40'));
         }
 
         $data  = ['credits' => $input, 'identifier' => $this->_identifier];
@@ -189,7 +189,7 @@ class CreditSystem
 
         $database = $this->muonline;
         if ($database === null || !$database->query($query, $data)) {
-            throw new Exception(is_string(lang('error_76')) ? lang('error_76') : 'error_76');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_76')) ? \Darkheim\Application\Language\Translator::phrase('error_76') : 'error_76');
         }
 
         $this->_addLog((string)$config['config_title'], $input, 'subtract');
@@ -197,11 +197,11 @@ class CreditSystem
 
     public function getCredits(): int {
         if (!$this->_configId) {
-            throw new Exception(is_string(lang('error_66')) ? lang('error_66') : 'error_66');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_66')) ? \Darkheim\Application\Language\Translator::phrase('error_66') : 'error_66');
         }
         if (!$this->_identifier) {
             throw new Exception(
-                is_string(lang('error_66')) ? lang('error_66') : 'error_66'
+                is_string(\Darkheim\Application\Language\Translator::phrase('error_66')) ? \Darkheim\Application\Language\Translator::phrase('error_66') : 'error_66'
             );
         }
         $config   = $this->showConfigs(true);
@@ -225,7 +225,7 @@ class CreditSystem
         $result = $database->query_fetch_single($query, $data);
         if (!is_array($result) || !isset($result[$config['config_credits_col']]) || !is_numeric($result[$config['config_credits_col']])) {
             throw new Exception(
-                is_string(lang('error_89')) ? lang('error_89') : 'error_89'
+                is_string(\Darkheim\Application\Language\Translator::phrase('error_89')) ? \Darkheim\Application\Language\Translator::phrase('error_89') : 'error_89'
             );
         }
         return (int)$result[$config['config_credits_col']];
@@ -236,10 +236,10 @@ class CreditSystem
     public function setConfigId(int $input): void
     {
         if (!Validator::UnsignedNumber($input)) {
-            throw new Exception(is_string(lang('error_77')) ? lang('error_77') : 'error_77');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_77')) ? \Darkheim\Application\Language\Translator::phrase('error_77') : 'error_77');
         }
         if (!$this->_configurationExists($input)) {
-            throw new Exception(is_string(lang('error_77')) ? lang('error_77') : 'error_77');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_77')) ? \Darkheim\Application\Language\Translator::phrase('error_77') : 'error_77');
         }
         $this->_configId = $input;
     }
@@ -247,7 +247,7 @@ class CreditSystem
     public function setConfigTitle(string $input): void
     {
         if (!Validator::Chars($input, ['a-z', 'A-Z', '0-9', ' '])) {
-            throw new Exception(is_string(lang('error_78')) ? lang('error_78') : 'error_78');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_78')) ? \Darkheim\Application\Language\Translator::phrase('error_78') : 'error_78');
         }
         $this->_configTitle = $input;
     }
@@ -255,7 +255,7 @@ class CreditSystem
     public function setConfigDatabase(string $input): void
     {
         if (!Validator::Chars($input, ['a-z', 'A-Z', '0-9', '_'])) {
-            throw new Exception(is_string(lang('error_79')) ? lang('error_79') : 'error_79');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_79')) ? \Darkheim\Application\Language\Translator::phrase('error_79') : 'error_79');
         }
         $this->_configDatabase = $input;
     }
@@ -263,7 +263,7 @@ class CreditSystem
     public function setConfigTable(string $input): void
     {
         if (!Validator::Chars($input, ['a-z', 'A-Z', '0-9', '_'])) {
-            throw new Exception(is_string(lang('error_80')) ? lang('error_80') : 'error_80');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_80')) ? \Darkheim\Application\Language\Translator::phrase('error_80') : 'error_80');
         }
         $this->_configTable = $input;
     }
@@ -271,7 +271,7 @@ class CreditSystem
     public function setConfigCreditsColumn(string $input): void
     {
         if (!Validator::Chars($input, ['a-z', 'A-Z', '0-9', '_'])) {
-            throw new Exception(is_string(lang('error_81')) ? lang('error_81') : 'error_81');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_81')) ? \Darkheim\Application\Language\Translator::phrase('error_81') : 'error_81');
         }
         $this->_configCreditsCol = $input;
     }
@@ -279,7 +279,7 @@ class CreditSystem
     public function setConfigUserColumn(string $input): void
     {
         if (!Validator::Chars($input, ['a-z', 'A-Z', '0-9', '_'])) {
-            throw new Exception(is_string(lang('error_82')) ? lang('error_82') : 'error_82');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_82')) ? \Darkheim\Application\Language\Translator::phrase('error_82') : 'error_82');
         }
         $this->_configUserCol = $input;
     }
@@ -287,10 +287,10 @@ class CreditSystem
     public function setConfigUserColumnId(string $input): void
     {
         if (!Validator::AlphaNumeric($input)) {
-            throw new Exception(is_string(lang('error_83')) ? lang('error_83') : 'error_83');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_83')) ? \Darkheim\Application\Language\Translator::phrase('error_83') : 'error_83');
         }
         if (!in_array($input, $this->_allowedUserColId, true)) {
-            throw new Exception(is_string(lang('error_83')) ? lang('error_83') : 'error_83');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_83')) ? \Darkheim\Application\Language\Translator::phrase('error_83') : 'error_83');
         }
         $this->_configUserColId = $input;
     }
@@ -298,38 +298,38 @@ class CreditSystem
     public function saveConfig(): void
     {
         if (!$this->_configTitle || !$this->_configDatabase || !$this->_configTable || !$this->_configCreditsCol || !$this->_configUserCol || !$this->_configUserColId) {
-            throw new Exception(is_string(lang('error_84')) ? lang('error_84') : 'error_84');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_84')) ? \Darkheim\Application\Language\Translator::phrase('error_84') : 'error_84');
         }
 
         $data  = ['title' => $this->_configTitle, 'database' => $this->_configDatabase, 'table' => $this->_configTable, 'creditscol' => $this->_configCreditsCol, 'usercol' => $this->_configUserCol, 'usercolid' => $this->_configUserColId, 'checkonline' => $this->_configCheckOnline, 'display' => $this->_configDisplay];
         $query = "INSERT INTO " . Credits_Config . " (config_title, config_database, config_table, config_credits_col, config_user_col, config_user_col_id, config_checkonline, config_display) VALUES (:title, :database, :table, :creditscol, :usercol, :usercolid, :checkonline, :display)";
 
         if (!$this->muonline->query($query, $data)) {
-            throw new Exception(lang('error_85'));
+            throw new Exception(\Darkheim\Application\Language\Translator::phrase('error_85'));
         }
     }
 
     public function editConfig(): void
     {
         if (!$this->_configId || !$this->_configTitle || !$this->_configDatabase || !$this->_configTable || !$this->_configCreditsCol || !$this->_configUserCol || !$this->_configUserColId) {
-            throw new Exception(is_string(lang('error_84')) ? lang('error_84') : 'error_84');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_84')) ? \Darkheim\Application\Language\Translator::phrase('error_84') : 'error_84');
         }
 
         $data  = ['id' => $this->_configId, 'title' => $this->_configTitle, 'database' => $this->_configDatabase, 'table' => $this->_configTable, 'creditscol' => $this->_configCreditsCol, 'usercol' => $this->_configUserCol, 'usercolid' => $this->_configUserColId, 'checkonline' => $this->_configCheckOnline, 'display' => $this->_configDisplay];
         $query = "UPDATE " . Credits_Config . " SET config_title = :title, config_database = :database, config_table = :table, config_credits_col = :creditscol, config_user_col= :usercol, config_user_col_id = :usercolid, config_checkonline = :checkonline, config_display = :display WHERE config_id = :id";
 
         if (!$this->muonline->query($query, $data)) {
-            throw new Exception(lang('error_86'));
+            throw new Exception(\Darkheim\Application\Language\Translator::phrase('error_86'));
         }
     }
 
     public function deleteConfig(): void
     {
         if (!$this->_configId) {
-            throw new Exception(is_string(lang('error_66')) ? lang('error_66') : 'error_66');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_66')) ? \Darkheim\Application\Language\Translator::phrase('error_66') : 'error_66');
         }
         if ($this->muonline === null || !$this->muonline->query("DELETE FROM " . Credits_Config . " WHERE config_id = ?", [$this->_configId])) {
-            throw new Exception(is_string(lang('error_87')) ? lang('error_87') : 'error_87');
+            throw new Exception(is_string(\Darkheim\Application\Language\Translator::phrase('error_87')) ? \Darkheim\Application\Language\Translator::phrase('error_87') : 'error_87');
         }
     }
 
@@ -341,7 +341,7 @@ class CreditSystem
         if ($singleConfig) {
             if (!$this->_configId) {
                 throw new Exception(
-                    is_string(lang('error_66')) ? lang('error_66') : 'error_66'
+                    is_string(\Darkheim\Application\Language\Translator::phrase('error_66')) ? \Darkheim\Application\Language\Translator::phrase('error_66') : 'error_66'
                 );
             }
             if ($this->muonline === null) {
@@ -428,7 +428,7 @@ class CreditSystem
     private function _isOnline(string $input): bool {
         if (!$this->_identifier) {
             throw new Exception(
-                is_string(lang('error_88')) ? lang('error_88') : 'error_88'
+                is_string(\Darkheim\Application\Language\Translator::phrase('error_88')) ? \Darkheim\Application\Language\Translator::phrase('error_88') : 'error_88'
             );
         }
 
@@ -436,7 +436,7 @@ class CreditSystem
             case 'userid':
                 $accountInfo = $this->common->accountInformation($this->_identifier);
                 if (!is_array($accountInfo) || !isset($accountInfo[_CLMN_USERNM_])) {
-                    throw new Exception((string)lang('error_12'));
+                    throw new Exception((string)\Darkheim\Application\Language\Translator::phrase('error_12'));
                 }
                 return (bool) $this->common->accountOnline($accountInfo[_CLMN_USERNM_]);
 
@@ -446,23 +446,23 @@ class CreditSystem
             case 'email':
                 $userId = $this->common->retrieveUserIDbyEmail($this->_identifier);
                 if (!is_string($userId)) {
-                    throw new Exception((string)lang('error_12'));
+                    throw new Exception((string)\Darkheim\Application\Language\Translator::phrase('error_12'));
                 }
                 $accountInfo = $this->common->accountInformation($userId);
                 if (!is_array($accountInfo) || !isset($accountInfo[_CLMN_USERNM_])) {
-                    throw new Exception((string)lang('error_12'));
+                    throw new Exception((string)\Darkheim\Application\Language\Translator::phrase('error_12'));
                 }
                 return (bool) $this->common->accountOnline($accountInfo[_CLMN_USERNM_]);
 
             case 'character':
                 $characterData = $this->character->CharacterData($this->_identifier);
                 if (!is_array($characterData) || !isset($characterData[_CLMN_CHR_ACCID_])) {
-                    throw new Exception((string)lang('error_12'));
+                    throw new Exception((string)\Darkheim\Application\Language\Translator::phrase('error_12'));
                 }
                 return (bool) $this->common->accountOnline($characterData[_CLMN_CHR_ACCID_]);
 
             default:
-                throw new Exception((string)lang('error_88'));
+                throw new Exception((string)\Darkheim\Application\Language\Translator::phrase('error_88'));
         }
     }
 

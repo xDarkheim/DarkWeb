@@ -23,7 +23,7 @@ final class EditCharacterController
     public function render(): void
     {
         if (!isset($_GET['name'])) {
-            message('error', 'Please provide a valid character name.');
+            \Darkheim\Application\View\MessageRenderer::toast('error', 'Please provide a valid character name.');
             return;
         }
 
@@ -46,6 +46,7 @@ final class EditCharacterController
             }
 
             $db     = Connection::Database('MuOnline');
+            $admincpUrl = new AdmincpUrlGenerator();
             $common = new Common();
 
             $mLinfo = defined('_TBL_MASTERLVL_')
@@ -67,7 +68,7 @@ final class EditCharacterController
             $this->view->render('admincp/editcharacter', [
                 'charName'       => (string) ($charData[_CLMN_CHR_NAME_] ?? ''),
                 'accountId'      => (string) ($charData[_CLMN_CHR_ACCID_] ?? ''),
-                'accountInfoUrl' => admincp_base('accountinfo&id=' . $common->retrieveUserID($charData[_CLMN_CHR_ACCID_])),
+                'accountInfoUrl' => $admincpUrl->base('accountinfo&id=' . $common->retrieveUserID($charData[_CLMN_CHR_ACCID_])),
                 'classOptions'   => $classOptions,
                 'level'          => (string) ($charData[_CLMN_CHR_LVL_] ?? ''),
                 'resets'         => defined('_CLMN_CHR_RSTS_') ? (string) ($charData[_CLMN_CHR_RSTS_] ?? '') : null,
@@ -88,7 +89,7 @@ final class EditCharacterController
             ]);
         } catch (\Exception $ex) {
             echo '<h1 class="page-header">Edit Character</h1>';
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 
@@ -185,7 +186,7 @@ final class EditCharacterController
                 $db->query($mlQuery, $mlData);
             }
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 }

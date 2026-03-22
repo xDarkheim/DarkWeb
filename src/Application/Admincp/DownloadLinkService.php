@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Admincp;
 
+use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Cache\CacheBuilder;
 use Darkheim\Infrastructure\Cache\CacheRepository;
 use Darkheim\Infrastructure\Database\Connection;
@@ -42,7 +43,7 @@ final class DownloadLinkService
 
     public function edit(string|int $id, string $title, string $link, string $description = '', string|int|float $size = 0, string|int $type = 1): bool
     {
-        if (! check_value($id) || ! $this->isValidPayload($title, $link, $description, $size, $type)) {
+        if (! Validator::hasValue($id) || ! $this->isValidPayload($title, $link, $description, $size, $type)) {
             return false;
         }
 
@@ -61,7 +62,7 @@ final class DownloadLinkService
 
     public function delete(string|int $id): bool
     {
-        if (! check_value($id)) {
+        if (! Validator::hasValue($id)) {
             return false;
         }
 
@@ -86,7 +87,7 @@ final class DownloadLinkService
 
     private function isValidPayload(string $title, string $link, string $description, string|int|float $size, string|int $type): bool
     {
-        if (! check_value($title) || ! check_value($link) || ! check_value((string) $size) || ! check_value((string) $type)) {
+        if (! Validator::hasValue($title) || ! Validator::hasValue($link) || ! Validator::hasValue((string) $size) || ! Validator::hasValue((string) $type)) {
             return false;
         }
 

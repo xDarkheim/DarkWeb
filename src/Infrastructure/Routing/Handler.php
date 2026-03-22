@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Darkheim\Infrastructure\Routing;
 
 use Darkheim\Application\Auth\Common;
+use Darkheim\Application\Language\Translator;
+use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Database\Connection;
 use Darkheim\Infrastructure\Runtime\NativeQueryStore;
@@ -61,7 +63,7 @@ class Handler
 
     public function loadPage(): void
     {
-        $config    = BootstrapContext::configProvider()?->cms() ?? [];
+        $config    = BootstrapContext::configProvider()?->cms()           ?? [];
         $custom    = BootstrapContext::runtimeState()?->customConfig()    ?? [];
         $lang      = BootstrapContext::runtimeState()?->languagePhrases() ?? [];
         $tSettings = [];
@@ -104,7 +106,7 @@ class Handler
 
     public function loadModule(?string $page = 'news', ?string $subpage = 'home'): void
     {
-        $config    = BootstrapContext::configProvider()?->cms() ?? [];
+        $config    = BootstrapContext::configProvider()?->cms()           ?? [];
         $custom    = BootstrapContext::runtimeState()?->customConfig()    ?? [];
         $lang      = BootstrapContext::runtimeState()?->languagePhrases() ?? [];
         $mconfig   = BootstrapContext::runtimeState()?->moduleConfig()    ?? [];
@@ -116,17 +118,17 @@ class Handler
 
             $this->requestParameterParser->parseInto($this->query);
 
-            if (! check_value($page)) {
+            if (! Validator::hasValue($page)) {
                 $page = 'home';
             }
 
             // Controller-based routes are defined in config/routes.web.php.
-            if (! check_value($subpage) && $this->controllerDispatcher->dispatch((string) $page)) {
+            if (! Validator::hasValue($subpage) && $this->controllerDispatcher->dispatch((string) $page)) {
                 return;
             }
 
             // Top-level pages must be controller-routed; no legacy fallback.
-            if (! check_value($subpage)) {
+            if (! Validator::hasValue($subpage)) {
                 $this->module404();
                 return;
             }
@@ -146,13 +148,13 @@ class Handler
                 }
             }
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 
     public function loadAdminCPModule($module = 'home'): void
     {
-        $config  = BootstrapContext::configProvider()?->cms() ?? [];
+        $config  = BootstrapContext::configProvider()?->cms()           ?? [];
         $lang    = BootstrapContext::runtimeState()?->languagePhrases() ?? [];
         $custom  = BootstrapContext::runtimeState()?->customConfig()    ?? [];
         $handler = $this;
@@ -163,7 +165,7 @@ class Handler
         $dB     = Connection::Database('MuOnline');
         $common = new Common();
 
-        $module = (check_value($module) ? $module : 'home');
+        $module = (Validator::hasValue($module) ? $module : 'home');
         if ($this->admincpModuleDispatcher->dispatch((string) $module, compact(
             'config',
             'lang',
@@ -178,7 +180,7 @@ class Handler
             return;
         }
 
-        message('error', 'INVALID MODULE');
+        \Darkheim\Application\View\MessageRenderer::toast('error', 'INVALID MODULE');
     }
 
     public function darkcorePowered(): void
@@ -188,15 +190,17 @@ class Handler
 
     public function websiteTitle(): void
     {
-        $websiteTitle = (check_value(lang('website_title', true)) && lang('website_title', true) != 'ERROR'
-            ? lang('website_title', true)
-            : config('website_title', true));
+        $titlePhrase  = Translator::phrase('website_title');
+        $cmsConfig = BootstrapContext::configProvider()?->cms() ?? [];
+        $websiteTitle = (Validator::hasValue($titlePhrase) && $titlePhrase !== 'ERROR'
+            ? $titlePhrase
+            : (string) ($cmsConfig['website_title'] ?? ''));
         echo $websiteTitle;
     }
 
     public function switchLanguage($language): bool
     {
-        if (! check_value($language)) {
+        if (! Validator::hasValue($language)) {
             return false;
         }
         if (! $this->languageExists($language)) {
@@ -214,7 +218,7 @@ class Handler
 
     private function module404(): void
     {
-        redirect();
+        \Darkheim\Infrastructure\Http\Redirector::go();
     }
 
     private function dispatchApiRequest(string $page, string $subpage): bool

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Infrastructure\Routing;
 
+use Darkheim\Domain\Validator;
+
 final class ModuleRouteResolver
 {
     /**
@@ -11,7 +13,7 @@ final class ModuleRouteResolver
      */
     public function resolve(string $page, ?string $subpage): array
     {
-        if (!check_value($subpage)) {
+        if (! Validator::hasValue($subpage)) {
             return [
                 'type' => 'module',
                 'page' => $page,
@@ -27,10 +29,9 @@ final class ModuleRouteResolver
         }
 
         return [
-            'type' => 'submodule',
-            'page' => $page,
+            'type'    => 'submodule',
+            'page'    => $page,
             'subpage' => (string) $subpage,
         ];
     }
 }
-

@@ -7,6 +7,7 @@ namespace Darkheim\Application\Subpage\Usercp;
 use Darkheim\Application\Auth\Common;
 use Darkheim\Application\Character\Character;
 use Darkheim\Application\Credits\CreditSystem;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Database\Connection;
 use Darkheim\Infrastructure\View\ViewRenderer;
@@ -22,47 +23,47 @@ final class BuyZenSubpageController
 
     public function render(): void
     {
-        if (!isLoggedIn()) {
-            redirect(1, 'login');
+        if (!\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+            \Darkheim\Infrastructure\Http\Redirector::go(1, 'login');
             return;
         }
 
         try {
-            if (!mconfig('active')) {
-                throw new \Exception(lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                throw new \Exception(Translator::phrase('error_47'));
             }
 
             $characterService = new Character();
             $accountCharacters = $characterService->AccountCharacter($_SESSION['username']);
             if (!is_array($accountCharacters)) {
-                throw new \Exception(lang('error_46', true));
+                throw new \Exception(Translator::phrase('error_46'));
             }
 
-            $maxZen = (int) mconfig('max_zen');
-            $exchangeRatio = (int) mconfig('exchange_ratio');
-            $incrementRate = (int) mconfig('increment_rate');
+            $maxZen = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_zen');
+            $exchangeRatio = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('exchange_ratio');
+            $incrementRate = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('increment_rate');
             $buyOptions = $this->buildBuyOptions($maxZen, $exchangeRatio, $incrementRate);
 
             if (isset($_POST['submit'], $_POST['character'], $_POST['credits'])) {
                 try {
                     $this->handleSubmit($characterService, $accountCharacters, $buyOptions, $maxZen, $exchangeRatio);
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
             $this->view->render('subpages/usercp/buyzen', [
-                'pageTitle' => lang('module_titles_txt_28', true),
-                'cardTitle' => lang('module_titles_txt_28', true),
+                'pageTitle' => Translator::phrase('module_titles_txt_28'),
+                'cardTitle' => Translator::phrase('module_titles_txt_28'),
                 'characterOptions' => array_map(
                     static fn (string $characterName): array => ['value' => $characterName, 'label' => $characterName],
                     $accountCharacters
                 ),
                 'buyOptions' => $buyOptions,
-                'submitLabel' => lang('buyzen_txt_5', true),
+                'submitLabel' => Translator::phrase('buyzen_txt_5'),
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 
@@ -87,7 +88,7 @@ final class BuyZenSubpageController
             $options[] = [
                 'credits' => $creditAmount,
                 'zen' => $zenAmount,
-                'label' => number_format($zenAmount) . ' Zen — ' . $creditAmount . ' ' . lang('buyzen_txt_6', true),
+                'label' => number_format($zenAmount) . ' Zen — ' . $creditAmount . ' ' . Translator::phrase('buyzen_txt_6'),
             ];
         }
 
@@ -107,41 +108,41 @@ final class BuyZenSubpageController
     ): void {
         $common = new Common();
         if ($common->accountOnline($_SESSION['username'])) {
-            throw new \Exception(lang('error_28', true));
+            throw new \Exception(Translator::phrase('error_28'));
         }
 
         $creditInput = (string) ($_POST['credits'] ?? '');
         if (!Validator::UnsignedNumber($creditInput)) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(Translator::phrase('error_25'));
         }
 
         $credits = (int) $creditInput;
         $allowedCredits = array_column($buyOptions, 'credits');
         if (!in_array($credits, $allowedCredits, true)) {
-            throw new \Exception(lang('error_24', true));
+            throw new \Exception(Translator::phrase('error_24'));
         }
 
         $characterName = (string) ($_POST['character'] ?? '');
         $zen = $credits * $exchangeRatio;
         if ($zen > $maxZen) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(Translator::phrase('error_25'));
         }
         if (!in_array($characterName, $accountCharacters, true)) {
-            throw new \Exception(lang('error_24', true));
+            throw new \Exception(Translator::phrase('error_24'));
         }
 
         $characterData = $characterService->CharacterData($characterName);
         if (!is_array($characterData)) {
-            throw new \Exception(lang('error_25', true));
+            throw new \Exception(Translator::phrase('error_25'));
         }
 
         $characterZen = (int) ($characterData[_CLMN_CHR_ZEN_] ?? 0);
         if ($characterZen + $zen > $maxZen) {
-            throw new \Exception(lang('error_55', true));
+            throw new \Exception(Translator::phrase('error_55'));
         }
 
         $creditSystem = new CreditSystem();
-        $creditSystem->setConfigId((int) mconfig('credit_config'));
+        $creditSystem->setConfigId((int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('credit_config'));
         $configSettings = $creditSystem->showConfigs(true);
         switch ($configSettings['config_user_col_id'] ?? '') {
             case 'userid':
@@ -164,8 +165,8 @@ final class BuyZenSubpageController
             [$zen, $characterData[_CLMN_CHR_NAME_]]
         );
 
-        message('success', lang('success_21', true));
-        message('info', number_format($zen) . lang('buyzen_txt_2', true) . $characterName);
+        \Darkheim\Application\View\MessageRenderer::toast('success', Translator::phrase('success_21'));
+        \Darkheim\Application\View\MessageRenderer::toast('info', number_format($zen) . Translator::phrase('buyzen_txt_2') . $characterName);
     }
 }
 

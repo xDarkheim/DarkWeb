@@ -41,7 +41,7 @@ final class AuthService
     public function logout(): void
     {
         $this->session->clearSession();
-        redirect();
+        \Darkheim\Infrastructure\Http\Redirector::go();
     }
 }
 

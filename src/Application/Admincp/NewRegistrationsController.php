@@ -19,6 +19,7 @@ final class NewRegistrationsController
     public function render(): void
     {
         $database = Connection::Database('MuOnline');
+        $admincpUrl = new AdmincpUrlGenerator();
         $registrations = $database->query_fetch(
             'SELECT TOP 200 ' . _CLMN_MEMBID_ . ', ' . _CLMN_USERNM_ . ', ' . _CLMN_EMAIL_ . ' FROM ' . _TBL_MI_ . ' ORDER BY ' . _CLMN_MEMBID_ . ' DESC'
         );
@@ -35,7 +36,7 @@ final class NewRegistrationsController
                     'id' => $memberId,
                     'username' => (string) ($registration[_CLMN_USERNM_] ?? ''),
                     'email' => (string) ($registration[_CLMN_EMAIL_] ?? ''),
-                    'accountInfoUrl' => admincp_base('accountinfo&id=' . $memberId),
+                    'accountInfoUrl' => $admincpUrl->base('accountinfo&id=' . $memberId),
                 ];
             }
         }

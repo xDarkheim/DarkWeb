@@ -21,7 +21,7 @@ final class AddNewsTranslationController
     {
         try {
             $newsService = new News();
-            loadModuleConfigs('news');
+            \Darkheim\Infrastructure\Bootstrap\BootstrapContext::loadModuleConfig('news');
 
             if (! $newsService->isNewsDirWritable()) {
                 throw new \RuntimeException('The news cache folder is not writable.');
@@ -35,9 +35,9 @@ final class AddNewsTranslationController
                     $newsService->setContent($_POST['news_content']);
                     $newsService->addNewsTransation();
                     $newsService->updateNewsCacheIndex();
-                    redirect(1, 'admincp/?module=managenews');
+                    \Darkheim\Infrastructure\Http\Redirector::go(1, 'admincp/?module=managenews');
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
@@ -51,7 +51,7 @@ final class AddNewsTranslationController
                 throw new \RuntimeException('There are no available languages.');
             }
 
-            $defaultLang = (string) config('language_default', true);
+            $defaultLang = (string) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('language_default', true);
             $languages   = array_filter($languagesList, static fn($l) => $l !== $defaultLang);
 
             $this->view->render('admincp/addnewstranslation', [
@@ -64,7 +64,7 @@ final class AddNewsTranslationController
                 'formContent'      => (string) ($_POST['news_content'] ?? ($newsData['news_content'] ?? '')),
             ]);
         } catch (\Exception $ex) {
-            message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
         }
     }
 }

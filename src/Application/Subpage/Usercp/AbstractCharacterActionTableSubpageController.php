@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Darkheim\Application\Subpage\Usercp;
 
 use Darkheim\Application\Character\Character;
+use Darkheim\Application\Language\Translator;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 abstract class AbstractCharacterActionTableSubpageController
@@ -18,27 +19,27 @@ abstract class AbstractCharacterActionTableSubpageController
 
     final public function render(): void
     {
-        if (!isLoggedIn()) {
-            redirect(1, 'login');
+        if (!\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+            \Darkheim\Infrastructure\Http\Redirector::go(1, 'login');
             return;
         }
 
         try {
-            if (!mconfig('active')) {
-                throw new \Exception(lang('error_47', true));
+            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+                throw new \Exception(Translator::phrase('error_47'));
             }
 
             $characterService = new Character();
             $accountCharacters = $characterService->AccountCharacter($_SESSION['username']);
             if (!is_array($accountCharacters)) {
-                throw new \Exception(lang('error_46', true));
+                throw new \Exception(Translator::phrase('error_46'));
             }
 
             if ($this->isSubmitRequest()) {
                 try {
                     $this->handleSubmit($characterService);
                 } catch (\Exception $ex) {
-                    message('error', $ex->getMessage());
+                    \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
                 }
             }
 
@@ -59,7 +60,7 @@ abstract class AbstractCharacterActionTableSubpageController
                 'requirementsLines' => $this->requirementsLines(),
             ]);
         } catch (\Exception $ex) {
-            inline_message('error', $ex->getMessage());
+            \Darkheim\Application\View\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 

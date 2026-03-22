@@ -18,22 +18,23 @@ final class BlockedIpsController
 
     public function render(): void
     {
-        $common = new Common();
-        $module = (string) ($_REQUEST['module'] ?? 'blockedips');
+        $common     = new Common();
+        $admincpUrl = new AdmincpUrlGenerator();
+        $module     = (string) ($_REQUEST['module'] ?? 'blockedips');
 
         if (isset($_POST['submit_block'], $_POST['ip_address'])) {
             if ($common->blockIpAddress($_POST['ip_address'], $_SESSION['username'])) {
-                message('success', 'IP address blocked.');
+                \Darkheim\Application\View\MessageRenderer::toast('success', 'IP address blocked.');
             } else {
-                message('error', 'Error blocking IP.');
+                \Darkheim\Application\View\MessageRenderer::toast('error', 'Error blocking IP.');
             }
         }
 
         if (isset($_GET['unblock'])) {
             if ($common->unblockIpAddress($_REQUEST['unblock'])) {
-                message('success', 'IP address unblocked.');
+                \Darkheim\Application\View\MessageRenderer::toast('success', 'IP address unblocked.');
             } else {
-                message('error', 'Error unblocking IP.');
+                \Darkheim\Application\View\MessageRenderer::toast('error', 'Error unblocking IP.');
             }
         }
 
@@ -42,10 +43,10 @@ final class BlockedIpsController
         if (is_array($blockedIPs)) {
             foreach ($blockedIPs as $ip) {
                 $rows[] = [
-                    'ip'          => (string) ($ip['block_ip'] ?? ''),
-                    'blockedBy'   => (string) ($ip['block_by'] ?? ''),
-                    'date'        => date('Y-m-d H:i', (int) ($ip['block_date'] ?? 0)),
-                    'unblockUrl'  => admincp_base($module . '&unblock=' . ($ip['id'] ?? '')),
+                    'ip'         => (string) ($ip['block_ip'] ?? ''),
+                    'blockedBy'  => (string) ($ip['block_by'] ?? ''),
+                    'date'       => date('Y-m-d H:i', (int) ($ip['block_date'] ?? 0)),
+                    'unblockUrl' => $admincpUrl->base($module . '&unblock=' . ($ip['id'] ?? '')),
                 ];
             }
         }
@@ -55,4 +56,3 @@ final class BlockedIpsController
         ]);
     }
 }
-

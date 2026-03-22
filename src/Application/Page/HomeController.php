@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Page;
 
+use Darkheim\Application\Auth\SessionManager;
 use Darkheim\Application\Game\GameHelper;
 use Darkheim\Application\Profile\ProfileRenderer;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
@@ -22,7 +23,8 @@ final class HomeController
 
     public function render(): void
     {
-        $language = (config('language_switch_active', true) && isset($_SESSION['language_display']))
+        $cmsConfig = BootstrapContext::configProvider()?->cms() ?? [];
+        $language = ((bool) ($cmsConfig['language_switch_active'] ?? false) && isset($_SESSION['language_display']))
             ? $_SESSION['language_display']
             : '';
 
@@ -88,7 +90,7 @@ final class HomeController
             }
         }
 
-        $userLoggedIn   = isLoggedIn() === true;
+        $userLoggedIn   = (new SessionManager())->isWebsiteAuthenticated(BootstrapContext::configProvider()?->moduleConfig('login'));
         $usercpMenuHtml = $userLoggedIn ? new DefaultThemeLayoutBuilder()->renderUsercpMenuHtml() : '';
 
         $this->view->render('home', [

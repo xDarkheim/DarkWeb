@@ -27,6 +27,7 @@ final class SearchBanController
             $searchRequest = (string) $_POST['search_request'];
             try {
                 $db     = Connection::Database('MuOnline');
+                $admincpUrl = new AdmincpUrlGenerator();
                 $common = new Common();
                 $rows   = $db->query_fetch(
                     'SELECT TOP 25 * FROM ' . Ban_Log . ' WHERE account_id LIKE ?',
@@ -40,12 +41,12 @@ final class SearchBanController
                     $accId    = (string) ($ban['account_id'] ?? '');
                     $results[] = [
                         'account'        => $accId,
-                        'accountInfoUrl' => admincp_base('accountinfo&id=' . $common->retrieveUserID($accId)),
+                        'accountInfoUrl' => $admincpUrl->base('accountinfo&id=' . $common->retrieveUserID($accId)),
                         'bannedBy'       => (string) ($ban['banned_by'] ?? ''),
                         'banType'        => (string) ($ban['ban_type'] ?? ''),
                         'banDate'        => date('Y-m-d H:i', (int) ($ban['ban_date'] ?? 0)),
                         'banDays'        => (string) ($ban['ban_days'] ?? ''),
-                        'liftBanUrl'     => admincp_base('latestbans&liftban=' . ($ban['id'] ?? '')),
+                        'liftBanUrl'     => $admincpUrl->base('latestbans&liftban=' . ($ban['id'] ?? '')),
                     ];
                 }
             } catch (\Exception $ex) {

@@ -32,7 +32,7 @@ final class AdminCPAccessController
                     if (! Validator::AlphaNumeric($adminUsername) || ! Validator::UsernameLength($adminUsername)) {
                         throw new \RuntimeException('Invalid username.');
                     }
-                    if (! array_key_exists($adminUsername, config('admins', true))) {
+                    if (! array_key_exists($adminUsername, \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('admins', true))) {
                         continue;
                     }
                     if (! Validator::UnsignedNumber($accessLevel) || ! Validator::Number($accessLevel, 100)) {
@@ -47,8 +47,8 @@ final class AdminCPAccessController
                     $adminAccounts[$adminUsername] = (int) $accessLevel;
                 }
 
-                if (check_value($newAdminUser)) {
-                    if (array_key_exists($newAdminUser, config('admins', true))) {
+                if (Validator::hasValue($newAdminUser)) {
+                    if (array_key_exists($newAdminUser, \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('admins', true))) {
                         throw new \RuntimeException('Admin already exists.');
                     }
                     if (! Validator::UnsignedNumber($newAdminLevel)) {
@@ -59,13 +59,13 @@ final class AdminCPAccessController
 
                 $cmsConfigurations['admins'] = $adminAccounts;
                 new ConfigRepository(__PATH_CONFIGS__)->saveCms($cmsConfigurations);
-                message('success', 'Settings saved!');
+                \Darkheim\Application\View\MessageRenderer::toast('success', 'Settings saved!');
             } catch (\Exception $ex) {
-                message('error', $ex->getMessage());
+                \Darkheim\Application\View\MessageRenderer::toast('error', $ex->getMessage());
             }
         }
 
-        $admins    = config('admins', true);
+        $admins    = \Darkheim\Infrastructure\Bootstrap\BootstrapContext::cmsValue('admins', true);
         $adminRows = [];
         if (is_array($admins)) {
             foreach ($admins as $adminName => $level) {

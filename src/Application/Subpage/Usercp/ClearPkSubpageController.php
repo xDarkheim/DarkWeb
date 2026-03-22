@@ -6,16 +6,17 @@ namespace Darkheim\Application\Subpage\Usercp;
 
 use Darkheim\Application\Character\Character;
 use Darkheim\Application\Game\GameHelper;
+use Darkheim\Application\Language\Translator;
 
 final class ClearPkSubpageController extends AbstractCharacterActionTableSubpageController
 {
     protected function pageTitle(): string
     {
-        return lang('module_titles_txt_13', true);
+        return Translator::phrase('module_titles_txt_13');
     }
     protected function cardTitle(): string
     {
-        return lang('module_titles_txt_13', true);
+        return Translator::phrase('module_titles_txt_13');
     }
     protected function cardIconClass(): string
     {
@@ -24,7 +25,7 @@ final class ClearPkSubpageController extends AbstractCharacterActionTableSubpage
 
     protected function tableHeaders(): array
     {
-        return ['', lang('clearpk_txt_1', true), lang('clearpk_txt_2', true), lang('clearpk_txt_3', true), ''];
+        return ['', Translator::phrase('clearpk_txt_1'), Translator::phrase('clearpk_txt_2'), Translator::phrase('clearpk_txt_3'), ''];
     }
 
     protected function buildRow(Character $characterService, string $characterName): ?array
@@ -42,7 +43,7 @@ final class ClearPkSubpageController extends AbstractCharacterActionTableSubpage
                 number_format((float) $data[_CLMN_CHR_ZEN_]),
                 GameHelper::pkLevel((int) $data[_CLMN_CHR_PK_LEVEL_]),
             ],
-            'buttonLabel' => lang('clearpk_txt_4', true),
+            'buttonLabel' => Translator::phrase('clearpk_txt_4'),
         ];
     }
 
@@ -57,8 +58,8 @@ final class ClearPkSubpageController extends AbstractCharacterActionTableSubpage
     protected function requirementsLines(): array
     {
         $lines = [];
-        if (mconfig('zen_cost') > 0) {
-            $lines[] = langf('clearpk_txt_5', [number_format((float) mconfig('zen_cost'))]);
+        if (\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost') > 0) {
+            $lines[] = Translator::phraseFmt('clearpk_txt_5', [number_format((float) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('zen_cost'))]);
         }
         return $lines;
     }
