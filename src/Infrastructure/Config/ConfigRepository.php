@@ -63,9 +63,6 @@ final class ConfigRepository
     {
         $path = $this->configDir . 'config.json';
         $encoded = json_encode(self::sanitizeCms($data), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        if ($encoded === false) {
-            throw new Exception('Could not encode DarkCore configurations.');
-        }
 
         $written = file_put_contents($path, $encoded, LOCK_EX);
         if ($written === false) {
@@ -86,4 +83,3 @@ final class ConfigRepository
         return $data;
     }
 }
-

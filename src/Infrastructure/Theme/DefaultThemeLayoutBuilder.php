@@ -133,7 +133,7 @@ final class DefaultThemeLayoutBuilder
         if (is_array($srvInfo)) {
             $rows[] = [
                 'label' => (string) lang('sidebar_srvinfo_txt_2'),
-                'value' => number_format((int) ($srvInfo[0] ?? 0)),
+                'value' => number_format((int) $srvInfo[0]),
                 'valueStyle' => 'font-weight:bold;',
             ];
             $rows[] = [
@@ -367,5 +367,4 @@ final class DefaultThemeLayoutBuilder
         return $publicBase . $resolvedFileName . '?v=' . $version;
     }
 }
-
 

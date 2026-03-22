@@ -78,9 +78,6 @@ final class CacheManagerController
     {
         $rows = [];
         foreach ($cacheFileList as $row) {
-            if (!is_array($row)) {
-                continue;
-            }
             $file = (string) ($row['file'] ?? '');
             $isWritable = (int) ($row['write'] ?? 0) === 1;
             $rows[] = [
@@ -130,5 +127,4 @@ final class CacheManagerController
         return $cards;
     }
 }
-
 

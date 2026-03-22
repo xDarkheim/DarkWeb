@@ -179,6 +179,50 @@ class Common
         if ($result) return true;
     }
 
+    public function paypal_transaction($transactionId, $userId, $paymentAmount, $paypalEmail, $orderId): bool
+    {
+        if (!check_value($transactionId) || !Validator::UnsignedNumber($userId) || !check_value($paypalEmail) || !check_value($orderId)) {
+            return false;
+        }
+
+        return (bool) $this->muonline->query(
+            'INSERT INTO ' . PayPal_Transactions . ' (transaction_id, user_id, payment_amount, paypal_email, transaction_date, transaction_status, order_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [
+                (string) $transactionId,
+                (int) $userId,
+                (string) $paymentAmount,
+                (string) $paypalEmail,
+                time(),
+                1,
+                (string) $orderId,
+            ]
+        );
+    }
+
+    public function paypal_transaction_reversed_updatestatus($orderId): bool
+    {
+        if (!check_value($orderId)) {
+            return false;
+        }
+
+        return (bool) $this->muonline->query(
+            'UPDATE ' . PayPal_Transactions . ' SET transaction_status = ? WHERE order_id = ?',
+            [0, (string) $orderId]
+        );
+    }
+
+    public function blockAccount($userId): bool
+    {
+        if (!Validator::UnsignedNumber($userId)) {
+            return false;
+        }
+
+        return (bool) $this->muonline->query(
+            'UPDATE ' . _TBL_MI_ . ' SET ' . _CLMN_BLOCCODE_ . ' = ? WHERE ' . _CLMN_MEMBID_ . ' = ?',
+            [1, (int) $userId]
+        );
+    }
+
     public function retrieveBlockedIPs(): array|false
     {
         $result = $this->muonline->query_fetch("SELECT * FROM " . Blocked_IP . " ORDER BY block_date DESC", []);
@@ -203,4 +247,3 @@ class Common
         return (bool) $result;
     }
 }
-

@@ -429,7 +429,7 @@ final class RankingsSectionController
         $cells[] = $avatarCell;
         $cells[] = $this->gensTypeHtml((int) $entry[1]);
         $cells[] = $playerCell;
-        $cells[] = (string) ($entry[3] ?? '');
+        $cells[] = (string) $entry[3];
         $cells[] = number_format((int) $entry[2]);
         if ($showLocation) {
             $cells[] = returnMapName((int) ($entry[6] ?? 0));

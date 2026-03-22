@@ -75,7 +75,7 @@ final class WebsiteSettingsController
         $rows = $this->rowsSchema();
         foreach ($rows as &$row) {
             $rawValue = config((string) $row['key'], true);
-            if (($row['type'] ?? 'text') === 'bool') {
+            if ($row['type'] === 'bool') {
                 $row['value'] = in_array($rawValue, [true, 1, '1', 'true'], true) ? '1' : '0';
             } else {
                 $row['value'] = (string) $rawValue;
@@ -213,4 +213,3 @@ final class WebsiteSettingsController
         ];
     }
 }
-

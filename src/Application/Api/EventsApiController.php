@@ -56,7 +56,6 @@ final class EventsApiController
             $result = [];
             foreach (self::EVENT_TIMES as $eventId => $event) {
                 if (!array_key_exists('day', $event)) {
-                    /** @var array<int,string> $schedule */
                     $schedule = $event['schedule'];
                     $lastTime = $this->getEventPreviousTime($schedule);
                     $nextTime = $this->getEventNextTime($schedule);
@@ -145,4 +144,3 @@ final class EventsApiController
         return date('Y-m-d H:i', strtotime('last ' . $day . ' ' . $time));
     }
 }
-

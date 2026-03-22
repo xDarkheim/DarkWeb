@@ -45,9 +45,7 @@ final class ModulesManagerController
             $this->handleSimpleConfigSave($configKey);
 
             $moduleConfigName = $this->moduleConfigNameFromKey($configKey);
-            if ($moduleConfigName !== null) {
-                loadModuleConfigs($moduleConfigName);
-            }
+            loadModuleConfigs($moduleConfigName);
 
             $subDir = in_array($configKey, $usercpModules, true) ? 'usercp/' : '';
             $filePath = __PATH_VIEWS__ . 'admincp/mconfig/' . $subDir . $configKey . '.php';
@@ -546,7 +544,7 @@ final class ModulesManagerController
             ],
         ];
 
-        if (!isset($simpleMap[$configKey]) || !is_array($simpleMap[$configKey])) {
+        if (!isset($simpleMap[$configKey])) {
             return;
         }
 
@@ -583,7 +581,7 @@ final class ModulesManagerController
         }
     }
 
-    private function moduleConfigNameFromKey(string $configKey): ?string
+    private function moduleConfigNameFromKey(string $configKey): string
     {
         $map = [
             'buyzen' => 'buy-zen',
@@ -601,4 +599,3 @@ final class ModulesManagerController
         return $map[$configKey] ?? $configKey;
     }
 }
-

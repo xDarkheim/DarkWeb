@@ -18,25 +18,19 @@ final class PhrasesController
     public function render(): void
     {
         $lang  = getLanguagePhrases();
-        $error = null;
         $rows  = [];
 
-        if (!is_array($lang)) {
-            $error = 'Language file is empty.';
-        } else {
-            foreach ($lang as $key => $value) {
-                $rows[] = [
-                    'key'   => (string) $key,
-                    'value' => (string) $value,
-                ];
-            }
+        foreach ($lang as $key => $value) {
+            $rows[] = [
+                'key'   => (string) $key,
+                'value' => (string) $value,
+            ];
         }
 
         $this->view->render('admincp/phrases', [
             'rows'  => $rows,
             'count' => count($rows),
-            'error' => $error,
+            'error' => $rows === [] ? 'Language file is empty.' : null,
         ]);
     }
 }
-

@@ -54,7 +54,7 @@ final class PluginsController
                     'enableUrl'     => admincp_base('plugins&enable=' . ($p['id'] ?? '')),
                     'disableUrl'    => admincp_base('plugins&disable=' . ($p['id'] ?? '')),
                     'uninstallUrl'  => admincp_base('plugins&uninstall=' . ($p['id'] ?? '')),
-                    'allowUninstall'=> defined('PLUGIN_ALLOW_UNINSTALL') && PLUGIN_ALLOW_UNINSTALL,
+                    'allowUninstall'=> PLUGIN_ALLOW_UNINSTALL,
                 ];
             }
         }
@@ -66,4 +66,3 @@ final class PluginsController
         ]);
     }
 }
-

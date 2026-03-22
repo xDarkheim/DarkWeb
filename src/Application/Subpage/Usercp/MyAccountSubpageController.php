@@ -89,12 +89,10 @@ final class MyAccountSubpageController
 
             $displayLevel = (int) ($cd[_CLMN_CHR_LVL_] ?? 0);
             if (defined('_TBL_MASTERLVL_')) {
-                if (_TBL_MASTERLVL_ != _TBL_CHR_) {
-                    $mlData = $characterService->getMasterLevelInfo((string) $characterName);
-                    if (is_array($mlData)) {
-                        $displayLevel += (int) ($mlData[_CLMN_ML_LVL_] ?? 0);
-                    }
-                } else {
+                $mlData = $characterService->getMasterLevelInfo((string) $characterName);
+                if (is_array($mlData)) {
+                    $displayLevel += (int) ($mlData[_CLMN_ML_LVL_] ?? 0);
+                } elseif (array_key_exists(_CLMN_ML_LVL_, $cd)) {
                     $displayLevel += (int) ($cd[_CLMN_ML_LVL_] ?? 0);
                 }
             }
@@ -155,4 +153,3 @@ final class MyAccountSubpageController
         ]);
     }
 }
-

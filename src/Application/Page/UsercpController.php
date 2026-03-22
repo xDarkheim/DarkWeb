@@ -106,10 +106,7 @@ final class UsercpController
             }
 
             $visibility = (string)($element['visibility'] ?? 'user');
-            if ($visibility === 'guest' && isLoggedIn()) {
-                continue;
-            }
-            if ($visibility === 'user' && !isLoggedIn()) {
+            if ($visibility === 'guest') {
                 continue;
             }
 
