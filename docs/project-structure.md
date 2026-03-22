@@ -266,33 +266,33 @@ public/admincp/index.php
 
 ## Path constants defined by AppKernel
 
-| Constant | Points to |
-| :--- | :--- |
-| `__ROOT_DIR__` | Project root filesystem path |
-| `__PUBLIC_DIR__` | `public/` filesystem path (DocumentRoot) |
-| `__PATH_INCLUDES__` | `includes/` filesystem path |
-| `__PATH_VIEWS__` | `views/` filesystem path — permanent view templates |
-| `__PATH_THEMES__` | `public/themes/` filesystem path |
-| `__PATH_CONFIGS__` | `config/` filesystem path |
-| `__PATH_CACHE__` | `var/cache/` filesystem path |
-| `__PATH_LOGS__` | `var/logs/` filesystem path |
-| `__BASE_URL__` | Site URL (e.g. `https://example.com/`) |
-| `__PATH_IMG__` | `__BASE_URL__ . 'img/'` |
-| `__PATH_ASSETS__` | `__BASE_URL__ . 'assets/'` |
-| `__PATH_API__` | `__BASE_URL__ . 'api/'` |
-| `__PATH_ADMINCP__` | `public/admincp/` filesystem path |
+| Constant            | Points to                                           |
+|:--------------------|:----------------------------------------------------|
+| `__ROOT_DIR__`      | Project root filesystem path                        |
+| `__PUBLIC_DIR__`    | `public/` filesystem path (DocumentRoot)            |
+| `__PATH_INCLUDES__` | `includes/` filesystem path                         |
+| `__PATH_VIEWS__`    | `views/` filesystem path — permanent view templates |
+| `__PATH_THEMES__`   | `public/themes/` filesystem path                    |
+| `__PATH_CONFIGS__`  | `config/` filesystem path                           |
+| `__PATH_CACHE__`    | `var/cache/` filesystem path                        |
+| `__PATH_LOGS__`     | `var/logs/` filesystem path                         |
+| `__BASE_URL__`      | Site URL (e.g. `https://example.com/`)              |
+| `__PATH_IMG__`      | `__BASE_URL__ . 'img/'`                             |
+| `__PATH_ASSETS__`   | `__BASE_URL__ . 'assets/'`                          |
+| `__PATH_API__`      | `__BASE_URL__ . 'api/'`                             |
+| `__PATH_ADMINCP__`  | `public/admincp/` filesystem path                   |
 
 ## Runtime boundary
 
 Classes under `src/` avoid reading PHP superglobals directly. Runtime state is funneled through small adapters in `src/Infrastructure/Runtime/`:
 
-| Adapter | Wraps | Used by |
-| :--- | :--- | :--- |
-| `SessionStore` | `$_SESSION` | `SessionManager`, `Login`, `Plugins`, `Handler` |
-| `QueryStore` | `$_GET` | `Handler`, `CreditSystem` |
-| `RequestStore` | `$_REQUEST` | `RankingsService` |
-| `PostStore` | `$_POST` | `PaypalIPN` |
-| `ServerContext` | `$_SERVER` | `Login`, `Account`, `CreditSystem` |
+| Adapter         | Wraps       | Used by                                         |
+|:----------------|:------------|:------------------------------------------------|
+| `SessionStore`  | `$_SESSION` | `SessionManager`, `Login`, `Plugins`, `Handler` |
+| `QueryStore`    | `$_GET`     | `Handler`, `CreditSystem`                       |
+| `RequestStore`  | `$_REQUEST` | `RankingsService`                               |
+| `PostStore`     | `$_POST`    | `PaypalIPN`                                     |
+| `ServerContext` | `$_SERVER`  | `Login`, `Account`, `CreditSystem`              |
 
 This keeps the composition root in `includes/bootstrap/boot.php` explicit while making namespaced services easier to test in isolation.
 
@@ -300,39 +300,39 @@ This keeps the composition root in `includes/bootstrap/boot.php` explicit while 
 
 All classes under `src/` are autoloaded via Composer PSR-4 with the root namespace `Darkheim\`:
 
-| Namespace | Directory | Purpose |
-| :--- | :--- | :--- |
-| `Darkheim\Application\Account\*` | `src/Application/Account/` | Account read/write helpers |
-| `Darkheim\Application\Admincp\*` | `src/Application/Admincp/` | AdminCP controllers, layout/check helpers, downloads service |
-| `Darkheim\Application\Auth\*` | `src/Application/Auth/` | Authentication, session, AdminCP guard |
-| `Darkheim\Application\CastleSiege\*` | `src/Application/CastleSiege/` | Castle siege data access |
-| `Darkheim\Application\Character\*` | `src/Application/Character/` | Character read/write helpers |
-| `Darkheim\Application\Credits\*` | `src/Application/Credits/` | Credits & donation logic |
-| `Darkheim\Application\Game\*` | `src/Application/Game/` | Class avatars, maps, Gens, guild logo |
-| `Darkheim\Application\Helpers\*` | `src/Application/Helpers/` | Encoder, TimeHelper |
-| `Darkheim\Application\Language\*` | `src/Application/Language/` | Translator, LanguageRepository |
-| `Darkheim\Application\News\*` | `src/Application/News/` | News value object, repository, service |
-| `Darkheim\Application\Page\*` | `src/Application/Page/` | Top-level page controllers (one per public route) |
-| `Darkheim\Application\Profile\*` | `src/Application/Profile/` | Profile link builder, repository |
-| `Darkheim\Application\Rankings\*` | `src/Application/Rankings/` | Ranking cache, repository, service |
-| `Darkheim\Application\View\*` | `src/Application/View/` | MessageRenderer (toast + inline) |
-| `Darkheim\Application\Vote\*` | `src/Application/Vote/` | Vote tracking |
-| `Darkheim\Domain\*` | `src/Domain/` | Pure domain helpers (Validator) |
-| `Darkheim\Infrastructure\Bootstrap\*` | `src/Infrastructure/Bootstrap/` | AppKernel, ConfigProvider, RuntimeState, BootstrapContext |
-| `Darkheim\Infrastructure\Cache\*` | `src/Infrastructure/Cache/` | CacheBuilder, CacheRepository, CacheManager |
-| `Darkheim\Infrastructure\Config\*` | `src/Infrastructure/Config/` | JSON/XML config readers |
-| `Darkheim\Infrastructure\Cron\*` | `src/Infrastructure/Cron/` | CronManager |
-| `Darkheim\Infrastructure\Database\*` | `src/Infrastructure/Database/` | PDO wrapper + connection factory |
-| `Darkheim\Infrastructure\Email\*` | `src/Infrastructure/Email/` | PHPMailer wrapper |
-| `Darkheim\Infrastructure\Helpers\*` | `src/Infrastructure/Helpers/` | FileHelper (JSON, directories, file size) |
-| `Darkheim\Infrastructure\Http\*` | `src/Infrastructure/Http/` | Redirector, GeoIpService |
-| `Darkheim\Infrastructure\Payment\*` | `src/Infrastructure/Payment/` | PayPal IPN |
-| `Darkheim\Infrastructure\Plugins\*` | `src/Infrastructure/Plugins/` | Plugin loader |
-| `Darkheim\Infrastructure\Routing\*` | `src/Infrastructure/Routing/` | Handler, Controller/Subpage/AdminCP dispatchers, registries, sanitizers |
-| `Darkheim\Infrastructure\Theme\*` | `src/Infrastructure/Theme/` | Theme layout context builders (`DefaultThemeLayoutBuilder`) |
-| `Darkheim\Infrastructure\View\*` | `src/Infrastructure/View/` | ViewRenderer — theme-aware template engine |
-| `Darkheim\Infrastructure\Runtime\*` | `src/Infrastructure/Runtime/` | Request/session/server boundary adapters |
-| `Darkheim\Infrastructure\Security\*` | `src/Infrastructure/Security/` | IpBlocker |
+| Namespace                             | Directory                       | Purpose                                                                 |
+|:--------------------------------------|:--------------------------------|:------------------------------------------------------------------------|
+| `Darkheim\Application\Account\*`      | `src/Application/Account/`      | Account read/write helpers                                              |
+| `Darkheim\Application\Admincp\*`      | `src/Application/Admincp/`      | AdminCP controllers, layout/check helpers, downloads service            |
+| `Darkheim\Application\Auth\*`         | `src/Application/Auth/`         | Authentication, session, AdminCP guard                                  |
+| `Darkheim\Application\CastleSiege\*`  | `src/Application/CastleSiege/`  | Castle siege data access                                                |
+| `Darkheim\Application\Character\*`    | `src/Application/Character/`    | Character read/write helpers                                            |
+| `Darkheim\Application\Credits\*`      | `src/Application/Credits/`      | Credits & donation logic                                                |
+| `Darkheim\Application\Game\*`         | `src/Application/Game/`         | Class avatars, maps, Gens, guild logo                                   |
+| `Darkheim\Application\Helpers\*`      | `src/Application/Helpers/`      | Encoder, TimeHelper                                                     |
+| `Darkheim\Application\Language\*`     | `src/Application/Language/`     | Translator, LanguageRepository                                          |
+| `Darkheim\Application\News\*`         | `src/Application/News/`         | News value object, repository, service                                  |
+| `Darkheim\Application\Page\*`         | `src/Application/Page/`         | Top-level page controllers (one per public route)                       |
+| `Darkheim\Application\Profile\*`      | `src/Application/Profile/`      | Profile link builder, repository                                        |
+| `Darkheim\Application\Rankings\*`     | `src/Application/Rankings/`     | Ranking cache, repository, service                                      |
+| `Darkheim\Application\View\*`         | `src/Application/View/`         | MessageRenderer (toast + inline)                                        |
+| `Darkheim\Application\Vote\*`         | `src/Application/Vote/`         | Vote tracking                                                           |
+| `Darkheim\Domain\*`                   | `src/Domain/`                   | Pure domain helpers (Validator)                                         |
+| `Darkheim\Infrastructure\Bootstrap\*` | `src/Infrastructure/Bootstrap/` | AppKernel, ConfigProvider, RuntimeState, BootstrapContext               |
+| `Darkheim\Infrastructure\Cache\*`     | `src/Infrastructure/Cache/`     | CacheBuilder, CacheRepository, CacheManager                             |
+| `Darkheim\Infrastructure\Config\*`    | `src/Infrastructure/Config/`    | JSON/XML config readers                                                 |
+| `Darkheim\Infrastructure\Cron\*`      | `src/Infrastructure/Cron/`      | CronManager                                                             |
+| `Darkheim\Infrastructure\Database\*`  | `src/Infrastructure/Database/`  | PDO wrapper + connection factory                                        |
+| `Darkheim\Infrastructure\Email\*`     | `src/Infrastructure/Email/`     | PHPMailer wrapper                                                       |
+| `Darkheim\Infrastructure\Helpers\*`   | `src/Infrastructure/Helpers/`   | FileHelper (JSON, directories, file size)                               |
+| `Darkheim\Infrastructure\Http\*`      | `src/Infrastructure/Http/`      | Redirector, GeoIpService                                                |
+| `Darkheim\Infrastructure\Payment\*`   | `src/Infrastructure/Payment/`   | PayPal IPN                                                              |
+| `Darkheim\Infrastructure\Plugins\*`   | `src/Infrastructure/Plugins/`   | Plugin loader                                                           |
+| `Darkheim\Infrastructure\Routing\*`   | `src/Infrastructure/Routing/`   | Handler, Controller/Subpage/AdminCP dispatchers, registries, sanitizers |
+| `Darkheim\Infrastructure\Theme\*`     | `src/Infrastructure/Theme/`     | Theme layout context builders (`DefaultThemeLayoutBuilder`)             |
+| `Darkheim\Infrastructure\View\*`      | `src/Infrastructure/View/`      | ViewRenderer — theme-aware template engine                              |
+| `Darkheim\Infrastructure\Runtime\*`   | `src/Infrastructure/Runtime/`   | Request/session/server boundary adapters                                |
+| `Darkheim\Infrastructure\Security\*`  | `src/Infrastructure/Security/`  | IpBlocker                                                               |
 
 ## Global function shim (`compat.php`)
 
@@ -343,58 +343,58 @@ one-to-three-line wrapper that casts arguments and delegates to the matching `sr
 > **Rule:** never add business logic to `compat.php`. If you need a new helper, create a class in
 > `src/` and add a thin wrapper here only if legacy call-sites need it.
 
-| Global function | Delegates to |
-| :--- | :--- |
-| `check_value()` | `Validator::hasValue()` |
-| `redirect()` | `Redirector::go()` |
-| `isLoggedIn()` / `logOutUser()` | `SessionManager` |
-| `canAccessAdminCP()` | `AdminGuard::canAccess()` |
-| `admincp_base()` | `AdmincpUrlGenerator::base()` |
-| `getDownloadsList()` / `addDownload()` / `editDownload()` / `deleteDownload()` / `updateDownloadsCache()` | `DownloadLinkService` |
-| `message()` / `inline_message()` | `MessageRenderer::toast()` / `::inline()` |
-| `lang()` / `langf()` | `Translator::phrase()` / `::phraseFmt()` |
-| `config()` / `cmsConfigs()` | `ConfigProvider::cms()` via `bootstrapConfigProvider()` |
-| `loadConfigurations()` / `loadConfig()` / `mconfig()` / `gconfig()` | `ConfigProvider` + `RuntimeState` |
-| `BuildCacheData()` / `UpdateCache()` / `encodeCache()` | `CacheBuilder` |
-| `LoadCacheData()` / `loadCache()` / `updateCacheFile()` | `CacheRepository` |
-| `sec_to_hms()` / `sec_to_dhms()` | `TimeHelper` |
-| `updateCronLastRun()` / `getCronList()` | `CronManager` |
-| `getPlayerClass()` / `getPlayerClassAvatar()` / `returnMapName()` / `returnPkLevel()` / `getGensRank()` / `getGensLeadershipRank()` / `returnGuildLogo()` | `GameHelper` |
-| `playerProfile()` / `guildProfile()` | `ProfileRenderer` |
-| `checkBlockedIp()` | `IpBlocker::isCurrentIpBlocked()` |
-| `getCountryCodeFromIp()` / `getCountryFlag()` | `GeoIpService` |
-| `loadJsonFile()` / `readableFileSize()` / `getDirectoryListFromPath()` | `FileHelper` |
-| `getInstalledLanguagesList()` | `LanguageRepository::getInstalled()` |
-| `base64url_encode()` / `base64url_decode()` | `Encoder` |
-| `enabledisableCheckboxes()` / `weekDaySelectOptions()` | compatibility-only HTML helpers for remaining config partials |
+| Global function                                                                                                                                           | Delegates to                                                  |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------|
+| `check_value()`                                                                                                                                           | `Validator::hasValue()`                                       |
+| `redirect()`                                                                                                                                              | `Redirector::go()`                                            |
+| `isLoggedIn()` / `logOutUser()`                                                                                                                           | `SessionManager`                                              |
+| `canAccessAdminCP()`                                                                                                                                      | `AdminGuard::canAccess()`                                     |
+| `admincp_base()`                                                                                                                                          | `AdmincpUrlGenerator::base()`                                 |
+| `getDownloadsList()` / `addDownload()` / `editDownload()` / `deleteDownload()` / `updateDownloadsCache()`                                                 | `DownloadLinkService`                                         |
+| `message()` / `inline_message()`                                                                                                                          | `MessageRenderer::toast()` / `::inline()`                     |
+| `lang()` / `langf()`                                                                                                                                      | `Translator::phrase()` / `::phraseFmt()`                      |
+| `config()` / `cmsConfigs()`                                                                                                                               | `ConfigProvider::cms()` via `bootstrapConfigProvider()`       |
+| `loadConfigurations()` / `loadConfig()` / `mconfig()` / `gconfig()`                                                                                       | `ConfigProvider` + `RuntimeState`                             |
+| `BuildCacheData()` / `UpdateCache()` / `encodeCache()`                                                                                                    | `CacheBuilder`                                                |
+| `LoadCacheData()` / `loadCache()` / `updateCacheFile()`                                                                                                   | `CacheRepository`                                             |
+| `sec_to_hms()` / `sec_to_dhms()`                                                                                                                          | `TimeHelper`                                                  |
+| `updateCronLastRun()` / `getCronList()`                                                                                                                   | `CronManager`                                                 |
+| `getPlayerClass()` / `getPlayerClassAvatar()` / `returnMapName()` / `returnPkLevel()` / `getGensRank()` / `getGensLeadershipRank()` / `returnGuildLogo()` | `GameHelper`                                                  |
+| `playerProfile()` / `guildProfile()`                                                                                                                      | `ProfileRenderer`                                             |
+| `checkBlockedIp()`                                                                                                                                        | `IpBlocker::isCurrentIpBlocked()`                             |
+| `getCountryCodeFromIp()` / `getCountryFlag()`                                                                                                             | `GeoIpService`                                                |
+| `loadJsonFile()` / `readableFileSize()` / `getDirectoryListFromPath()`                                                                                    | `FileHelper`                                                  |
+| `getInstalledLanguagesList()`                                                                                                                             | `LanguageRepository::getInstalled()`                          |
+| `base64url_encode()` / `base64url_decode()`                                                                                                               | `Encoder`                                                     |
+| `enabledisableCheckboxes()` / `weekDaySelectOptions()`                                                                                                    | compatibility-only HTML helpers for remaining config partials |
 
 ## What to edit vs. what not to touch
 
-| Path | Edit? | Notes |
-| :--- | :---: | :--- |
-| `src/` | ✅ | Application / domain / infrastructure classes |
-| `views/` | ✅ | View templates — write once, works for all themes |
-| `views/subpages/` | ✅ | Sub-page templates dispatched by `SubpageRouteDispatcher` |
-| `public/themes/{theme}/views/` | ✅ | Optional per-theme template overrides (only when markup must differ) |
-| `public/themes/default/index.php` | ✅ | Keep logic-light — render prepared layout data only |
-| `public/themes/default/inc/modules/*.php` | ✅ | Pure partials only; no runtime/config/service calls |
-| `includes/bootstrap/compat.php` | ⚠️ | Add wrappers only; no logic — logic goes in `src/` |
-| `includes/bootstrap/boot.php` | ❌ | Entry point — do not add logic here |
-| `config/config.json` | ✅ | Main config: DB credentials, server name, feature toggles |
-| `config/admincp-layout.php` | ✅ | AdminCP shell/sidebar metadata |
-| `config/routes.admincp.php` | ✅ | AdminCP controller route table |
-| `config/routes.web.php` | ✅ | Top-level controller route table — add new page routes here |
-| `config/routes.subpages.php` | ✅ | Sub-page route table — add new sub-page routes here |
-| `config/routing-migration.json` | ✅ | Machine-readable migration status — keep in sync with route tables |
-| `views/admincp/` | ✅ | AdminCP layout + controller-backed module templates |
-| `views/admincp/mconfig/` | ✅ | Transitional AdminCP module-config partials |
-| `public/assets/css/*.css` | ✅ | Global page/component styles |
-| `public/themes/default/css/*.css` | ✅ | Template layout styles |
-| `public/themes/default/js/*.js` | ✅ | Template JS |
-| `includes/languages/*/language.php` | ✅ | Translation phrases |
-| `vendor/` | ❌ | Managed by Composer — run `composer install` / `composer update` |
-| `var/cache/` | ❌ | Runtime cache managed by CMS |
-| `var/logs/` | ❌ | Runtime logs managed by CMS |
+| Path                                      | Edit? | Notes                                                                |
+|:------------------------------------------|:-----:|:---------------------------------------------------------------------|
+| `src/`                                    |   ✅   | Application / domain / infrastructure classes                        |
+| `views/`                                  |   ✅   | View templates — write once, works for all themes                    |
+| `views/subpages/`                         |   ✅   | Sub-page templates dispatched by `SubpageRouteDispatcher`            |
+| `public/themes/{theme}/views/`            |   ✅   | Optional per-theme template overrides (only when markup must differ) |
+| `public/themes/default/index.php`         |   ✅   | Keep logic-light — render prepared layout data only                  |
+| `public/themes/default/inc/modules/*.php` |   ✅   | Pure partials only; no runtime/config/service calls                  |
+| `includes/bootstrap/compat.php`           |  ⚠️   | Add wrappers only; no logic — logic goes in `src/`                   |
+| `includes/bootstrap/boot.php`             |   ❌   | Entry point — do not add logic here                                  |
+| `config/config.json`                      |   ✅   | Main config: DB credentials, server name, feature toggles            |
+| `config/admincp-layout.php`               |   ✅   | AdminCP shell/sidebar metadata                                       |
+| `config/routes.admincp.php`               |   ✅   | AdminCP controller route table                                       |
+| `config/routes.web.php`                   |   ✅   | Top-level controller route table — add new page routes here          |
+| `config/routes.subpages.php`              |   ✅   | Sub-page route table — add new sub-page routes here                  |
+| `config/routing-migration.json`           |   ✅   | Machine-readable migration status — keep in sync with route tables   |
+| `views/admincp/`                          |   ✅   | AdminCP layout + controller-backed module templates                  |
+| `views/admincp/mconfig/`                  |   ✅   | Transitional AdminCP module-config partials                          |
+| `public/assets/css/*.css`                 |   ✅   | Global page/component styles                                         |
+| `public/themes/default/css/*.css`         |   ✅   | Template layout styles                                               |
+| `public/themes/default/js/*.js`           |   ✅   | Template JS                                                          |
+| `includes/languages/*/language.php`       |   ✅   | Translation phrases                                                  |
+| `vendor/`                                 |   ❌   | Managed by Composer — run `composer install` / `composer update`     |
+| `var/cache/`                              |   ❌   | Runtime cache managed by CMS                                         |
+| `var/logs/`                               |   ❌   | Runtime logs managed by CMS                                          |
 
 ## Controller-backed views and pure templates
 

@@ -44,24 +44,24 @@ cp docker/config.env.example docker/config.env
 
 ### 2. Fill in `config/config.json`
 
-| Key | Example | Description |
-| :--- | :---: | :--- |
+| Key           |     Example      | Description               |
+|:--------------|:----------------:|:--------------------------|
 | `SQL_DB_HOST` | `"192.168.1.56"` | SQL Server IP or hostname |
-| `SQL_DB_NAME` | `"MuOnline"` | Database name |
-| `SQL_DB_USER` | `"sa"` | Database user |
-| `SQL_DB_PASS` | `"yourpassword"` | Database password |
-| `SQL_DB_PORT` | `"1433"` | SQL Server port |
+| `SQL_DB_NAME` |   `"MuOnline"`   | Database name             |
+| `SQL_DB_USER` |      `"sa"`      | Database user             |
+| `SQL_DB_PASS` | `"yourpassword"` | Database password         |
+| `SQL_DB_PORT` |     `"1433"`     | SQL Server port           |
 
 See [Configuration](configuration.md) for all available keys.
 
 ### 3. Fill in `docker/config.env`
 
-| Variable | Local default | Production example |
-| :--- | :---: | :--- |
-| `DOCKER_SERVER_NAME` | `localhost` | `mu.example.com` |
-| `DOCKER_TIMEZONE` | `UTC` | `Europe/Moscow` |
+| Variable              |                  Local default                  | Production example                              |
+|:----------------------|:-----------------------------------------------:|:------------------------------------------------|
+| `DOCKER_SERVER_NAME`  |                   `localhost`                   | `mu.example.com`                                |
+| `DOCKER_TIMEZONE`     |                      `UTC`                      | `Europe/Moscow`                                 |
 | `DOCKER_CRON_COMMAND` | `/usr/local/bin/php /var/www/html/bin/cron.php` | `/usr/local/bin/php /var/www/html/bin/cron.php` |
-| `DOCKER_XDEBUG_MODE` | `off` | `off` |
+| `DOCKER_XDEBUG_MODE`  |                      `off`                      | `off`                                           |
 
 > **`DOCKER_SERVER_NAME`** is injected into the Apache `VirtualHost` as `ServerName` at container start.
 > Changing `docker/config.env` requires container recreation: `docker compose up -d --force-recreate`.
@@ -114,26 +114,26 @@ docker network create proxy
 
 Then configure a **Proxy Host** in Nginx Proxy Manager:
 
-| Field | Value |
-| :--- | :--- |
-| Domain Names | `your-domain.com` |
-| Scheme | `http` |
+| Field                 | Value                                  |
+|:----------------------|:---------------------------------------|
+| Domain Names          | `your-domain.com`                      |
+| Scheme                | `http`                                 |
 | Forward Hostname / IP | `cms_darkcore` *(your container name)* |
-| Forward Port | `8081` |
-| Block Common Exploits | `Yes` |
+| Forward Port          | `8081`                                 |
+| Block Common Exploits | `Yes`                                  |
 
 SSL → **Request a new SSL Certificate** (Let's Encrypt).
 
 ## Docker files
 
-| File | Purpose |
-| :--- | :--- |
-| `docker/Dockerfile` | Builds the image: PHP 8.4 + Apache + FreeTDS + Xdebug + all required extensions |
-| `docker/config.env.example` | **Commit this.** Template for `docker/config.env` with local-dev defaults |
-| `docker/config.env` | **Git-ignored.** Your actual runtime config (domain, timezone, cron, Xdebug) |
-| `docker/xdebug.ini` | Xdebug 3 config: port 9003, `host.docker.internal`, idekey `PHPSTORM` |
-| `docker/entrypoint.sh` | Runs on every container start |
-| `docker-compose.yml` | Service definition — image build, volume mount, proxy network, healthcheck |
+| File                        | Purpose                                                                         |
+|:----------------------------|:--------------------------------------------------------------------------------|
+| `docker/Dockerfile`         | Builds the image: PHP 8.4 + Apache + FreeTDS + Xdebug + all required extensions |
+| `docker/config.env.example` | **Commit this.** Template for `docker/config.env` with local-dev defaults       |
+| `docker/config.env`         | **Git-ignored.** Your actual runtime config (domain, timezone, cron, Xdebug)    |
+| `docker/xdebug.ini`         | Xdebug 3 config: port 9003, `host.docker.internal`, idekey `PHPSTORM`           |
+| `docker/entrypoint.sh`      | Runs on every container start                                                   |
+| `docker-compose.yml`        | Service definition — image build, volume mount, proxy network, healthcheck      |
 
 ### What the Dockerfile builds
 

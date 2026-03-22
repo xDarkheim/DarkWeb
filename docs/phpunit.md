@@ -17,12 +17,12 @@ A passing run prints `OK (N tests, N assertions)`.
 
 ## What's tested
 
-| Layer | Classes | Tests |
-| :--- | :--- | :---: |
-| Domain | `Validator` | 24 |
-| Application | `Account`, `Auth/*`, `News/*`, `Rankings/*`, `Vote/*` | 69 |
-| Infrastructure | `Cache/*`, `Config/*`, `Cron/*`, `Database/*`, `Email`, `Payment/*`, `Plugins`, `Routing/*`, `Runtime/*` | 114 |
-| **Total** | 32 classes | **207 tests, 295 assertions** |
+| Layer          | Classes                                                                                                  |             Tests             |
+|:---------------|:---------------------------------------------------------------------------------------------------------|:-----------------------------:|
+| Domain         | `Validator`                                                                                              |              24               |
+| Application    | `Account`, `Auth/*`, `News/*`, `Rankings/*`, `Vote/*`                                                    |              69               |
+| Infrastructure | `Cache/*`, `Config/*`, `Cron/*`, `Database/*`, `Email`, `Payment/*`, `Plugins`, `Routing/*`, `Runtime/*` |              114              |
+| **Total**      | 32 classes                                                                                               | **207 tests, 295 assertions** |
 
 ## Writing tests
 
@@ -141,13 +141,13 @@ docker compose restart
 
 ### Xdebug modes
 
-| Mode | Use case |
-| :--- | :--- |
-| `off` | Production / CI — zero overhead |
-| `debug` | Step debugging with IDE |
-| `profile` | Generate cachegrind profiling files |
-| `coverage` | Code coverage for PHPUnit |
-| `debug,coverage` | Debugging + coverage together |
+| Mode             | Use case                            |
+|:-----------------|:------------------------------------|
+| `off`            | Production / CI — zero overhead     |
+| `debug`          | Step debugging with IDE             |
+| `profile`        | Generate cachegrind profiling files |
+| `coverage`       | Code coverage for PHPUnit           |
+| `debug,coverage` | Debugging + coverage together       |
 
 ### Coverage report
 
@@ -158,8 +158,8 @@ docker compose exec web ./vendor/bin/phpunit --coverage-text
 
 ## Configuration files
 
-| File | Purpose |
-| :--- | :--- |
-| `phpunit.xml` | Test suite definition, bootstrap path |
-| `tests/bootstrap.php` | Loaded before every test — stubs globals, defines constants |
-| `tests/Stubs/` | Test helpers: `DbTestHelper`, `RedirectException`, runtime adapter stubs |
+| File                  | Purpose                                                                  |
+|:----------------------|:-------------------------------------------------------------------------|
+| `phpunit.xml`         | Test suite definition, bootstrap path                                    |
+| `tests/bootstrap.php` | Loaded before every test — stubs globals, defines constants              |
+| `tests/Stubs/`        | Test helpers: `DbTestHelper`, `RedirectException`, runtime adapter stubs |

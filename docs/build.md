@@ -16,13 +16,13 @@ See [CSS Architecture](css-architecture.md) for the full load order and naming c
 Each JS file is prepared in `DefaultThemeLayoutBuilder::build()` and rendered at the bottom of
 `public/themes/default/index.php`.
 
-| # | File | Purpose |
-| :---: | :--- | :--- |
-| 1 | jQuery 3.7.1 (CDN) | DOM manipulation |
-| 2 | `main.js` | Server time clock, castle siege countdown, PayPal calculator |
-| 3 | `events.js` | Event schedule feed (`/api/events.php`) |
-| 4 | Bootstrap 3 JS (CDN) | Dropdowns, tooltips, modals |
-| 5 | `public/assets/js/components.js` | DarkCore UI components (toasts, theme toggle, etc.) |
+| # | File                             | Purpose                                                      |
+|:-:|:---------------------------------|:-------------------------------------------------------------|
+| 1 | jQuery 3.7.1 (CDN)               | DOM manipulation                                             |
+| 2 | `main.js`                        | Server time clock, castle siege countdown, PayPal calculator |
+| 3 | `events.js`                      | Event schedule feed (`/api/events.php`)                      |
+| 4 | Bootstrap 3 JS (CDN)             | Dropdowns, tooltips, modals                                  |
+| 5 | `public/assets/js/components.js` | DarkCore UI components (toasts, theme toggle, etc.)          |
 
 ## Cache busting
 

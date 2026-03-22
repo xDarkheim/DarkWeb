@@ -15,25 +15,25 @@ Sub-page routes are registered in `config/routes.subpages.php` (`SubpageRouteReg
 
 ## Current matrix (v1)
 
-| Page | Status | Controller |
-|---|---|---|
-| castlesiege | migrated | `Darkheim\\Application\\Page\\CastleSiegeController` |
-| contact | migrated | `Darkheim\\Application\\Page\\ContactController` |
-| donation | migrated | `Darkheim\\Application\\Page\\DonationController` |
-| downloads | migrated | `Darkheim\\Application\\Page\\DownloadsController` |
+| Page           | Status   | Controller                                              |
+|----------------|----------|---------------------------------------------------------|
+| castlesiege    | migrated | `Darkheim\\Application\\Page\\CastleSiegeController`    |
+| contact        | migrated | `Darkheim\\Application\\Page\\ContactController`        |
+| donation       | migrated | `Darkheim\\Application\\Page\\DonationController`       |
+| downloads      | migrated | `Darkheim\\Application\\Page\\DownloadsController`      |
 | forgotpassword | migrated | `Darkheim\\Application\\Page\\ForgotPasswordController` |
-| home | migrated | `Darkheim\\Application\\Page\\HomeController` |
-| info | migrated | `Darkheim\\Application\\Page\\InfoController` |
-| login | migrated | `Darkheim\\Application\\Page\\LoginController` |
-| logout | migrated | `Darkheim\\Application\\Page\\LogoutController` |
-| news | migrated | `Darkheim\\Application\\Page\\NewsController` |
-| privacy | migrated | `Darkheim\\Application\\Page\\PrivacyController` |
-| rankings | migrated | `Darkheim\\Application\\Page\\RankingsController` |
-| refunds | migrated | `Darkheim\\Application\\Page\\RefundsController` |
-| register | migrated | `Darkheim\\Application\\Page\\RegisterController` |
-| tos | migrated | `Darkheim\\Application\\Page\\TosController` |
-| usercp | migrated | `Darkheim\\Application\\Page\\UsercpController` |
-| verifyemail | migrated | `Darkheim\\Application\\Page\\VerifyEmailController` |
+| home           | migrated | `Darkheim\\Application\\Page\\HomeController`           |
+| info           | migrated | `Darkheim\\Application\\Page\\InfoController`           |
+| login          | migrated | `Darkheim\\Application\\Page\\LoginController`          |
+| logout         | migrated | `Darkheim\\Application\\Page\\LogoutController`         |
+| news           | migrated | `Darkheim\\Application\\Page\\NewsController`           |
+| privacy        | migrated | `Darkheim\\Application\\Page\\PrivacyController`        |
+| rankings       | migrated | `Darkheim\\Application\\Page\\RankingsController`       |
+| refunds        | migrated | `Darkheim\\Application\\Page\\RefundsController`        |
+| register       | migrated | `Darkheim\\Application\\Page\\RegisterController`       |
+| tos            | migrated | `Darkheim\\Application\\Page\\TosController`            |
+| usercp         | migrated | `Darkheim\\Application\\Page\\UsercpController`         |
+| verifyemail    | migrated | `Darkheim\\Application\\Page\\VerifyEmailController`    |
 
 ## Update rules
 
