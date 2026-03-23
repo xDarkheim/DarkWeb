@@ -9,7 +9,9 @@ use Darkheim\Application\Auth\SessionManager;
 use Darkheim\Application\CastleSiege\CastleSiege;
 use Darkheim\Application\Game\GameHelper;
 use Darkheim\Application\Language\Translator;
+use Darkheim\Application\News\NewsRepository;
 use Darkheim\Application\Profile\ProfileRenderer;
+use Darkheim\Application\Rankings\RankingRepository;
 use Darkheim\Domain\Validator;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Cache\CacheRepository;
@@ -70,6 +72,7 @@ final class DefaultThemeLayoutBuilder
             'mainJsUrl'              => $this->versionedUrl(__PATH_THEME_JS__, __PATH_THEME_ROOT__ . 'js/main.js'),
             'eventsJsUrl'            => $this->versionedUrl(__PATH_THEME_JS__, __PATH_THEME_ROOT__ . 'js/events.js'),
             'componentsJsUrl'        => $this->versionedUrl(__PATH_ASSETS_JS__, __PUBLIC_DIR__ . 'assets/js/components.js'),
+            'widgetData'             => $this->widgetData($currentPage, $currentSubpage),
         ];
     }
 
@@ -397,6 +400,264 @@ final class DefaultThemeLayoutBuilder
         $html .= '</ul>';
 
         return $html;
+    }
+
+    /**
+     * Ranking widget data for the darkheim theme home page and sidebar.
+     * Follows the same pattern as sidebarData(): all data prepared here,
+     * templates stay echo-only.
+     *
+     * @return array{topPlayers:array<int,array<string,mixed>>,topGuilds:array<int,array<string,mixed>>,topGens:array<int,array<string,mixed>>,sidebarTopResets:array<int,array<string,mixed>>,newsItems:array<int,array<string,string>>,usercpSidebar:array<string,mixed>}
+     */
+    private function widgetData(string $currentPage, string $currentSubpage): array
+    {
+        BootstrapContext::loadModuleConfig('rankings');
+
+        $showCountry        = (bool) BootstrapContext::moduleValue('show_country_flags');
+        $repo               = new RankingRepository(new CacheRepository(__PATH_CACHE__));
+        $characterCountries = $showCountry ? $repo->loadCharacterCountries() : [];
+        if ($characterCountries === []) {
+            $showCountry = false;
+        }
+
+        return [
+            'topPlayers'       => $this->buildWidgetTopPlayers($repo, $showCountry, $characterCountries),
+            'topGuilds'        => $this->buildWidgetTopGuilds($repo),
+            'topGens'          => $this->buildWidgetTopGens($repo, $showCountry, $characterCountries),
+            'sidebarTopResets' => $this->buildWidgetSidebarResets($repo, $showCountry, $characterCountries),
+            'newsItems'        => $this->buildNewsItems(),
+            'usercpSidebar'    => $this->buildUsercpSidebarData($currentPage, $currentSubpage),
+        ];
+    }
+
+    /**
+     * Latest news titles for the home-page news widget.
+     *
+     * @return array<int,array{title:string,url:string,date:string}>
+     */
+    private function buildNewsItems(): array
+    {
+        $newsRepo = new NewsRepository(
+            new CacheRepository(__PATH_CACHE__),
+            defined('__PATH_NEWS_CACHE__') ? __PATH_NEWS_CACHE__ : '',
+        );
+
+        $language = (BootstrapContext::cmsValue('language_switch_active', true) && isset($_SESSION['language_display']))
+            ? (string) $_SESSION['language_display']
+            : '';
+
+        $result = [];
+        foreach (array_slice($newsRepo->findAll(), 0, 10) as $item) {
+            $result[] = [
+                'title' => $item->titleForLanguage($language),
+                'url'   => $item->url(__BASE_URL__),
+                'date'  => date('m/d/Y', $item->date),
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Builds structured sidebar data for the darkheim UserCP.
+     * Maps icon filenames from usercp-menu.json → Bootstrap Icon classes.
+     *
+     * @return array<string,mixed>
+     */
+    private function buildUsercpSidebarData(string $currentPage, string $currentSubpage): array
+    {
+        $iconMap = [
+            'account.png'  => 'bi-person-circle',
+            'reset.png'    => 'bi-arrow-repeat',
+            'unstick.png'  => 'bi-geo-alt-fill',
+            'clearpk.png'  => 'bi-shield-x',
+            'fixstats.png' => 'bi-arrow-clockwise',
+            'addstats.png' => 'bi-plus-circle-fill',
+            'clearst.png'  => 'bi-layers',
+            'vote.png'     => 'bi-star-fill',
+            'donate.png'   => 'bi-currency-dollar',
+            'zen.png'      => 'bi-coin',
+        ];
+
+        $menuConfig = BootstrapContext::configProvider()?->config('usercp') ?? [];
+        $isLoggedIn = $this->isLoggedInStrict();
+        $username   = $isLoggedIn ? (string) ($_SESSION['username'] ?? '') : '';
+
+        $items = [];
+        foreach ((array) $menuConfig as $element) {
+            if (! is_array($element) || empty($element['active'])) {
+                continue;
+            }
+            $link = (string) ($element['link'] ?? '');
+            // My Account has its own fixed slot in the sidebar template
+            if ($link === 'usercp/myaccount') {
+                continue;
+            }
+            if (! $this->isVisibleForCurrentUser((string) ($element['visibility'] ?? ''))) {
+                continue;
+            }
+
+            $href      = ((string) ($element['type'] ?? '') === 'internal') ? __BASE_URL__ . $link : $link;
+            $iconClass = $iconMap[(string) ($element['icon'] ?? '')] ?? 'bi-circle';
+            $title     = Translator::phrase((string) ($element['phrase'] ?? ''));
+
+            // Active: subpage matches the slug after 'usercp/'
+            $subpageSlug = str_starts_with($link, 'usercp/') ? substr($link, strlen('usercp/')) : '';
+            $isActive    = $currentPage === 'usercp' && $subpageSlug !== '' && $currentSubpage === $subpageSlug;
+
+            $items[] = [
+                'href'      => $href,
+                'iconClass' => $iconClass,
+                'title'     => $title,
+                'active'    => $isActive,
+                'newTab'    => ! empty($element['newtab']),
+            ];
+        }
+
+        return [
+            'username'        => $username,
+            'menuTitle'       => Translator::phrase('usercp_menu_title'),
+            'dashboardActive' => $currentPage === 'usercp' && $currentSubpage === '',
+            'dashboardLabel'  => Translator::phrase('module_titles_txt_3'),
+            'myAccountActive' => $currentPage === 'usercp' && $currentSubpage === 'myaccount',
+            'myAccountLabel'  => Translator::phrase('usercp_menu_txt_1'),
+            'items'           => $items,
+            'logoutLabel'     => Translator::phrase('menu_txt_6'),
+        ];
+    }
+
+    /**
+     * @param  array<string,string>  $characterCountries
+     * @return array<int,array<string,mixed>>
+     */
+    private function buildWidgetTopPlayers(RankingRepository $repo, bool $showCountry, array $characterCountries): array
+    {
+        $cache = $repo->load('rankings_resets.cache');
+        if ($cache === null) {
+            return [];
+        }
+
+        $result   = [];
+        $position = 1;
+        foreach ($cache->entries as $entry) {
+            if ($position > 7) {
+                break;
+            }
+            if (! isset($entry[0], $entry[1], $entry[2], $entry[3])) {
+                continue;
+            }
+            $name     = (string) $entry[0];
+            $result[] = [
+                'position'       => $position,
+                'countryFlagUrl' => GeoIpService::flagUrl($showCountry ? ($characterCountries[$name] ?? 'default') : 'default'),
+                'profileHtml'    => ProfileRenderer::player($name),
+                'level'          => (int) $entry[3],
+                'resets'         => (int) $entry[2],
+            ];
+            $position++;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array<int,array<string,mixed>>
+     */
+    private function buildWidgetTopGuilds(RankingRepository $repo): array
+    {
+        $cache = $repo->load('rankings_guilds.cache');
+        if ($cache === null) {
+            return [];
+        }
+
+        $multiplier = (int) BootstrapContext::moduleValue('guild_score_formula') === 1
+            ? 1
+            : (int) BootstrapContext::moduleValue('guild_score_multiplier');
+
+        $result   = [];
+        $position = 1;
+        foreach ($cache->entries as $entry) {
+            if ($position > 7) {
+                break;
+            }
+            if (! isset($entry[0], $entry[1], $entry[2], $entry[3])) {
+                continue;
+            }
+            $result[] = [
+                'position'  => $position,
+                'logoHtml'  => GameHelper::guildLogo((string) $entry[3], 20),
+                'guildHtml' => ProfileRenderer::guild((string) $entry[0]),
+                'score'     => number_format((int) floor((float) $entry[2] * $multiplier)),
+            ];
+            $position++;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  array<string,string>  $characterCountries
+     * @return array<int,array<string,mixed>>
+     */
+    private function buildWidgetTopGens(RankingRepository $repo, bool $showCountry, array $characterCountries): array
+    {
+        $cache = $repo->load('rankings_gens.cache');
+        if ($cache === null) {
+            return [];
+        }
+
+        $result   = [];
+        $position = 1;
+        foreach ($cache->entries as $entry) {
+            if ($position > 7) {
+                break;
+            }
+            if (! isset($entry[0], $entry[1], $entry[2], $entry[3])) {
+                continue;
+            }
+            $name     = (string) $entry[0];
+            $result[] = [
+                'position'       => $position,
+                'countryFlagUrl' => GeoIpService::flagUrl($showCountry ? ($characterCountries[$name] ?? 'default') : 'default'),
+                'profileHtml'    => ProfileRenderer::player($name),
+                'contribution'   => (int) $entry[2],
+                'gensFamily'     => (int) $entry[1] === 1 ? 'Duprian' : 'Vantarion',
+            ];
+            $position++;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  array<string,string>  $characterCountries
+     * @return array<int,array<string,mixed>>
+     */
+    private function buildWidgetSidebarResets(RankingRepository $repo, bool $showCountry, array $characterCountries): array
+    {
+        $cache = $repo->load('rankings_resets.cache');
+        if ($cache === null) {
+            return [];
+        }
+
+        $result   = [];
+        $position = 1;
+        foreach ($cache->entries as $entry) {
+            if ($position > 5) {
+                break;
+            }
+            if (! isset($entry[0], $entry[1], $entry[2])) {
+                continue;
+            }
+            $result[] = [
+                'classAvatarUrl' => GameHelper::playerClassAvatar((int) $entry[1], false),
+                'profileHtml'    => ProfileRenderer::player((string) $entry[0]),
+                'resets'         => (int) $entry[2],
+            ];
+            $position++;
+        }
+
+        return $result;
     }
 
     private function versionedUrl(string $publicBase, string $absolutePath, ?string $fileName = null): string
