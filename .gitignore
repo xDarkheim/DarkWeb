@@ -8,6 +8,7 @@
 Thumbs.db
 
 # Darkheim CMS specific
+.php-cs-fixer.cache
 var/cache/*
 !var/cache/.htaccess
 var/logs/*
