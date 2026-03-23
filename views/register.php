@@ -1,36 +1,39 @@
-<div class="page-title"><span><?php echo \Darkheim\Application\Language\Translator::phrase('module_titles_txt_1', true); ?></span></div>
+<div class="page-title"><span><?php
+        use Darkheim\Application\Language\Translator;
+
+echo Translator::phrase('module_titles_txt_1', true); ?></span></div>
 
 <div class="auth-wrap">
     <div class="auth-card">
         <div class="auth-header">
             <div class="auth-header-icon">⚔️</div>
-            <div class="auth-header-title"><?php echo \Darkheim\Application\Language\Translator::phrase('module_titles_txt_1', true); ?></div>
+            <div class="auth-header-title"><?php echo Translator::phrase('module_titles_txt_1', true); ?></div>
             <div class="auth-header-sub">Create your account and enter the world of MU</div>
         </div>
 
         <form action="" method="post" class="auth-form">
             <div class="auth-field">
-                <label for="darkheimRegistration1"><?php echo \Darkheim\Application\Language\Translator::phrase('register_txt_1', true); ?></label>
+                <label for="darkheimRegistration1"><?php echo Translator::phrase('register_txt_1', true); ?></label>
                 <input type="text" id="darkheimRegistration1" name="darkheimRegister_user" required autocomplete="username">
-                <span class="auth-hint"><?php echo \Darkheim\Application\Language\Translator::phraseFmt('register_txt_6', [$userMinLen, $userMaxLen]); ?></span>
+                <span class="auth-hint"><?php echo Translator::phraseFmt('register_txt_6', [$userMinLen, $userMaxLen]); ?></span>
             </div>
 
             <div class="auth-field">
-                <label for="darkheimRegistration2"><?php echo \Darkheim\Application\Language\Translator::phrase('register_txt_2', true); ?></label>
+                <label for="darkheimRegistration2"><?php echo Translator::phrase('register_txt_2', true); ?></label>
                 <input type="password" id="darkheimRegistration2" name="darkheimRegister_pwd" required autocomplete="new-password">
-                <span class="auth-hint"><?php echo \Darkheim\Application\Language\Translator::phraseFmt('register_txt_7', [$pwdMinLen, $pwdMaxLen]); ?></span>
+                <span class="auth-hint"><?php echo Translator::phraseFmt('register_txt_7', [$pwdMinLen, $pwdMaxLen]); ?></span>
             </div>
 
             <div class="auth-field">
-                <label for="darkheimRegistration3"><?php echo \Darkheim\Application\Language\Translator::phrase('register_txt_3', true); ?></label>
+                <label for="darkheimRegistration3"><?php echo Translator::phrase('register_txt_3', true); ?></label>
                 <input type="password" id="darkheimRegistration3" name="darkheimRegister_pwdc" required autocomplete="new-password">
-                <span class="auth-hint"><?php echo \Darkheim\Application\Language\Translator::phrase('register_txt_8', true); ?></span>
+                <span class="auth-hint"><?php echo Translator::phrase('register_txt_8', true); ?></span>
             </div>
 
             <div class="auth-field">
-                <label for="darkheimRegistration4"><?php echo \Darkheim\Application\Language\Translator::phrase('register_txt_4', true); ?></label>
+                <label for="darkheimRegistration4"><?php echo Translator::phrase('register_txt_4', true); ?></label>
                 <input type="email" id="darkheimRegistration4" name="darkheimRegister_email" required autocomplete="email">
-                <span class="auth-hint"><?php echo \Darkheim\Application\Language\Translator::phrase('register_txt_9', true); ?></span>
+                <span class="auth-hint"><?php echo Translator::phrase('register_txt_9', true); ?></span>
             </div>
 
             <?php if ($recaptchaEnabled): ?>
@@ -38,11 +41,43 @@
             <script src="https://www.google.com/recaptcha/api.js"></script>
             <?php endif; ?>
 
-            <div class="auth-tos"><?php echo \Darkheim\Application\Language\Translator::phraseFmt('register_txt_10', [$tosUrl]); ?></div>
-            <button type="submit" name="darkheimRegister_submit" value="submit" class="auth-btn"><?php echo \Darkheim\Application\Language\Translator::phrase('register_txt_5', true); ?></button>
+            <div class="auth-tos"><?php echo Translator::phraseFmt('register_txt_10', [$tosUrl]); ?></div>
+            <button type="submit" name="darkheimRegister_submit" value="submit" class="auth-btn"><?php echo Translator::phrase('register_txt_5', true); ?></button>
         </form>
 
-        <div class="auth-footer">Already have an account? <a href="<?php echo $loginUrl; ?>"><?php echo \Darkheim\Application\Language\Translator::phrase('menu_txt_4', true); ?></a></div>
+        <div class="auth-footer">Already have an account? <a href="<?php echo $loginUrl; ?>"><?php echo Translator::phrase('menu_txt_4', true); ?></a></div>
+    </div>
+
+    <div class="auth-security">
+        <div class="auth-security-title">
+            <span class="auth-security-icon">🛡️</span>
+            Security Notice
+        </div>
+        <ul class="auth-security-list">
+            <li>
+                <span class="auth-sec-bullet">⚠️</span>
+                <span>The administration will <strong>never</strong> ask for your password after registration.</span>
+            </li>
+            <li>
+                <span class="auth-sec-bullet">🚫</span>
+                <span>Do not use passwords from other games, services or email accounts.</span>
+            </li>
+            <li>
+                <span class="auth-sec-bullet">📧</span>
+                <span>Use a valid email address — it is required to recover your account if access is lost.</span>
+            </li>
+            <li>
+                <span class="auth-sec-bullet">🔗</span>
+                <span>Only register on the official website. Fake sites steal your account data.</span>
+            </li>
+            <li>
+                <span class="auth-sec-bullet">🔒</span>
+                <span>Choose a strong, unique password with letters, numbers and special characters.</span>
+            </li>
+        </ul>
+        <div class="auth-security-footer">
+            Your account security is <strong>your responsibility</strong>. Keep your credentials private at all times.
+        </div>
     </div>
 </div>
 

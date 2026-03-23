@@ -1,29 +1,65 @@
-<div class="page-title"><span><?php echo \Darkheim\Application\Language\Translator::phrase('module_titles_txt_2', true); ?></span></div>
+<div class="page-title"><span><?php
+        use Darkheim\Application\Language\Translator;
+
+echo Translator::phrase('module_titles_txt_2', true); ?></span></div>
 
 <div class="auth-wrap">
     <div class="auth-card">
         <div class="auth-header">
             <div class="auth-header-icon">🔑</div>
-            <div class="auth-header-title"><?php echo \Darkheim\Application\Language\Translator::phrase('module_titles_txt_2', true); ?></div>
+            <div class="auth-header-title"><?php echo Translator::phrase('module_titles_txt_2', true); ?></div>
             <div class="auth-header-sub">Enter your credentials to access your account</div>
         </div>
 
         <form action="" method="post" class="auth-form">
             <div class="auth-field">
-                <label for="darkheimLogin1"><?php echo \Darkheim\Application\Language\Translator::phrase('login_txt_1', true); ?></label>
+                <label for="darkheimLogin1"><?php echo Translator::phrase('login_txt_1', true); ?></label>
                 <input type="text" id="darkheimLogin1" name="darkheimLogin_user" required autocomplete="username">
             </div>
 
             <div class="auth-field">
-                <label for="darkheimLogin2"><?php echo \Darkheim\Application\Language\Translator::phrase('login_txt_2', true); ?></label>
+                <label for="darkheimLogin2"><?php echo Translator::phrase('login_txt_2', true); ?></label>
                 <input type="password" id="darkheimLogin2" name="darkheimLogin_pwd" required autocomplete="current-password">
-                <span class="auth-hint"><a href="<?php echo $forgotPassUrl; ?>"><?php echo \Darkheim\Application\Language\Translator::phrase('login_txt_4', true); ?></a></span>
+                <span class="auth-hint"><a href="<?php echo $forgotPassUrl; ?>"><?php echo Translator::phrase('login_txt_4', true); ?></a></span>
             </div>
 
-            <button type="submit" name="darkheimLogin_submit" value="submit" class="auth-btn"><?php echo \Darkheim\Application\Language\Translator::phrase('login_txt_3', true); ?></button>
+            <button type="submit" name="darkheimLogin_submit" value="submit" class="auth-btn"><?php echo Translator::phrase('login_txt_3', true); ?></button>
         </form>
 
-        <div class="auth-footer">Don't have an account? <a href="<?php echo $registerUrl; ?>"><?php echo \Darkheim\Application\Language\Translator::phrase('menu_txt_3', true); ?></a></div>
+        <div class="auth-footer">Don't have an account? <a href="<?php echo $registerUrl; ?>"><?php echo Translator::phrase('menu_txt_3', true); ?></a></div>
     </div>
+
+    <div class="auth-security">
+        <div class="auth-security-title">
+            <span class="auth-security-icon">🛡️</span>
+            Security Notice
+        </div>
+        <ul class="auth-security-list">
+            <li>
+                <span class="auth-sec-bullet">⚠️</span>
+                <span>The administration will <strong>never</strong> ask for your password under any circumstances.</span>
+            </li>
+            <li>
+                <span class="auth-sec-bullet">🚫</span>
+                <span>Never share your password with anyone — including players claiming to be staff or GMs.</span>
+            </li>
+            <li>
+                <span class="auth-sec-bullet">🔗</span>
+                <span>Always make sure you are on the official website before entering your credentials.</span>
+            </li>
+            <li>
+                <span class="auth-sec-bullet">📧</span>
+                <span>We will never ask for your account details via Discord, in-game chat or email.</span>
+            </li>
+            <li>
+                <span class="auth-sec-bullet">🔒</span>
+                <span>Use a unique password that you do not use on any other website or service.</span>
+            </li>
+        </ul>
+        <div class="auth-security-footer">
+            If someone asked for your password, <strong>report it immediately</strong> via our support channels.
+        </div>
+    </div>
+
 </div>
 
