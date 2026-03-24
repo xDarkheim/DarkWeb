@@ -24,7 +24,7 @@
 | **Frontend** | Bootstrap 3, Vanilla JS, fully mobile responsive         |
 | **Runtime**  | Docker + docker compose                                  |
 
-> **Emulator compatibility:** X-Team, MuEmu, Louis, Darkheim Emulator.
+> **Emulator compatibility:** X-Team, MuEmu, Louis.
 > IGCN, zTeam, OpenMU and other emulators are not yet supported.
 
 ---
