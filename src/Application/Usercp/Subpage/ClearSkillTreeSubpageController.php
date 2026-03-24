@@ -9,9 +9,18 @@ use Darkheim\Application\Shared\Language\Translator;
 
 final class ClearSkillTreeSubpageController extends AbstractCharacterActionTableSubpageController
 {
-    protected function pageTitle(): string { return Translator::phrase('module_titles_txt_19'); }
-    protected function cardTitle(): string { return Translator::phrase('module_titles_txt_19'); }
-    protected function cardIconClass(): string { return 'bi bi-lightning-fill'; }
+    protected function pageTitle(): string
+    {
+        return Translator::phrase('module_titles_txt_19');
+    }
+    protected function cardTitle(): string
+    {
+        return Translator::phrase('module_titles_txt_19');
+    }
+    protected function cardIconClass(): string
+    {
+        return 'bi bi-lightning-fill';
+    }
 
     protected function tableHeaders(): array
     {
@@ -20,15 +29,15 @@ final class ClearSkillTreeSubpageController extends AbstractCharacterActionTable
 
     protected function buildRow(Character $characterService, string $characterName): ?array
     {
-        $data = $characterService->CharacterData($characterName);
+        $data   = $characterService->CharacterData($characterName);
         $mlData = $characterService->getMasterLevelInfo($characterName);
-        if (!is_array($data) || !is_array($mlData)) {
+        if (! is_array($data) || ! is_array($mlData)) {
             return null;
         }
 
         return [
             'character' => (string) $data[_CLMN_CHR_NAME_],
-            'cells' => [
+            'cells'     => [
                 $characterService->GenerateCharacterClassAvatar((int) $data[_CLMN_CHR_CLASS_]),
                 htmlspecialchars((string) $data[_CLMN_CHR_NAME_], ENT_QUOTES, 'UTF-8'),
                 number_format((float) ($mlData[_CLMN_ML_LVL_] ?? 0)),
@@ -62,4 +71,3 @@ final class ClearSkillTreeSubpageController extends AbstractCharacterActionTable
         return $lines;
     }
 }
-

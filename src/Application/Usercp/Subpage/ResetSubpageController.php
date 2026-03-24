@@ -9,9 +9,18 @@ use Darkheim\Application\Shared\Language\Translator;
 
 final class ResetSubpageController extends AbstractCharacterActionTableSubpageController
 {
-    protected function pageTitle(): string { return Translator::phrase('module_titles_txt_12'); }
-    protected function cardTitle(): string { return Translator::phrase('module_titles_txt_12'); }
-    protected function cardIconClass(): string { return 'bi bi-person-dash-fill'; }
+    protected function pageTitle(): string
+    {
+        return Translator::phrase('module_titles_txt_12');
+    }
+    protected function cardTitle(): string
+    {
+        return Translator::phrase('module_titles_txt_12');
+    }
+    protected function cardIconClass(): string
+    {
+        return 'bi bi-person-dash-fill';
+    }
 
     protected function tableHeaders(): array
     {
@@ -21,13 +30,13 @@ final class ResetSubpageController extends AbstractCharacterActionTableSubpageCo
     protected function buildRow(Character $characterService, string $characterName): ?array
     {
         $data = $characterService->CharacterData($characterName);
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             return null;
         }
 
         return [
             'character' => (string) $data[_CLMN_CHR_NAME_],
-            'cells' => [
+            'cells'     => [
                 $characterService->GenerateCharacterClassAvatar((int) $data[_CLMN_CHR_CLASS_]),
                 htmlspecialchars((string) $data[_CLMN_CHR_NAME_], ENT_QUOTES, 'UTF-8'),
                 number_format((float) $data[_CLMN_CHR_LVL_]),
@@ -70,4 +79,3 @@ final class ResetSubpageController extends AbstractCharacterActionTableSubpageCo
         return $lines;
     }
 }
-

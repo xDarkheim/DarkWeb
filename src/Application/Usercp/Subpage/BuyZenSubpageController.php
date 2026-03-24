@@ -23,26 +23,26 @@ final class BuyZenSubpageController
 
     public function render(): void
     {
-        if (!\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+        if (! \Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
             \Darkheim\Infrastructure\Http\Redirector::go(1, 'login');
             return;
         }
 
         try {
-            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+            if (! \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
                 throw new \Exception(Translator::phrase('error_47'));
             }
 
-            $characterService = new Character();
+            $characterService  = new Character();
             $accountCharacters = $characterService->AccountCharacter($_SESSION['username']);
-            if (!is_array($accountCharacters)) {
+            if (! is_array($accountCharacters)) {
                 throw new \Exception(Translator::phrase('error_46'));
             }
 
-            $maxZen = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_zen');
+            $maxZen        = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('max_zen');
             $exchangeRatio = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('exchange_ratio');
             $incrementRate = (int) \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('increment_rate');
-            $buyOptions = $this->buildBuyOptions($maxZen, $exchangeRatio, $incrementRate);
+            $buyOptions    = $this->buildBuyOptions($maxZen, $exchangeRatio, $incrementRate);
 
             if (isset($_POST['submit'], $_POST['character'], $_POST['credits'])) {
                 try {
@@ -53,13 +53,13 @@ final class BuyZenSubpageController
             }
 
             $this->view->render('subpages/usercp/buyzen', [
-                'pageTitle' => Translator::phrase('module_titles_txt_28'),
-                'cardTitle' => Translator::phrase('module_titles_txt_28'),
+                'pageTitle'        => Translator::phrase('module_titles_txt_28'),
+                'cardTitle'        => Translator::phrase('module_titles_txt_28'),
                 'characterOptions' => array_map(
-                    static fn (string $characterName): array => ['value' => $characterName, 'label' => $characterName],
-                    $accountCharacters
+                    static fn(string $characterName): array => ['value' => $characterName, 'label' => $characterName],
+                    $accountCharacters,
                 ),
-                'buyOptions' => $buyOptions,
+                'buyOptions'  => $buyOptions,
                 'submitLabel' => Translator::phrase('buyzen_txt_5'),
             ]);
         } catch (\Exception $ex) {
@@ -77,9 +77,9 @@ final class BuyZenSubpageController
         }
 
         $options = [];
-        $limit = (int) floor($maxZen / $incrementRate);
+        $limit   = (int) floor($maxZen / $incrementRate);
         for ($multiplier = 1; $multiplier <= $limit; $multiplier++) {
-            $zenAmount = $multiplier * $incrementRate;
+            $zenAmount    = $multiplier * $incrementRate;
             $creditAmount = (int) ceil($zenAmount / $exchangeRatio);
             if ($zenAmount > $maxZen) {
                 continue;
@@ -87,8 +87,8 @@ final class BuyZenSubpageController
 
             $options[] = [
                 'credits' => $creditAmount,
-                'zen' => $zenAmount,
-                'label' => number_format($zenAmount) . ' Zen — ' . $creditAmount . ' ' . Translator::phrase('buyzen_txt_6'),
+                'zen'     => $zenAmount,
+                'label'   => number_format($zenAmount) . ' Zen — ' . $creditAmount . ' ' . Translator::phrase('buyzen_txt_6'),
             ];
         }
 
@@ -112,27 +112,27 @@ final class BuyZenSubpageController
         }
 
         $creditInput = (string) ($_POST['credits'] ?? '');
-        if (!Validator::UnsignedNumber($creditInput)) {
+        if (! Validator::UnsignedNumber($creditInput)) {
             throw new \Exception(Translator::phrase('error_25'));
         }
 
-        $credits = (int) $creditInput;
+        $credits        = (int) $creditInput;
         $allowedCredits = array_column($buyOptions, 'credits');
-        if (!in_array($credits, $allowedCredits, true)) {
+        if (! in_array($credits, $allowedCredits, true)) {
             throw new \Exception(Translator::phrase('error_24'));
         }
 
         $characterName = (string) ($_POST['character'] ?? '');
-        $zen = $credits * $exchangeRatio;
+        $zen           = $credits * $exchangeRatio;
         if ($zen > $maxZen) {
             throw new \Exception(Translator::phrase('error_25'));
         }
-        if (!in_array($characterName, $accountCharacters, true)) {
+        if (! in_array($characterName, $accountCharacters, true)) {
             throw new \Exception(Translator::phrase('error_24'));
         }
 
         $characterData = $characterService->CharacterData($characterName);
-        if (!is_array($characterData)) {
+        if (! is_array($characterData)) {
             throw new \Exception(Translator::phrase('error_25'));
         }
 
@@ -162,11 +162,10 @@ final class BuyZenSubpageController
         $db = Connection::Database('MuOnline');
         $db->query(
             'UPDATE ' . _TBL_CHR_ . ' SET ' . _CLMN_CHR_ZEN_ . ' = ' . _CLMN_CHR_ZEN_ . ' + ? WHERE ' . _CLMN_CHR_NAME_ . ' = ?',
-            [$zen, $characterData[_CLMN_CHR_NAME_]]
+            [$zen, $characterData[_CLMN_CHR_NAME_]],
         );
 
         \Darkheim\Application\Shared\UI\MessageRenderer::toast('success', Translator::phrase('success_21'));
         \Darkheim\Application\Shared\UI\MessageRenderer::toast('info', number_format($zen) . Translator::phrase('buyzen_txt_2') . $characterName);
     }
 }
-

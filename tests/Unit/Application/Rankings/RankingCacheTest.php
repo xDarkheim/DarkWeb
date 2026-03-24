@@ -25,4 +25,3 @@ class RankingCacheTest extends TestCase
         $this->assertSame([], $cache->entries);
     }
 }
-

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Infrastructure\Payment;
 
-use Darkheim\Infrastructure\Runtime\Native\NativePostStore;
 use Darkheim\Infrastructure\Runtime\Contracts\PostStore;
+use Darkheim\Infrastructure\Runtime\Native\NativePostStore;
 
 /**
  * PaypalIPN — verifies PayPal Instant Payment Notifications via cURL postback.

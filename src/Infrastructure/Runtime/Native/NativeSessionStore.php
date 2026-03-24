@@ -28,4 +28,3 @@ final class NativeSessionStore implements SessionStore
         $_SESSION = [];
     }
 }
-

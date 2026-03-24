@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Admincp\Controller\Dashboard;
 
-use Darkheim\Application\Admincp\Layout\AdmincpUrlGenerator;
-
 use Darkheim\Application\Account\Account;
+use Darkheim\Application\Admincp\Layout\AdmincpUrlGenerator;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 final class OnlineAccountsController

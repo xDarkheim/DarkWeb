@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Darkheim\Application\Auth;
 
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
-use Darkheim\Infrastructure\Runtime\Native\NativeSessionStore;
 use Darkheim\Infrastructure\Runtime\Contracts\SessionStore;
+use Darkheim\Infrastructure\Runtime\Native\NativeSessionStore;
 
 /**
  * Read/write interface for the CMS session state.

@@ -108,4 +108,3 @@ class AccountTest extends TestCase
         $sut->changePasswordProcess('', 'user', 'old', 'newpass1', 'newpass1');
     }
 }
-

@@ -18,4 +18,3 @@ final class JsonResponse
         echo json_encode($payload, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
     }
 }
-

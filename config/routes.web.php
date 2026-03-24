@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-use Darkheim\Application\CastleSiege\CastleSiegeController;
-use Darkheim\Application\Website\ContactController;
-use Darkheim\Application\Donation\DonationController;
-use Darkheim\Application\Website\DownloadsController;
 use Darkheim\Application\Auth\ForgotPasswordController;
-use Darkheim\Application\Website\HomeController;
-use Darkheim\Application\Website\InfoController;
 use Darkheim\Application\Auth\LoginController;
 use Darkheim\Application\Auth\LogoutController;
-use Darkheim\Application\News\NewsController;
-use Darkheim\Application\Website\PrivacyController;
-use Darkheim\Application\Rankings\RankingsController;
-use Darkheim\Application\Website\RefundsController;
 use Darkheim\Application\Auth\RegisterController;
-use Darkheim\Application\Website\TosController;
-use Darkheim\Application\Usercp\UsercpController;
 use Darkheim\Application\Auth\VerifyEmailController;
+use Darkheim\Application\CastleSiege\CastleSiegeController;
+use Darkheim\Application\Donation\DonationController;
+use Darkheim\Application\News\NewsController;
+use Darkheim\Application\Rankings\RankingsController;
+use Darkheim\Application\Usercp\UsercpController;
+use Darkheim\Application\Website\ContactController;
+use Darkheim\Application\Website\DownloadsController;
+use Darkheim\Application\Website\HomeController;
+use Darkheim\Application\Website\InfoController;
+use Darkheim\Application\Website\PrivacyController;
+use Darkheim\Application\Website\RefundsController;
+use Darkheim\Application\Website\TosController;
 
 /**
  * Web route registry.

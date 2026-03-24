@@ -20,7 +20,9 @@ class AuthServiceTest extends TestCase
 
     public function testLogoutClearsSessionAndRedirects(): void
     {
-        if (session_status() === PHP_SESSION_NONE) @session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            @session_start();
+        }
         $_SESSION = ['valid' => true, 'userid' => 1, 'username' => 'test', 'timeout' => time()];
 
         $service = new AuthService();
@@ -34,4 +36,3 @@ class AuthServiceTest extends TestCase
         $this->assertInstanceOf(SessionManager::class, $service->session());
     }
 }
-

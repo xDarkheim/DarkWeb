@@ -9,8 +9,8 @@ use Darkheim\Domain\Validation\Validator;
 use Darkheim\Infrastructure\Cache\CacheBuilder;
 use Darkheim\Infrastructure\Cache\CacheRepository;
 use Darkheim\Infrastructure\Database\Connection;
-use Darkheim\Infrastructure\Runtime\Native\NativeSessionStore;
 use Darkheim\Infrastructure\Runtime\Contracts\SessionStore;
+use Darkheim\Infrastructure\Runtime\Native\NativeSessionStore;
 
 /**
  * Plugin installation, activation, cache rebuild.

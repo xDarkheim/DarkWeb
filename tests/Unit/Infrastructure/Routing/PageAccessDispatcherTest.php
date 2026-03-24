@@ -34,9 +34,9 @@ final class PageAccessDispatcherTest extends TestCase
 
     public function testDispatchIncludesThemeEntryFileForIndexAccess(): void
     {
-        $theme = '__route_test_theme';
+        $theme    = '__route_test_theme';
         $themeDir = __PATH_THEMES__ . $theme;
-        @mkdir($themeDir, 0777, true);
+        @mkdir($themeDir, 0o777, true);
         file_put_contents($themeDir . '/index.php', "<?php \$GLOBALS['__page_access_theme_loaded'] = true;\n");
 
         $GLOBALS['__page_access_theme_loaded'] = false;
@@ -58,4 +58,3 @@ final class PageAccessDispatcherTest extends TestCase
         $this->assertTrue(true);
     }
 }
-

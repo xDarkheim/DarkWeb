@@ -14,12 +14,14 @@ class ConfigRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->dir = sys_get_temp_dir() . '/dh_config_test_' . uniqid('', true) . '/';
-        mkdir($this->dir, 0777, true);
+        mkdir($this->dir, 0o777, true);
     }
 
     protected function tearDown(): void
     {
-        foreach (glob($this->dir . '*') ?: [] as $f) @unlink($f);
+        foreach (glob($this->dir . '*') ?: [] as $f) {
+            @unlink($f);
+        }
         @rmdir($this->dir);
     }
 
@@ -56,11 +58,11 @@ class ConfigRepositoryTest extends TestCase
     {
         file_put_contents($this->dir . 'config.json', json_encode([
             'cms_installed' => true,
-            'cron_api' => true,
-            'cron_api_key' => 'secret',
+            'cron_api'      => true,
+            'cron_api_key'  => 'secret',
         ]));
 
-        $repo = new ConfigRepository($this->dir);
+        $repo   = new ConfigRepository($this->dir);
         $result = $repo->loadCmsOrFail();
 
         $this->assertArrayNotHasKey('cron_api', $result);
@@ -98,9 +100,9 @@ class ConfigRepositoryTest extends TestCase
     {
         $repo = new ConfigRepository($this->dir);
         $repo->saveCms([
-            'cms_installed' => true,
-            'cron_api' => true,
-            'cron_api_key' => 'secret',
+            'cms_installed'    => true,
+            'cron_api'         => true,
+            'cron_api_key'     => 'secret',
             'language_default' => 'en',
         ]);
 
@@ -112,4 +114,3 @@ class ConfigRepositoryTest extends TestCase
         $this->assertSame('en', $saved['language_default']);
     }
 }
-

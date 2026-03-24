@@ -48,7 +48,7 @@ class VoteSiteRepositoryTest extends TestCase
 
     public function testFindByIdReturnsNullForEmptyId(): void
     {
-        $db  = $this->createMock(dB::class);
+        $db = $this->createMock(dB::class);
         $db->expects($this->never())->method('query_fetch_single');
         $sut = $this->make($db);
         $this->assertNull($sut->findById(''));
@@ -104,4 +104,3 @@ class VoteSiteRepositoryTest extends TestCase
         $this->assertNull($sut->getTopVotes());
     }
 }
-

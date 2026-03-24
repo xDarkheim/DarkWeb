@@ -20,17 +20,17 @@ final class VoteSubpageController
 
     public function render(): void
     {
-        if (!\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+        if (! \Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
             \Darkheim\Infrastructure\Http\Redirector::go(1, 'login');
             return;
         }
 
         try {
-            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+            if (! \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
                 throw new \Exception(Translator::phrase('error_47'));
             }
 
-            $vote = new Vote();
+            $vote               = new Vote();
             $voteSiteRepository = new VoteSiteRepository();
 
             if (isset($_POST['submit'])) {
@@ -44,11 +44,11 @@ final class VoteSubpageController
                 }
             }
 
-            $siteRows = [];
+            $siteRows  = [];
             $voteSites = $voteSiteRepository->findAll();
             if (is_array($voteSites)) {
                 foreach ($voteSites as $site) {
-                    if (!is_array($site)) {
+                    if (! is_array($site)) {
                         continue;
                     }
                     $siteRows[] = [
@@ -60,16 +60,15 @@ final class VoteSubpageController
             }
 
             $this->view->render('subpages/usercp/vote', [
-                'pageTitle'   => Translator::phrase('module_titles_txt_7'),
-                'cardTitle'   => Translator::phrase('module_titles_txt_7'),
-                'headerTitle' => Translator::phrase('vfc_txt_1'),
-                'headerReward'=> Translator::phrase('vfc_txt_2'),
-                'buttonLabel' => Translator::phrase('vfc_txt_3'),
-                'siteRows'    => $siteRows,
+                'pageTitle'    => Translator::phrase('module_titles_txt_7'),
+                'cardTitle'    => Translator::phrase('module_titles_txt_7'),
+                'headerTitle'  => Translator::phrase('vfc_txt_1'),
+                'headerReward' => Translator::phrase('vfc_txt_2'),
+                'buttonLabel'  => Translator::phrase('vfc_txt_3'),
+                'siteRows'     => $siteRows,
             ]);
         } catch (\Exception $ex) {
             \Darkheim\Application\Shared\UI\MessageRenderer::inline('error', $ex->getMessage());
         }
     }
 }
-

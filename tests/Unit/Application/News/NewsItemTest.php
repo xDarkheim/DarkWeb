@@ -14,10 +14,10 @@ class NewsItemTest extends TestCase
     protected function setUp(): void
     {
         $this->item = new NewsItem(
-            id:    42,
+            id: 42,
             title: 'Default Title',
             author: 'Admin',
-            date:   1700000000,
+            date: 1700000000,
             translations: [
                 'fr' => base64_encode('Titre Français'),
                 'de' => base64_encode(''),    // empty decode — should fall back
@@ -60,4 +60,3 @@ class NewsItemTest extends TestCase
         $this->assertSame('https://example.com/news/42/', $this->item->url('https://example.com/'));
     }
 }
-

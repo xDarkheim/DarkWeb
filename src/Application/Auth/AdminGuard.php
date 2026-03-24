@@ -34,4 +34,3 @@ final class AdminGuard
             && array_key_exists($username, $cms['admins']);
     }
 }
-

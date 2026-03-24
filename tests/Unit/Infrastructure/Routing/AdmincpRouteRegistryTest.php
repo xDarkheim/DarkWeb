@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Routing;
 
-use Darkheim\Application\Admincp\Controller\Operations\CacheManagerController;
 use Darkheim\Application\Admincp\Controller\Dashboard\HomeController;
 use Darkheim\Application\Admincp\Controller\Dashboard\NewRegistrationsController;
 use Darkheim\Application\Admincp\Controller\Dashboard\OnlineAccountsController;
+use Darkheim\Application\Admincp\Controller\Operations\CacheManagerController;
 use Darkheim\Infrastructure\Routing\Registries\AdmincpRouteRegistry;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -17,15 +17,17 @@ final class AdmincpRouteRegistryTest extends TestCase
     public function testRouteForReturnsConfiguredAdmincpEntry(): void
     {
         $routesFile = sys_get_temp_dir() . '/darkcore_admincp_registry_' . uniqid('', true) . '.php';
-        file_put_contents($routesFile, <<<'PHP'
-<?php
-return [
-    'home' => [
-        'controller' => 'Tests\\Admincp\\HomeController',
-    ],
-];
-PHP
-);
+        file_put_contents(
+            $routesFile,
+            <<<'PHP'
+                <?php
+                return [
+                    'home' => [
+                        'controller' => 'Tests\\Admincp\\HomeController',
+                    ],
+                ];
+                PHP
+        );
 
         $registry = new AdmincpRouteRegistry($routesFile);
 
@@ -60,4 +62,3 @@ PHP
         ];
     }
 }
-

@@ -39,9 +39,9 @@ final class CronExecutorTest extends TestCase
         $manager = $this->createMock(CronManager::class);
         $manager->method('getCronList')->willReturn([
             [
-                'cron_id' => '1',
+                'cron_id'       => '1',
                 'cron_file_run' => 'missing.php',
-                'cron_status' => 1,
+                'cron_status'   => 1,
                 'cron_last_run' => 0,
                 'cron_run_time' => 60,
             ],
@@ -59,9 +59,9 @@ final class CronExecutorTest extends TestCase
         $manager = $this->createMock(CronManager::class);
         $manager->method('getCronList')->willReturn([
             [
-                'cron_id' => '1',
+                'cron_id'       => '1',
                 'cron_file_run' => 'missing.php',
-                'cron_status' => 1,
+                'cron_status'   => 1,
                 'cron_last_run' => time(),
                 'cron_run_time' => 999999,
             ],
@@ -72,4 +72,3 @@ final class CronExecutorTest extends TestCase
         $this->assertSame([], $sut->execute());
     }
 }
-

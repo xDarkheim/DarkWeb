@@ -41,4 +41,3 @@ final class ModuleRouteResolverTest extends TestCase
         $this->assertSame('level', $resolved['subpage']);
     }
 }
-

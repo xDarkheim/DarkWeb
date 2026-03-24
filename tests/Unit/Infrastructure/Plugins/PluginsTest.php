@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Plugins;
 
-use Darkheim\Infrastructure\Plugins\Plugins;
 use Darkheim\Infrastructure\Database\dB;
+use Darkheim\Infrastructure\Plugins\Plugins;
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
 use Tests\Stubs\DbTestHelper;
 
 class PluginsTest extends TestCase
@@ -25,14 +24,13 @@ class PluginsTest extends TestCase
 
     private function callCheckXml(Plugins $sut, array $data): bool
     {
-        $m = new ReflectionMethod(Plugins::class, 'checkXML');
-        return $m->invoke($sut, $data);
+        return new \ReflectionMethod(Plugins::class, 'checkXML')->invoke($sut, $data);
     }
 
     public function testCheckXmlReturnsTrueForValidData(): void
     {
-        $db  = $this->createMock(dB::class);
-        $sut = $this->make($db);
+        $db   = $this->createMock(dB::class);
+        $sut  = $this->make($db);
         $data = [
             'name'          => 'TestPlugin',
             'author'        => 'Dev',
@@ -46,11 +44,11 @@ class PluginsTest extends TestCase
 
     public function testCheckXmlReturnsFalseForMissingKey(): void
     {
-        $db  = $this->createMock(dB::class);
-        $sut = $this->make($db);
+        $db   = $this->createMock(dB::class);
+        $sut  = $this->make($db);
         $data = [
-            'name'    => 'TestPlugin',
-            'author'  => 'Dev',
+            'name'   => 'TestPlugin',
+            'author' => 'Dev',
             // missing version, compatibility, folder, files
         ];
         $this->assertFalse($this->callCheckXml($sut, $data));
@@ -58,8 +56,8 @@ class PluginsTest extends TestCase
 
     public function testCheckXmlReturnsFalseForEmptyName(): void
     {
-        $db  = $this->createMock(dB::class);
-        $sut = $this->make($db);
+        $db   = $this->createMock(dB::class);
+        $sut  = $this->make($db);
         $data = [
             'name'          => '',
             'author'        => 'Dev',
@@ -75,8 +73,7 @@ class PluginsTest extends TestCase
 
     private function callCheckCompatibility(Plugins $sut, array $data): bool
     {
-        $m = new ReflectionMethod(Plugins::class, 'checkCompatibility');
-        return $m->invoke($sut, $data);
+        return new \ReflectionMethod(Plugins::class, 'checkCompatibility')->invoke($sut, $data);
     }
 
     public function testCheckCompatibilityMatchesCurrentVersion(): void
@@ -128,4 +125,3 @@ class PluginsTest extends TestCase
         $this->assertTrue($sut->uninstallPlugin(1));
     }
 }
-

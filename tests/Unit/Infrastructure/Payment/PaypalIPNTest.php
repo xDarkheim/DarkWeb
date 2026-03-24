@@ -65,4 +65,3 @@ class PaypalIPNTest extends TestCase
         $this->assertStringEndsWith('/includes/paypal/cert/cacert.pem', $certPath);
     }
 }
-

@@ -66,7 +66,6 @@ final class CacheBuilder
     /**
      * JSON-encodes $data for cache storage.
      * Pass $pretty = true to get a human-readable output (useful for debugging).
-     *
      */
     public static function encode(mixed $data, bool $pretty = false): string
     {

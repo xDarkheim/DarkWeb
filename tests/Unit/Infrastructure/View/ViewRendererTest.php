@@ -15,16 +15,16 @@ final class ViewRendererTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tmpDir   = sys_get_temp_dir() . '/darkcore_view_test_' . uniqid(
-                '',
-                true
-            );
+        $this->tmpDir = sys_get_temp_dir() . '/darkcore_view_test_' . uniqid(
+            '',
+            true,
+        );
         $this->themesDir = $this->tmpDir . '/themes/';
         $this->viewsDir  = $this->tmpDir . '/views/';
 
-        mkdir($this->themesDir . 'myTheme/views', 0777, true);
-        mkdir($this->themesDir . 'default/views',  0777, true);
-        mkdir($this->viewsDir,                      0777, true);
+        mkdir($this->themesDir . 'myTheme/views', 0o777, true);
+        mkdir($this->themesDir . 'default/views', 0o777, true);
+        mkdir($this->viewsDir, 0o777, true);
     }
 
     protected function tearDown(): void
@@ -65,9 +65,13 @@ final class ViewRendererTest extends TestCase
 
     private function rmdirRecursive(string $dir): void
     {
-        if (!is_dir($dir)) return;
+        if (! is_dir($dir)) {
+            return;
+        }
         foreach (scandir($dir) as $entry) {
-            if ($entry === '.' || $entry === '..') continue;
+            if ($entry === '.' || $entry === '..') {
+                continue;
+            }
             $path = $dir . '/' . $entry;
             is_dir($path) ? $this->rmdirRecursive($path) : unlink($path);
         }
@@ -140,10 +144,10 @@ final class ViewRendererTest extends TestCase
         $this->writeView('page', 'default-view');
         $this->writeThemeOverride('myTheme', 'page', 'myTheme-view');
 
-        mkdir($this->themesDir . 'otherTheme/views', 0777, true);
+        mkdir($this->themesDir . 'otherTheme/views', 0o777, true);
         // otherTheme has no override → falls back to views/
 
-        $outMy    = $this->capture(new ViewRenderer('myTheme',    $this->themesDir, $this->viewsDir), 'page');
+        $outMy    = $this->capture(new ViewRenderer('myTheme', $this->themesDir, $this->viewsDir), 'page');
         $outOther = $this->capture(new ViewRenderer('otherTheme', $this->themesDir, $this->viewsDir), 'page');
 
         $this->assertSame('myTheme-view', $outMy);

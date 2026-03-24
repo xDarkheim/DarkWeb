@@ -31,7 +31,7 @@ final class HandlerMigrationGateTest extends TestCase
             null,
             null,
             null,
-            null
+            null,
         );
 
         // Should hit 404 path before touching legacy include.
@@ -42,4 +42,3 @@ final class HandlerMigrationGateTest extends TestCase
         @unlink($routesPath);
     }
 }
-

@@ -17,39 +17,39 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // ── Constants ────────────────────────────────────────────────────────────────
 
 $tmpBase = sys_get_temp_dir() . '/darkheim_tests/';
-if (!is_dir($tmpBase) && !mkdir($tmpBase, 0777, true) && !is_dir($tmpBase)) {
+if (! is_dir($tmpBase) && ! mkdir($tmpBase, 0o777, true) && ! is_dir($tmpBase)) {
     throw new \RuntimeException(
-        sprintf('Directory "%s" was not created', $tmpBase)
+        sprintf('Directory "%s" was not created', $tmpBase),
     );
 }
 
-define('__PATH_CACHE__',             $tmpBase . 'cache/');
-define('__PATH_LOGS__',              $tmpBase . 'logs/');
-define('__PATH_CONFIGS__',           $tmpBase . 'config/');
-define('__PATH_MODULE_CONFIGS__',       $tmpBase . 'config/modules/');
+define('__PATH_CACHE__', $tmpBase . 'cache/');
+define('__PATH_LOGS__', $tmpBase . 'logs/');
+define('__PATH_CONFIGS__', $tmpBase . 'config/');
+define('__PATH_MODULE_CONFIGS__', $tmpBase . 'config/modules/');
 define('__PATH_MODULE_CONFIGS_USERCP__', $tmpBase . 'config/modules/usercp/');
-define('__PATH_LANGUAGES__',         $tmpBase . 'languages/');
-define('__PATH_EMAILS__',            $tmpBase . 'emails/');
-define('__PATH_CRON__',              $tmpBase . 'cron/');
-define('__PUBLIC_DIR__',             $tmpBase . 'public/');
-define('__PATH_PLUGINS__',           $tmpBase . 'plugins/');
-define('__PATH_THEMES__',            __PUBLIC_DIR__ . 'themes/');
-define('__PATH_VIEWS__',             $tmpBase . 'views/');
-define('__PATH_ADMINCP_MODULES__',   $tmpBase . 'admincp/modules/');
+define('__PATH_LANGUAGES__', $tmpBase . 'languages/');
+define('__PATH_EMAILS__', $tmpBase . 'emails/');
+define('__PATH_CRON__', $tmpBase . 'cron/');
+define('__PUBLIC_DIR__', $tmpBase . 'public/');
+define('__PATH_PLUGINS__', $tmpBase . 'plugins/');
+define('__PATH_THEMES__', __PUBLIC_DIR__ . 'themes/');
+define('__PATH_VIEWS__', $tmpBase . 'views/');
+define('__PATH_ADMINCP_MODULES__', $tmpBase . 'admincp/modules/');
 define('__PATH_PLAYER_PROFILES_CACHE__', $tmpBase . 'cache/profiles/players/');
-define('__PATH_GUILD_PROFILES_CACHE__',  $tmpBase . 'cache/profiles/guilds/');
-define('__PATH_API__',               'http://localhost:8081/api/');
-define('__PATH_ADMINCP_HOME__',      'http://localhost:8081/admincp/');
-define('__BASE_URL__',               'http://localhost:8081/');
-define('__CMS_VERSION__',            '1.1.0');
+define('__PATH_GUILD_PROFILES_CACHE__', $tmpBase . 'cache/profiles/guilds/');
+define('__PATH_API__', 'http://localhost:8081/api/');
+define('__PATH_ADMINCP_HOME__', 'http://localhost:8081/admincp/');
+define('__BASE_URL__', 'http://localhost:8081/');
+define('__CMS_VERSION__', '1.1.0');
 define('DARKHEIM_DATABASE_ERRORLOG', __PATH_LOGS__ . 'db_errors.log');
-define('DARKHEIM_PHP_ERRORLOG',      __PATH_LOGS__ . 'php_errors.log');
-define('__PATH_THEME_ROOT__',        __PATH_THEMES__ . 'default/');
-define('__PATH_THEME__',             __BASE_URL__ . 'themes/default/');
-define('__PATH_THEME_IMG__',         __PATH_THEME__ . 'img/');
-define('__PATH_THEME_CSS__',         __PATH_THEME__ . 'css/');
-define('__PATH_THEME_JS__',          __PATH_THEME__ . 'js/');
-define('__PATH_THEME_FONTS__',       __PATH_THEME__ . 'fonts/');
+define('DARKHEIM_PHP_ERRORLOG', __PATH_LOGS__ . 'php_errors.log');
+define('__PATH_THEME_ROOT__', __PATH_THEMES__ . 'default/');
+define('__PATH_THEME__', __BASE_URL__ . 'themes/default/');
+define('__PATH_THEME_IMG__', __PATH_THEME__ . 'img/');
+define('__PATH_THEME_CSS__', __PATH_THEME__ . 'css/');
+define('__PATH_THEME_JS__', __PATH_THEME__ . 'js/');
+define('__PATH_THEME_FONTS__', __PATH_THEME__ . 'fonts/');
 $themeImgFs = __PATH_THEME_ROOT__ . 'img/';
 
 foreach ([
@@ -70,9 +70,9 @@ foreach ([
     $themeImgFs,
     __PATH_LOGS__,
 ] as $dir) {
-    if (!is_dir($dir) && !mkdir($dir, 0777, true) && !is_dir($dir)) {
+    if (! is_dir($dir) && ! mkdir($dir, 0o777, true) && ! is_dir($dir)) {
         throw new \RuntimeException(
-            sprintf('Directory "%s" was not created', $dir)
+            sprintf('Directory "%s" was not created', $dir),
         );
     }
 }
@@ -85,36 +85,36 @@ require_once __DIR__ . '/../config/tables.custom.php';
 // ── Global test config (used by config() / cmsConfigs() stubs) ──────────────
 
 $GLOBALS['_TEST_CMS_CONFIG'] = [
-    'SQL_DB_HOST'               => '127.0.0.1',
-    'SQL_DB_PORT'               => '1433',
-    'SQL_DB_NAME'               => 'MuOnline',
-    'SQL_DB_USER'               => 'test',
-    'SQL_DB_PASS'               => 'test',
-    'SQL_PASSWORD_ENCRYPTION'   => 'phpmd5',
-    'SQL_SHA256_SALT'           => 'testsalt',
-    'language_default'          => 'en',
-    'language_switch_active'    => false,
-    'language_debug'            => false,
-    'error_reporting'           => false,
-    'website_theme'          => 'default',
-    'cms_installed'             => true,
-    'username_min_len'          => 4,
-    'username_max_len'          => 13,
-    'password_min_len'          => 4,
-    'password_max_len'          => 20,
-    'player_profiles'           => false,
-    'guild_profiles'            => false,
-    'plugins_system_enable'     => false,
-    'ip_block_system_enable'    => false,
-    'admins'                    => [],
-    'website_title'             => 'Test',
+    'SQL_DB_HOST'             => '127.0.0.1',
+    'SQL_DB_PORT'             => '1433',
+    'SQL_DB_NAME'             => 'MuOnline',
+    'SQL_DB_USER'             => 'test',
+    'SQL_DB_PASS'             => 'test',
+    'SQL_PASSWORD_ENCRYPTION' => 'phpmd5',
+    'SQL_SHA256_SALT'         => 'testsalt',
+    'language_default'        => 'en',
+    'language_switch_active'  => false,
+    'language_debug'          => false,
+    'error_reporting'         => false,
+    'website_theme'           => 'default',
+    'cms_installed'           => true,
+    'username_min_len'        => 4,
+    'username_max_len'        => 13,
+    'password_min_len'        => 4,
+    'password_max_len'        => 20,
+    'player_profiles'         => false,
+    'guild_profiles'          => false,
+    'plugins_system_enable'   => false,
+    'ip_block_system_enable'  => false,
+    'admins'                  => [],
+    'website_title'           => 'Test',
 ];
 
 // ── Global function stubs ────────────────────────────────────────────────────
 
 function check_value($value): bool
 {
-    return (@count((array) $value) > 0 && !@empty($value) && @isset($value)) || $value === '0';
+    return (@count((array) $value) > 0 && ! @empty($value) && @isset($value)) || $value === '0';
 }
 
 function cmsConfigs(): array
@@ -145,13 +145,17 @@ function moduleConfigData(): array
 function config(string $config_name, bool $return = false): mixed
 {
     $cfg = cmsConfigs();
-    if (!array_key_exists($config_name, $cfg)) return null;
+    if (! array_key_exists($config_name, $cfg)) {
+        return null;
+    }
     return $return ? $cfg[$config_name] : null;
 }
 
 function lang(string $phrase, bool $return = true): mixed
 {
-    if ($return) return $phrase;
+    if ($return) {
+        return $phrase;
+    }
     echo $phrase;
     return null;
 }
@@ -159,7 +163,10 @@ function lang(string $phrase, bool $return = true): mixed
 function langf(string $phrase, array $args = [], bool $print = false): mixed
 {
     $result = @vsprintf($phrase, $args) ?: $phrase;
-    if ($print) { echo $result; return null; }
+    if ($print) {
+        echo $result;
+        return null;
+    }
     return $result;
 }
 
@@ -274,14 +281,18 @@ function guildProfile(string $guildName, bool $returnLinkOnly = false): string
 
 function BuildCacheData(?array $data_array): ?string
 {
-    if (!is_array($data_array)) return null;
+    if (! is_array($data_array)) {
+        return null;
+    }
     $result = '';
     foreach ($data_array as $row) {
         $count = count($row);
-        $i = 1;
+        $i     = 1;
         foreach ($row as $data) {
             $result .= $data;
-            if ($i < $count) $result .= '¦';
+            if ($i < $count) {
+                $result .= '¦';
+            }
             $i++;
         }
         $result .= "\n";
@@ -344,4 +355,3 @@ function debug(mixed $value): void
 {
     // no-op
 }
-

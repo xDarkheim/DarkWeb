@@ -10,4 +10,3 @@ namespace Tests\Stubs;
  *   $this->expectException(RedirectException::class);
  */
 class RedirectException extends \RuntimeException {}
-

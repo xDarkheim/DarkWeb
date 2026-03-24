@@ -14,14 +14,16 @@ class JsonConfigReaderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dir    = sys_get_temp_dir() . '/dh_json_test_' . uniqid() . '/';
-        mkdir($this->dir, 0777, true);
+        $this->dir = sys_get_temp_dir() . '/dh_json_test_' . uniqid('', true) . '/';
+        mkdir($this->dir, 0o777, true);
         $this->reader = new JsonConfigReader();
     }
 
     protected function tearDown(): void
     {
-        foreach (glob($this->dir . '*') ?: [] as $f) @unlink($f);
+        foreach (glob($this->dir . '*') ?: [] as $f) {
+            @unlink($f);
+        }
         @rmdir($this->dir);
     }
 
@@ -60,4 +62,3 @@ class JsonConfigReaderTest extends TestCase
         $this->assertSame([1, 2, 3], $result);
     }
 }
-

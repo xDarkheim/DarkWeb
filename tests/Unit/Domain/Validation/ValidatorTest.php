@@ -226,4 +226,3 @@ class ValidatorTest extends TestCase
         $this->assertFalse(Validator::PasswordLength('averylongpasswordthatexceeds'));
     }
 }
-

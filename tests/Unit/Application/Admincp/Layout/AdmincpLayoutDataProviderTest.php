@@ -15,7 +15,7 @@ final class AdmincpLayoutDataProviderTest extends TestCase
         $provider = new AdmincpLayoutDataProvider();
 
         $property = new \ReflectionProperty(AdmincpLayoutDataProvider::class, 'layoutConfigFile');
-        $path = $property->getValue($provider);
+        $path     = $property->getValue($provider);
 
         $this->assertIsString($path);
         $this->assertStringEndsWith('/config/admincp-layout.php', $path);
@@ -27,33 +27,37 @@ final class AdmincpLayoutDataProviderTest extends TestCase
         $layoutFile = sys_get_temp_dir() . '/darkcore_admincp_layout_' . uniqid('', true) . '.php';
         $routesFile = sys_get_temp_dir() . '/darkcore_admincp_layout_routes_' . uniqid('', true) . '.php';
 
-        file_put_contents($layoutFile, <<<'PHP'
-<?php
-return [
-    [
-        'title' => 'Testing',
-        'icon' => 'bi-bezier',
-        'links' => [
-            ['module' => 'home', 'label' => 'Dashboard'],
-        ],
-    ],
-];
-PHP
-);
+        file_put_contents(
+            $layoutFile,
+            <<<'PHP'
+                <?php
+                return [
+                    [
+                        'title' => 'Testing',
+                        'icon' => 'bi-bezier',
+                        'links' => [
+                            ['module' => 'home', 'label' => 'Dashboard'],
+                        ],
+                    ],
+                ];
+                PHP
+        );
 
-        file_put_contents($routesFile, <<<'PHP'
-<?php
-return [
-    'home' => [
-        'controller' => 'Tests\\Fake\\HomeController',
-        'module_config' => 'home',
-    ],
-];
-PHP
-);
+        file_put_contents(
+            $routesFile,
+            <<<'PHP'
+                <?php
+                return [
+                    'home' => [
+                        'controller' => 'Tests\\Fake\\HomeController',
+                        'module_config' => 'home',
+                    ],
+                ];
+                PHP
+        );
 
         $provider = new AdmincpLayoutDataProvider($layoutFile, new AdmincpRouteRegistry($routesFile));
-        $groups = $provider->sidebarGroups();
+        $groups   = $provider->sidebarGroups();
 
         $this->assertCount(1, $groups);
         $this->assertSame('Testing', $groups[0]['title']);
@@ -72,25 +76,29 @@ PHP
         $layoutFile = sys_get_temp_dir() . '/darkcore_admincp_layout_invalid_' . uniqid('', true) . '.php';
         $routesFile = sys_get_temp_dir() . '/darkcore_admincp_layout_invalid_routes_' . uniqid('', true) . '.php';
 
-        file_put_contents($layoutFile, <<<'PHP'
-<?php
-return [
-    [
-        'title' => 'Testing',
-        'icon' => 'bi-bezier',
-        'links' => [
-            ['module' => 'missing-route', 'label' => 'Broken'],
-        ],
-    ],
-];
-PHP
-);
+        file_put_contents(
+            $layoutFile,
+            <<<'PHP'
+                <?php
+                return [
+                    [
+                        'title' => 'Testing',
+                        'icon' => 'bi-bezier',
+                        'links' => [
+                            ['module' => 'missing-route', 'label' => 'Broken'],
+                        ],
+                    ],
+                ];
+                PHP
+        );
 
-        file_put_contents($routesFile, <<<'PHP'
-<?php
-return [];
-PHP
-);
+        file_put_contents(
+            $routesFile,
+            <<<'PHP'
+                <?php
+                return [];
+                PHP
+        );
 
         $provider = new AdmincpLayoutDataProvider($layoutFile, new AdmincpRouteRegistry($routesFile));
 
@@ -102,4 +110,3 @@ PHP
         @unlink($routesFile);
     }
 }
-

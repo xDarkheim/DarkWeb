@@ -15,7 +15,7 @@ final class AdmincpConfigurationCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->baseDir = __PUBLIC_DIR__;
+        $this->baseDir              = __PUBLIC_DIR__;
         $this->existingWritablePath = '/tmp-admincp-check.txt';
         file_put_contents($this->baseDir . ltrim($this->existingWritablePath, '/'), 'ok');
     }
@@ -82,4 +82,3 @@ final class AdmincpConfigurationCheckerTest extends TestCase
         $this->assertFileExists($baseDir . 'config/admincp-layout.php');
     }
 }
-

@@ -71,7 +71,7 @@ final class EventsApiController
                     'last'     => $lastTime,
                     'next'     => $nextTime,
                     'nextF'    => date('D g:i A', strtotime($nextTime)),
-                    'offset'   => strtotime($nextTime)   - strtotime($lastTime),
+                    'offset'   => strtotime($nextTime) - strtotime($lastTime),
                     'timeleft' => strtotime($nextTime) - time(),
                 ];
             }

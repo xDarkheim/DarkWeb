@@ -15,8 +15,8 @@ final class RuntimeAdaptersTest extends TestCase
 {
     protected function setUp(): void
     {
-        $_GET = [];
-        $_POST = [];
+        $_GET     = [];
+        $_POST    = [];
         $_REQUEST = [];
         $_SESSION = [];
         unset($_SERVER['REMOTE_ADDR']);
@@ -81,4 +81,3 @@ final class RuntimeAdaptersTest extends TestCase
         $this->assertSame('127.0.0.1', $context->remoteAddress());
     }
 }
-

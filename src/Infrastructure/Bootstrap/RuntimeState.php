@@ -64,4 +64,3 @@ final class RuntimeState
         return $this->customConfig;
     }
 }
-

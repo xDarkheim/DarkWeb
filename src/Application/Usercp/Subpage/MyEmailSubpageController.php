@@ -19,13 +19,13 @@ final class MyEmailSubpageController
 
     public function render(): void
     {
-        if (!\Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
+        if (! \Darkheim\Application\Auth\SessionManager::websiteAuthenticated()) {
             \Darkheim\Infrastructure\Http\Redirector::go(1, 'login');
             return;
         }
 
         try {
-            if (!\Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
+            if (! \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('active')) {
                 throw new \Exception(Translator::phrase('error_47'));
             }
 
@@ -35,7 +35,7 @@ final class MyEmailSubpageController
                     $account->changeEmailAddress(
                         $_SESSION['userid'],
                         (string) ($_POST['darkheimEmail_newemail'] ?? ''),
-                        (string) ($_SERVER['REMOTE_ADDR'] ?? '')
+                        (string) ($_SERVER['REMOTE_ADDR'] ?? ''),
                     );
                     \Darkheim\Application\Shared\UI\MessageRenderer::toast('success', \Darkheim\Infrastructure\Bootstrap\BootstrapContext::moduleValue('require_verification') ? Translator::phrase('success_19') : Translator::phrase('success_20'));
                 } catch (\Exception $ex) {
@@ -53,4 +53,3 @@ final class MyEmailSubpageController
         }
     }
 }
-

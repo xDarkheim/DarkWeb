@@ -11,9 +11,7 @@ final class ArraySessionStore implements SessionStore
     /**
      * @param array<string, mixed> $data
      */
-    public function __construct(private array $data = [])
-    {
-    }
+    public function __construct(private array $data = []) {}
 
     public function has(string $key): bool
     {
@@ -43,4 +41,3 @@ final class ArraySessionStore implements SessionStore
         return $this->data;
     }
 }
-

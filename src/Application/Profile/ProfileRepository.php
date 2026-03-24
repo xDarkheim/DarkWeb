@@ -6,8 +6,8 @@ namespace Darkheim\Application\Profile;
 
 use Darkheim\Application\Auth\Common;
 use Darkheim\Application\Character\Character;
-use Darkheim\Application\Shared\Support\Encoder;
 use Darkheim\Application\Shared\Language\Translator;
+use Darkheim\Application\Shared\Support\Encoder;
 use Darkheim\Domain\Validation\Validator;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Database\Connection;

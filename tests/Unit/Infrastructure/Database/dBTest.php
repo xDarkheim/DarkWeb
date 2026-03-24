@@ -8,7 +8,6 @@ use Darkheim\Infrastructure\Database\dB;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
 
 /**
  * Unit-tests for the dB PDO wrapper.
@@ -19,13 +18,13 @@ class dBTest extends TestCase
 {
     private function make(): array
     {
-        $sut  = (new \ReflectionClass(dB::class))->newInstanceWithoutConstructor();
-        $pdo  = $this->createMock(PDO::class);
-        $stmt = $this->createMock(PDOStatement::class);
+        $sut  = new \ReflectionClass(dB::class)->newInstanceWithoutConstructor();
+        $pdo  = $this->createMock(\PDO::class);
+        $stmt = $this->createMock(\PDOStatement::class);
 
-        (new ReflectionProperty(dB::class, 'db'))->setValue($sut, $pdo);
-        (new ReflectionProperty(dB::class, 'dead'))->setValue($sut, false);
-        (new ReflectionProperty(dB::class, '_enableErrorLogs'))->setValue($sut, false);
+        new \ReflectionProperty(dB::class, 'db')->setValue($sut, $pdo);
+        new \ReflectionProperty(dB::class, 'dead')->setValue($sut, false);
+        new \ReflectionProperty(dB::class, '_enableErrorLogs')->setValue($sut, false);
 
         return [$sut, $pdo, $stmt];
     }
@@ -67,9 +66,9 @@ class dBTest extends TestCase
     public function testQueryFetchReturnsRowsOnSuccess(): void
     {
         [$sut, $pdo, $stmt] = $this->make();
-        $rows = [['Name' => 'Player1', 'cLevel' => '400']];
+        $rows               = [['Name' => 'Player1', 'cLevel' => '400']];
         $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetchAll')->with(PDO::FETCH_ASSOC)->willReturn($rows);
+        $stmt->method('fetchAll')->with(\PDO::FETCH_ASSOC)->willReturn($rows);
         $pdo->method('prepare')->willReturn($stmt);
 
         $this->assertSame($rows, $sut->query_fetch('SELECT * FROM Character'));
@@ -100,7 +99,7 @@ class dBTest extends TestCase
     public function testQueryFetchSingleReturnsFirstRow(): void
     {
         [$sut, $pdo, $stmt] = $this->make();
-        $rows = [['Name' => 'Alice'], ['Name' => 'Bob']];
+        $rows               = [['Name' => 'Alice'], ['Name' => 'Bob']];
         $stmt->method('execute')->willReturn(true);
         $stmt->method('fetchAll')->willReturn($rows);
         $pdo->method('prepare')->willReturn($stmt);
@@ -132,4 +131,3 @@ class dBTest extends TestCase
         $this->assertTrue($sut->query('SELECT 1', ''));
     }
 }
-

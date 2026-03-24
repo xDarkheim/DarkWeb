@@ -83,4 +83,3 @@ final class MessageRenderer
         return class_exists(TestCase::class, false);
     }
 }
-

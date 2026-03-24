@@ -136,4 +136,3 @@ class CronManagerTest extends TestCase
         $this->assertArrayHasKey(86400, $intervals);
     }
 }
-

@@ -11,9 +11,7 @@ final class ArrayQueryStore implements QueryStore
     /**
      * @param array<string, mixed> $data
      */
-    public function __construct(private array $data = [])
-    {
-    }
+    public function __construct(private array $data = []) {}
 
     public function has(string $key): bool
     {
@@ -38,4 +36,3 @@ final class ArrayQueryStore implements QueryStore
         return $this->data;
     }
 }
-

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Darkheim\Application\Website;
 
 use Darkheim\Application\Auth\SessionManager;
-use Darkheim\Application\Shared\Game\GameHelper;
 use Darkheim\Application\Profile\ProfileRenderer;
+use Darkheim\Application\Shared\Game\GameHelper;
+use Darkheim\Application\Theme\Layout\DefaultThemeLayoutBuilder;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Cache\CacheRepository;
-use Darkheim\Application\Theme\Layout\DefaultThemeLayoutBuilder;
 use Darkheim\Infrastructure\View\ViewRenderer;
 
 final class HomeController

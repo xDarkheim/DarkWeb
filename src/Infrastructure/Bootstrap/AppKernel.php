@@ -212,7 +212,7 @@ final class AppKernel
      */
     private function loadCustomTables(): void
     {
-        $custom = [];
+        $custom           = [];
         $customTablesPath = __PATH_CONFIGS__ . 'tables.custom.php';
 
         if (! is_file($customTablesPath)) {

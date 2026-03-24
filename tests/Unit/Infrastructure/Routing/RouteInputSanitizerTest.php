@@ -42,4 +42,3 @@ final class RouteInputSanitizerTest extends TestCase
         $this->assertSame('mypagetest', $this->sanitizer->sanitize('my-page_test'));
     }
 }
-

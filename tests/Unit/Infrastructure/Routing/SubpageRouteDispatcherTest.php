@@ -12,14 +12,14 @@ final class SubpageRouteDispatcherTest extends TestCase
 {
     public function testDispatchExecutesControllerWhenRouteDefinesController(): void
     {
-        if (!class_exists('Tests\\Stubs\\SubpageControllerStub', false)) {
+        if (! class_exists('Tests\\Stubs\\SubpageControllerStub', false)) {
             eval('namespace Tests\\Stubs; final class SubpageControllerStub { public function render(): void { $GLOBALS["__subpage_controller_dispatched"] = true; } }');
         }
 
         $routesFile = sys_get_temp_dir() . '/darkcore_sub_routes_' . uniqid('', true) . '.php';
         file_put_contents(
             $routesFile,
-            "<?php return ['x/y' => ['module_config' => null, 'controller' => 'Tests\\\\Stubs\\\\SubpageControllerStub']];\n"
+            "<?php return ['x/y' => ['module_config' => null, 'controller' => 'Tests\\\\Stubs\\\\SubpageControllerStub']];\n",
         );
 
         $GLOBALS['__subpage_controller_dispatched'] = false;
@@ -33,12 +33,12 @@ final class SubpageRouteDispatcherTest extends TestCase
 
     public function testDispatchIncludesMappedSubpageFile(): void
     {
-        $page = '__subpage_test';
+        $page    = '__subpage_test';
         $subpage = 'demo';
 
         $subpageViewsBase = sys_get_temp_dir() . '/darkcore_subpages_' . uniqid('', true) . '/';
-        $subpageDir = $subpageViewsBase . $page;
-        @mkdir($subpageDir, 0777, true);
+        $subpageDir       = $subpageViewsBase . $page;
+        @mkdir($subpageDir, 0o777, true);
         $subpageFile = $subpageDir . '/' . $subpage . '.php';
         file_put_contents($subpageFile, "<?php \$GLOBALS['__subpage_route_dispatched'] = true;\n");
 
@@ -68,4 +68,3 @@ final class SubpageRouteDispatcherTest extends TestCase
         @unlink($routesFile);
     }
 }
-

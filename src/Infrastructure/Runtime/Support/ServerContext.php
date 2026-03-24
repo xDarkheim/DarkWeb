@@ -12,4 +12,3 @@ final class ServerContext
         return is_string($address) ? $address : null;
     }
 }
-

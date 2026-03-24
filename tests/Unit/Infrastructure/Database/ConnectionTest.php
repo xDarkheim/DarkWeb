@@ -32,4 +32,3 @@ class DatabaseFactoryTest extends TestCase
         DatabaseFactory::muOnline();
     }
 }
-

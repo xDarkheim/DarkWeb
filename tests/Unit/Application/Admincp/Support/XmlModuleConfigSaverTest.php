@@ -14,7 +14,7 @@ final class XmlModuleConfigSaverTest extends TestCase
     protected function setUp(): void
     {
         $this->tmpDir = sys_get_temp_dir() . '/darkcore-xml-saver-' . uniqid('', true);
-        mkdir($this->tmpDir, 0777, true);
+        mkdir($this->tmpDir, 0o777, true);
     }
 
     protected function tearDown(): void
@@ -34,8 +34,8 @@ final class XmlModuleConfigSaverTest extends TestCase
 
         $saver = new XmlModuleConfigSaver();
         $saved = $saver->save([
-            'xml' => 'module.xml',
-            'base' => $this->tmpDir . '/',
+            'xml'    => 'module.xml',
+            'base'   => $this->tmpDir . '/',
             'fields' => [
                 'setting_1' => 'active',
                 'setting_2' => 'subject',
@@ -58,8 +58,8 @@ final class XmlModuleConfigSaverTest extends TestCase
         $saver = new XmlModuleConfigSaver();
 
         $saved = $saver->save([
-            'xml' => 'missing.xml',
-            'base' => $this->tmpDir . '/',
+            'xml'    => 'missing.xml',
+            'base'   => $this->tmpDir . '/',
             'fields' => [
                 'setting_1' => 'active',
             ],
@@ -70,4 +70,3 @@ final class XmlModuleConfigSaverTest extends TestCase
         $this->assertFalse($saved);
     }
 }
-

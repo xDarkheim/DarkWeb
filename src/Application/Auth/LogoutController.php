@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Auth;
 
-use Darkheim\Application\Auth\AuthService;
-use Darkheim\Application\Auth\SessionManager;
 use Darkheim\Infrastructure\Http\Redirector;
 
 final class LogoutController

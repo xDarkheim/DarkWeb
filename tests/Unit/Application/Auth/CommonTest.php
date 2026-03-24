@@ -43,7 +43,7 @@ class CommonTest extends TestCase
 
     public function testEmailExistsReturnsNullForInvalidEmail(): void
     {
-        $db  = $this->createMock(dB::class);
+        $db = $this->createMock(dB::class);
         $db->expects($this->never())->method('query_fetch_single');
         $sut = $this->make($db);
         $this->assertNull($sut->emailExists('notanemail'));
@@ -61,7 +61,7 @@ class CommonTest extends TestCase
 
     public function testUserExistsReturnsNullForShortUsername(): void
     {
-        $db  = $this->createMock(dB::class);
+        $db = $this->createMock(dB::class);
         $db->expects($this->never())->method('query_fetch_single');
         $sut = $this->make($db);
         $this->assertNull($sut->userExists('ab'));
@@ -69,7 +69,7 @@ class CommonTest extends TestCase
 
     public function testUserExistsReturnsNullForNonAlphanumeric(): void
     {
-        $db  = $this->createMock(dB::class);
+        $db = $this->createMock(dB::class);
         $db->expects($this->never())->method('query_fetch_single');
         $sut = $this->make($db);
         $this->assertNull($sut->userExists('user name'));
@@ -88,7 +88,7 @@ class CommonTest extends TestCase
 
     public function testAccountInformationReturnsNullForNonNumericId(): void
     {
-        $db  = $this->createMock(dB::class);
+        $db = $this->createMock(dB::class);
         $db->expects($this->never())->method('query_fetch_single');
         $sut = $this->make($db);
         $this->assertNull($sut->accountInformation('notanumber'));
@@ -116,8 +116,8 @@ class CommonTest extends TestCase
 
     public function testGenerateAccountRecoveryCode(): void
     {
-        $db  = $this->createMock(dB::class);
-        $sut = $this->make($db);
+        $db       = $this->createMock(dB::class);
+        $sut      = $this->make($db);
         $expected = md5(md5('5') . md5('testuser'));
         $this->assertSame($expected, $sut->generateAccountRecoveryCode('5', 'testuser'));
     }
@@ -146,7 +146,7 @@ class CommonTest extends TestCase
 
     public function testUpdateEmailReturnsNullForInvalidEmail(): void
     {
-        $db  = $this->createMock(dB::class);
+        $db = $this->createMock(dB::class);
         $db->expects($this->never())->method('query');
         $sut = $this->make($db);
         $this->assertNull($sut->updateEmail(1, 'bademail'));
@@ -172,7 +172,7 @@ class CommonTest extends TestCase
 
     public function testValidateUserReturnsNullForTooShortPassword(): void
     {
-        $db  = $this->createMock(dB::class);
+        $db = $this->createMock(dB::class);
         $db->expects($this->never())->method('query_fetch_single');
         $sut = $this->make($db);
         $this->assertNull($sut->validateUser('testuser', 'ab'));
@@ -188,4 +188,3 @@ class CommonTest extends TestCase
         $this->assertTrue($sut->removePasswordChangeRequest(1));
     }
 }
-

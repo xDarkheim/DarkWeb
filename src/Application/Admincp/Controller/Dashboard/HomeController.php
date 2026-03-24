@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Darkheim\Application\Admincp\Controller\Dashboard;
 
 use Darkheim\Application\Admincp\Layout\AdmincpUrlGenerator;
-
 use Darkheim\Application\Shared\UI\MessageRenderer;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Database\Connection;

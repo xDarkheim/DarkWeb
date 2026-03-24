@@ -15,4 +15,3 @@ final readonly class RankingCache
         public array $entries,
     ) {}
 }
-

@@ -71,7 +71,7 @@ class SessionManagerTest extends TestCase
     public function testRefreshTimeout(): void
     {
         [$sm, $store] = $this->make();
-        $before = time();
+        $before       = time();
         $sm->refreshTimeout();
         $this->assertGreaterThanOrEqual($before, (int) $store->get('timeout'));
     }
@@ -95,4 +95,3 @@ class SessionManagerTest extends TestCase
         $this->assertSame([], $store->all());
     }
 }
-

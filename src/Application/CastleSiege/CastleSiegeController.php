@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\CastleSiege;
 
-use Darkheim\Application\CastleSiege\CastleSiege;
+use Darkheim\Application\Profile\ProfileRenderer;
 use Darkheim\Application\Shared\Game\GameHelper;
 use Darkheim\Application\Shared\Language\Translator;
-use Darkheim\Application\Profile\ProfileRenderer;
 use Darkheim\Application\Shared\UI\MessageRenderer;
 use Darkheim\Infrastructure\View\ViewRenderer;
 

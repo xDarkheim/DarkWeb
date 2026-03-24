@@ -14,4 +14,3 @@ interface SessionStore
 
     public function clear(): void;
 }
-

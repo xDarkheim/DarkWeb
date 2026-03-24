@@ -16,7 +16,7 @@ final class ConfigProviderTest extends TestCase
     protected function setUp(): void
     {
         $this->configDir = sys_get_temp_dir() . '/darkcore_bootstrap_' . uniqid('', true) . '/config/';
-        mkdir($this->configDir . 'modules/', 0777, true);
+        mkdir($this->configDir . 'modules/', 0o777, true);
         $this->originalTimezone = date_default_timezone_get();
     }
 
@@ -29,7 +29,7 @@ final class ConfigProviderTest extends TestCase
     public function testCmsLoadsAndCachesConfiguration(): void
     {
         file_put_contents($this->configDir . 'config.json', json_encode([
-            'website_title' => 'DarkCore',
+            'website_title'   => 'DarkCore',
             'docker_timezone' => 'UTC',
         ], JSON_THROW_ON_ERROR));
 
@@ -37,7 +37,7 @@ final class ConfigProviderTest extends TestCase
 
         $first = $loader->cms();
         file_put_contents($this->configDir . 'config.json', json_encode([
-            'website_title' => 'Changed',
+            'website_title'   => 'Changed',
             'docker_timezone' => 'Europe/Kyiv',
         ], JSON_THROW_ON_ERROR));
         $second = $loader->cms();
@@ -59,7 +59,7 @@ final class ConfigProviderTest extends TestCase
 
     public function testUsercpModuleAliasesResolveHyphenatedXmlFiles(): void
     {
-        mkdir($this->configDir . 'modules/usercp/', 0777, true);
+        mkdir($this->configDir . 'modules/usercp/', 0o777, true);
         file_put_contents($this->configDir . 'modules/usercp/my-account.xml', '<config><active>1</active></config>');
         file_put_contents($this->configDir . 'modules/usercp/add-stats.xml', '<config><max_stats>32767</max_stats></config>');
         file_put_contents($this->configDir . 'modules/usercp/buy-zen.xml', '<config><max_zen>2000000000</max_zen></config>');
@@ -84,8 +84,8 @@ final class ConfigProviderTest extends TestCase
             'docker_timezone' => 'Europe/Kyiv',
         ], JSON_THROW_ON_ERROR));
 
-        $loader = new ConfigProvider($this->configDir);
-        $timezone = (new TimezoneInitializer($loader))->apply();
+        $loader   = new ConfigProvider($this->configDir);
+        $timezone = new TimezoneInitializer($loader)->apply();
 
         $this->assertSame('Europe/Kyiv', $timezone);
         $this->assertSame('Europe/Kyiv', date_default_timezone_get());
@@ -93,12 +93,12 @@ final class ConfigProviderTest extends TestCase
 
     private function deleteDir(string $path): void
     {
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 
         $items = scandir($path);
-        if (!is_array($items)) {
+        if (! is_array($items)) {
             return;
         }
 
@@ -119,5 +119,3 @@ final class ConfigProviderTest extends TestCase
         @rmdir($path);
     }
 }
-
-

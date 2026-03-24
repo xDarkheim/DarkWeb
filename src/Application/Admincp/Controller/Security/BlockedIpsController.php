@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Darkheim\Application\Admincp\Controller\Security;
 
 use Darkheim\Application\Admincp\Layout\AdmincpUrlGenerator;
-
 use Darkheim\Application\Auth\Common;
 use Darkheim\Application\Shared\UI\MessageRenderer;
 use Darkheim\Infrastructure\View\ViewRenderer;

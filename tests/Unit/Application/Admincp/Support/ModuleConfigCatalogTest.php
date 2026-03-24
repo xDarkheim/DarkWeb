@@ -37,4 +37,3 @@ final class ModuleConfigCatalogTest extends TestCase
         $this->assertSame('rankings', $catalog->moduleConfigNameFromKey('rankings'));
     }
 }
-

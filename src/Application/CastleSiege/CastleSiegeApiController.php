@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\CastleSiege;
 
-use Darkheim\Application\CastleSiege\CastleSiege;
 use Darkheim\Application\Shared\Language\Translator;
 
 final class CastleSiegeApiController

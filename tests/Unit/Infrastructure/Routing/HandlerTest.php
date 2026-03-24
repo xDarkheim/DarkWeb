@@ -36,7 +36,7 @@ class HandlerTest extends TestCase
     {
         // Create a language fixture file
         $langDir = __PATH_LANGUAGES__ . 'en/';
-        @mkdir($langDir, 0777, true);
+        @mkdir($langDir, 0o777, true);
         file_put_contents($langDir . 'language.php', '<?php $lang = [];');
 
         $result = $this->handler->switchLanguage('en');

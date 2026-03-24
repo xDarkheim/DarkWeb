@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\News;
 
-use Darkheim\Application\News\NewsRepository;
 use Darkheim\Application\News\NewsItem;
+use Darkheim\Application\News\NewsRepository;
 use Darkheim\Infrastructure\Cache\CacheRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -16,15 +16,17 @@ class NewsRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->cacheDir = sys_get_temp_dir() . '/dh_news_cache_' . uniqid(
-                '',
-                true
-            ) . '/';
-        mkdir($this->cacheDir, 0777, true);
+            '',
+            true,
+        ) . '/';
+        mkdir($this->cacheDir, 0o777, true);
     }
 
     protected function tearDown(): void
     {
-        foreach (glob($this->cacheDir . '*') ?: [] as $f) @unlink($f);
+        foreach (glob($this->cacheDir . '*') ?: [] as $f) {
+            @unlink($f);
+        }
         @rmdir($this->cacheDir);
     }
 
@@ -102,7 +104,7 @@ class NewsRepositoryTest extends TestCase
     public function testLoadContentReadsFullCacheFile(): void
     {
         $dir = sys_get_temp_dir() . '/dh_news_content_' . uniqid('', true) . '/';
-        mkdir($dir, 0777, true);
+        mkdir($dir, 0o777, true);
         file_put_contents($dir . 'news_3.cache', '<p>Article content</p>');
 
         $repo    = new NewsRepository(new CacheRepository($this->cacheDir), $dir);
@@ -116,7 +118,7 @@ class NewsRepositoryTest extends TestCase
     public function testLoadContentReadsShortCacheFile(): void
     {
         $dir = sys_get_temp_dir() . '/dh_news_content_' . uniqid('', true) . '/';
-        mkdir($dir, 0777, true);
+        mkdir($dir, 0o777, true);
         file_put_contents($dir . 'news_4_s.cache', 'Short excerpt');
 
         $repo    = new NewsRepository(new CacheRepository($this->cacheDir), $dir);
@@ -131,7 +133,7 @@ class NewsRepositoryTest extends TestCase
     {
         $dir   = sys_get_temp_dir() . '/dh_news_content_' . uniqid('', true) . '/';
         $trans = $dir . 'translations/';
-        mkdir($trans, 0777, true);
+        mkdir($trans, 0o777, true);
         file_put_contents($trans . 'news_5_fr.cache', 'Version française');
         file_put_contents($dir . 'news_5.cache', 'Default content');
 
@@ -145,4 +147,3 @@ class NewsRepositoryTest extends TestCase
         @rmdir($dir);
     }
 }
-

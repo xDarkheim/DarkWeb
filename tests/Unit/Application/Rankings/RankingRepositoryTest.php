@@ -16,15 +16,17 @@ class RankingRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->cacheDir = sys_get_temp_dir() . '/dh_ranking_cache_' . uniqid(
-                '',
-                true
-            ) . '/';
-        mkdir($this->cacheDir, 0777, true);
+            '',
+            true,
+        ) . '/';
+        mkdir($this->cacheDir, 0o777, true);
     }
 
     protected function tearDown(): void
     {
-        foreach (glob($this->cacheDir . '*') ?: [] as $f) @unlink($f);
+        foreach (glob($this->cacheDir . '*') ?: [] as $f) {
+            @unlink($f);
+        }
         @rmdir($this->cacheDir);
     }
 
@@ -103,4 +105,3 @@ class RankingRepositoryTest extends TestCase
         $this->assertSame([], $repo->loadOnlineCharacters());
     }
 }
-

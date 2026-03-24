@@ -23,4 +23,3 @@ final class AdmincpUrlGeneratorTest extends TestCase
         $this->assertSame(__PATH_ADMINCP_HOME__ . '?module=cachemanager', $generator->base('cachemanager'));
     }
 }
-

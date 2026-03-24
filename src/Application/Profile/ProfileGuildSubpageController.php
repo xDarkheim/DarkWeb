@@ -6,8 +6,6 @@ namespace Darkheim\Application\Profile;
 
 use Darkheim\Application\Shared\Game\GameHelper;
 use Darkheim\Application\Shared\Language\Translator;
-use Darkheim\Application\Profile\ProfileRenderer;
-use Darkheim\Application\Profile\ProfileRepository;
 use Darkheim\Application\Shared\UI\MessageRenderer;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\View\ViewRenderer;

@@ -21,7 +21,7 @@ final class AddNewsController
         $newsService = new News();
         \Darkheim\Infrastructure\Bootstrap\BootstrapContext::loadModuleConfig('news');
 
-        if (!$newsService->isNewsDirWritable()) {
+        if (! $newsService->isNewsDirWritable()) {
             \Darkheim\Application\Shared\UI\MessageRenderer::toast('error', 'The news cache folder is not writable.');
             return;
         }
@@ -36,4 +36,3 @@ final class AddNewsController
         $this->view->render('admincp/addnews', []);
     }
 }
-

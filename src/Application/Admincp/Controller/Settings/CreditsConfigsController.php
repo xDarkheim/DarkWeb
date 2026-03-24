@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Darkheim\Application\Admincp\Controller\Settings;
 
 use Darkheim\Application\Admincp\Layout\AdmincpUrlGenerator;
-
 use Darkheim\Application\Credits\CreditSystem;
 use Darkheim\Application\Shared\UI\MessageRenderer;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;

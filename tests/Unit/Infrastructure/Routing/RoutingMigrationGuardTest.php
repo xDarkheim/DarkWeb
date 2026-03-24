@@ -17,7 +17,7 @@ final class RoutingMigrationGuardTest extends TestCase
 
     public function testMigrationMatrixTracksAllTopLevelWebRoutes(): void
     {
-        $matrix = $this->loadMatrix();
+        $matrix       = $this->loadMatrix();
         $trackedPages = array_keys($matrix['pages']);
         sort($trackedPages);
 
@@ -30,13 +30,13 @@ final class RoutingMigrationGuardTest extends TestCase
         $this->assertSame(
             $routePages,
             $trackedPages,
-            'config/routing-migration.json must track all config/routes.web.php pages exactly.'
+            'config/routing-migration.json must track all config/routes.web.php pages exactly.',
         );
     }
 
     public function testMatrixStatusesAreValidAndMigratedRoutesMatchRouteRegistry(): void
     {
-        $matrix = $this->loadMatrix();
+        $matrix          = $this->loadMatrix();
         $allowedStatuses = $matrix['statuses'];
 
         /** @var mixed $routes */
@@ -79,4 +79,3 @@ final class RoutingMigrationGuardTest extends TestCase
         return $matrix;
     }
 }
-

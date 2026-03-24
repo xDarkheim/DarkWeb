@@ -23,4 +23,3 @@ final class NativeQueryStore implements QueryStore
         $_GET[$key] = $value;
     }
 }
-

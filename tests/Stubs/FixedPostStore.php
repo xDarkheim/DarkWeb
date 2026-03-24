@@ -11,9 +11,7 @@ final class FixedPostStore implements PostStore
     /**
      * @param array<string, mixed> $data
      */
-    public function __construct(private int $count, private array $data = [])
-    {
-    }
+    public function __construct(private int $count, private array $data = []) {}
 
     public function has(string $key): bool
     {
@@ -30,4 +28,3 @@ final class FixedPostStore implements PostStore
         return $this->count;
     }
 }
-

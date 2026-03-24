@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Admincp\Controller\News;
 
-use Darkheim\Application\Shared\Language\LanguageRepository;
 use Darkheim\Application\News\NewsService as News;
+use Darkheim\Application\Shared\Language\LanguageRepository;
 use Darkheim\Application\Shared\UI\MessageRenderer;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;
 use Darkheim\Infrastructure\Http\Redirector;

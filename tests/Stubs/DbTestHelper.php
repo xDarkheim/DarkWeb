@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\Stubs;
 
 use Darkheim\Infrastructure\Database\dB;
-use ReflectionClass;
-use ReflectionProperty;
 
 /**
  * Helper trait for tests that need to bypass the DB constructor.
@@ -20,8 +18,8 @@ trait DbTestHelper
      */
     protected function makeWithDb(string $className, dB $mockDb, string $prop = 'muonline'): object
     {
-        $instance = (new ReflectionClass($className))->newInstanceWithoutConstructor();
-        $rProp = new ReflectionProperty($className, $prop);
+        $instance = new \ReflectionClass($className)->newInstanceWithoutConstructor();
+        $rProp    = new \ReflectionProperty($className, $prop);
         $rProp->setValue($instance, $mockDb);
         return $instance;
     }
@@ -31,8 +29,7 @@ trait DbTestHelper
      */
     protected function setProp(object $instance, string $prop, mixed $value): void
     {
-        $rProp = new ReflectionProperty($instance, $prop);
+        $rProp = new \ReflectionProperty($instance, $prop);
         $rProp->setValue($instance, $value);
     }
 }
-

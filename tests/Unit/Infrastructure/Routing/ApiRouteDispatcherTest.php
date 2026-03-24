@@ -27,15 +27,17 @@ final class ApiRouteDispatcherTest extends TestCase
     public function testDispatchReturnsFalseWhenControllerClassDoesNotExist(): void
     {
         $routesFile = sys_get_temp_dir() . '/darkcore_api_routes_' . uniqid('', true) . '.php';
-        file_put_contents($routesFile, <<<'PHP'
-<?php
-return [
-    'events' => [
-        'controller' => 'Tests\\Missing\\Controller',
-    ],
-];
-PHP
-);
+        file_put_contents(
+            $routesFile,
+            <<<'PHP'
+                <?php
+                return [
+                    'events' => [
+                        'controller' => 'Tests\\Missing\\Controller',
+                    ],
+                ];
+                PHP
+        );
 
         $dispatcher = new ApiRouteDispatcher(new ApiRouteRegistry($routesFile));
         $this->assertFalse($dispatcher->dispatch('events'));
@@ -48,14 +50,14 @@ PHP
         $routesFile = sys_get_temp_dir() . '/darkcore_api_routes_' . uniqid('', true) . '.php';
         file_put_contents($routesFile, sprintf(
             <<<'PHP'
-<?php
-return [
-    'events' => [
-        'controller' => %s::class,
-    ],
-];
-PHP,
-            '\\' . ApiTestController::class
+                <?php
+                return [
+                    'events' => [
+                        'controller' => %s::class,
+                    ],
+                ];
+                PHP,
+            '\\' . ApiTestController::class,
         ));
 
         $GLOBALS['__api_controller_dispatched'] = false;
@@ -68,4 +70,3 @@ PHP,
         @unlink($routesFile);
     }
 }
-

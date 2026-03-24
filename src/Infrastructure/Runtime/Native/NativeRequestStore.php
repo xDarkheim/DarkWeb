@@ -18,4 +18,3 @@ final class NativeRequestStore implements RequestStore
         return $_REQUEST[$key] ?? $default;
     }
 }
-

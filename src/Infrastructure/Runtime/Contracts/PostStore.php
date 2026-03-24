@@ -12,4 +12,3 @@ interface PostStore
 
     public function count(): int;
 }
-

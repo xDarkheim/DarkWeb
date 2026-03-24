@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Darkheim\Application\Auth;
 
-use Darkheim\Application\Auth\AuthService;
-use Darkheim\Application\Auth\SessionManager;
 use Darkheim\Application\Shared\Language\Translator;
 use Darkheim\Application\Shared\UI\MessageRenderer;
 use Darkheim\Infrastructure\Bootstrap\BootstrapContext;

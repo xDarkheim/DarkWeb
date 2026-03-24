@@ -14,8 +14,8 @@ class CacheRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dir  = sys_get_temp_dir() . '/dh_cache_test_' . uniqid() . '/';
-        mkdir($this->dir, 0777, true);
+        $this->dir = sys_get_temp_dir() . '/dh_cache_test_' . uniqid('', true) . '/';
+        mkdir($this->dir, 0o777, true);
         $this->repo = new CacheRepository($this->dir);
     }
 
@@ -99,4 +99,3 @@ class CacheRepositoryTest extends TestCase
         $this->assertNull($this->repo->loadLegacyText('empty.cache'));
     }
 }
-

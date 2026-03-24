@@ -11,9 +11,7 @@ final class ArrayRequestStore implements RequestStore
     /**
      * @param array<string, mixed> $data
      */
-    public function __construct(private array $data = [])
-    {
-    }
+    public function __construct(private array $data = []) {}
 
     public function has(string $key): bool
     {
@@ -25,4 +23,3 @@ final class ArrayRequestStore implements RequestStore
         return $this->data[$key] ?? $default;
     }
 }
-

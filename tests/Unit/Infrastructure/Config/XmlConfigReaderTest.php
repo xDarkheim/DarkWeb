@@ -14,14 +14,16 @@ class XmlConfigReaderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dir    = sys_get_temp_dir() . '/dh_xml_test_' . uniqid('', true) . '/';
-        mkdir($this->dir, 0777, true);
+        $this->dir = sys_get_temp_dir() . '/dh_xml_test_' . uniqid('', true) . '/';
+        mkdir($this->dir, 0o777, true);
         $this->reader = new XmlConfigReader();
     }
 
     protected function tearDown(): void
     {
-        foreach (glob($this->dir . '*') ?: [] as $f) @unlink($f);
+        foreach (glob($this->dir . '*') ?: [] as $f) {
+            @unlink($f);
+        }
         @rmdir($this->dir);
     }
 
@@ -54,4 +56,3 @@ class XmlConfigReaderTest extends TestCase
         $this->assertNull($this->reader->readFile($path));
     }
 }
-

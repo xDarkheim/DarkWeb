@@ -12,4 +12,3 @@ interface QueryStore
 
     public function set(string $key, mixed $value): void;
 }
-

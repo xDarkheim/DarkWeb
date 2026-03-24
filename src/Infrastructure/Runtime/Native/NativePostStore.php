@@ -23,4 +23,3 @@ final class NativePostStore implements PostStore
         return count($_POST);
     }
 }
-

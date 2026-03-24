@@ -49,4 +49,3 @@ final class TimeHelper
         return [$days, $hours, $minutes, $seconds];
     }
 }
-

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Auth;
 
-use Darkheim\Application\Auth\Login;
 use Darkheim\Application\Auth\Common;
+use Darkheim\Application\Auth\Login;
 use Darkheim\Infrastructure\Database\dB;
 use PHPUnit\Framework\TestCase;
 use Tests\Stubs\DbTestHelper;
@@ -18,7 +18,7 @@ class LoginTest extends TestCase
     private function makeLogin(dB $mockDb, Common $mockCommon, array $config = []): Login
     {
         /** @var Login $sut */
-        $sut = (new \ReflectionClass(Login::class))->newInstanceWithoutConstructor();
+        $sut = new \ReflectionClass(Login::class)->newInstanceWithoutConstructor();
         $this->setProp($sut, 'muonline', $mockDb);
         $this->setProp($sut, 'common', $mockCommon);
         $this->setProp($sut, '_config', array_merge([
@@ -63,7 +63,7 @@ class LoginTest extends TestCase
         // second call: canLogin → locked record with future timestamp
         $db->method('query_fetch_single')->willReturnOnConsecutiveCalls(
             ['failed_attempts' => 5],
-            ['ip_address' => '127.0.0.1', 'unlock_timestamp' => time() + 3600]
+            ['ip_address' => '127.0.0.1', 'unlock_timestamp' => time() + 3600],
         );
         $sut = $this->makeLogin($db, $this->makeCommon($db));
         $this->assertNull($sut->canLogin('127.0.0.1'));
@@ -108,7 +108,9 @@ class LoginTest extends TestCase
 
     public function testLogoutClearsSessionAndRedirects(): void
     {
-        if (session_status() === PHP_SESSION_NONE) @session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            @session_start();
+        }
         $_SESSION = ['valid' => true];
 
         $db  = $this->createMock(dB::class);
@@ -118,4 +120,3 @@ class LoginTest extends TestCase
         $sut->logout();
     }
 }
-
