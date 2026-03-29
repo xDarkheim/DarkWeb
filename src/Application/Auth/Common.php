@@ -86,6 +86,8 @@ class Common
                 $data['password'] = $password . $username . $this->_sha256salt;
                 $query            = "SELECT * FROM " . _TBL_MI_ . " WHERE " . _CLMN_USERNM_ . " = :username AND " . _CLMN_PASSWD_ . " = HASHBYTES('SHA2_256', CAST(:password AS VARCHAR(MAX)))";
                 break;
+            default:
+                throw new \RuntimeException('Unsupported password encryption setting.');
         }
 
         $result = $this->muonline->query_fetch_single($query, $data);
@@ -352,6 +354,7 @@ class Common
             'wzmd5'  => $this->encodeWzMd5Password($username, $password),
             'phpmd5' => md5($password),
             'sha256' => '0x' . hash('sha256', $password . $username . $this->_sha256salt),
+            default  => throw new \RuntimeException('Unsupported password encryption setting.'),
         };
     }
 
@@ -366,6 +369,7 @@ class Common
                 "UPDATE " . _TBL_MI_ . " SET " . _CLMN_PASSWD_ . " = CONVERT(binary(32),:password,1) WHERE " . _CLMN_MEMBID_ . " = :userid",
                 ['userid' => $userId, 'password' => $encodedPassword],
             ),
+            default => throw new \RuntimeException('Unsupported password encryption setting.'),
         };
     }
 
@@ -382,6 +386,7 @@ class Common
         $query = match ($this->passwordEncryptionMode($mode)) {
             'none', 'wzmd5', 'phpmd5' => "INSERT INTO " . _TBL_MI_ . " (" . _CLMN_USERNM_ . ", " . _CLMN_PASSWD_ . ", " . _CLMN_MEMBNAME_ . ", " . _CLMN_SNONUMBER_ . ", " . _CLMN_EMAIL_ . ", " . _CLMN_BLOCCODE_ . ", " . _CLMN_CTLCODE_ . ") VALUES (:username, :password, :name, :serial, :email, 0, 0)",
             'sha256' => "INSERT INTO " . _TBL_MI_ . " (" . _CLMN_USERNM_ . ", " . _CLMN_PASSWD_ . ", " . _CLMN_MEMBNAME_ . ", " . _CLMN_SNONUMBER_ . ", " . _CLMN_EMAIL_ . ", " . _CLMN_BLOCCODE_ . ", " . _CLMN_CTLCODE_ . ") VALUES (:username, CONVERT(binary(32),:password,1), :name, :serial, :email, 0, 0)",
+            default => throw new \RuntimeException('Unsupported password encryption setting.'),
         };
 
         return $this->muonline->query($query, $data);

@@ -23,7 +23,6 @@ class Account extends Common
     private const string PASSWORD_RECOVERY_BUCKET    = 'password-recovery';
     private const string EMAIL_CHANGE_BUCKET         = 'email-change-verifications';
 
-    private string $_defaultAccountSerial = '1111111111111';
     private ?ServerContext $serverContext = null;
 
     public $_account {
