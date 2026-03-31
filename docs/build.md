@@ -20,9 +20,14 @@ Each JS file is prepared in `DefaultThemeLayoutBuilder::build()` and rendered at
 |:-:|:---------------------------------|:-------------------------------------------------------------|
 | 1 | jQuery 3.7.1 (CDN)               | DOM manipulation                                             |
 | 2 | `main.js`                        | Server time clock, castle siege countdown, PayPal calculator |
-| 3 | `events.js`                      | Event schedule feed (`/api/events.php`)                      |
+| 3 | `events.js`                      | Event schedule feed (`/api/events`)                          |
 | 4 | Bootstrap 3 JS (CDN)             | Dropdowns, tooltips, modals                                  |
 | 5 | `public/assets/js/components.js` | DarkCore UI components (toasts, theme toggle, etc.)          |
+
+The theme shell injects the site-relative root into the global `baseUrl` JS variable.
+Browser-side requests should stay relative to that root (`/api/events`, `/api/servertime`, etc.)
+instead of concatenating an absolute origin. This avoids mixed-content failures when HTTPS is
+terminated by an upstream reverse proxy.
 
 ## Cache busting
 
@@ -53,4 +58,3 @@ When you need to change the default layout (`navbar`, `header`, `sidebar`, `foot
 1. Add or reshape the data in `Darkheim\Application\Theme\Layout\DefaultThemeLayoutBuilder`.
 2. Render that prepared data in `public/themes/default/index.php` or `inc/modules/*.php`.
 3. Keep request/config/cache/session reads out of the theme templates.
-

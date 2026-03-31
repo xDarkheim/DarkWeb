@@ -163,7 +163,7 @@ final class GameHelper
         $imgSize = Validator::UnsignedNumber($size) ? $size : 40;
         $api     = defined('__PATH_API__') ? __PATH_API__ : '';
 
-        return '<img src="' . $api . 'guildmark.php?data=' . $binaryData
+        return '<img src="' . $api . 'guildmark?data=' . $binaryData
             . '&size=' . urlencode((string) $size) . '" width="' . $imgSize . '" height="' . $imgSize . '">';
     }
 

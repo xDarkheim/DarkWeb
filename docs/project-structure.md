@@ -302,11 +302,16 @@ public/admincp/index.php
 | `__PATH_CONFIGS__`  | `config/` filesystem path                           |
 | `__PATH_CACHE__`    | `var/cache/` filesystem path                        |
 | `__PATH_LOGS__`     | `var/logs/` filesystem path                         |
+| `__RELATIVE_ROOT__` | Site root path only (e.g. `/`, `/cms/`)            |
 | `__BASE_URL__`      | Site URL (e.g. `https://example.com/`)              |
 | `__PATH_IMG__`      | `__BASE_URL__ . 'img/'`                             |
 | `__PATH_ASSETS__`   | `__BASE_URL__ . 'assets/'`                          |
 | `__PATH_API__`      | `__BASE_URL__ . 'api/'`                             |
 | `__PATH_ADMINCP__`  | `public/admincp/` filesystem path                   |
+
+`__BASE_URL__` remains the server-side absolute origin for generated links and assets.
+Browser-side JS uses `__RELATIVE_ROOT__` via the theme shell for runtime API requests so the same
+page works correctly behind HTTPS-terminating reverse proxies.
 
 ## Runtime boundary
 
@@ -511,4 +516,3 @@ The following global helper functions were replaced with direct class calls acro
 | `redirect()` | `Redirector::go()` | ✅ Replaced |
 
 `includes/bootstrap/compat.php` and `includes/bootstrap/boot.php` were removed; entrypoints now call `EntrypointBootstrapper::boot()` directly.
-

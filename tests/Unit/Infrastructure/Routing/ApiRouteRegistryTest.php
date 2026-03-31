@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Routing;
 
+use Darkheim\Application\CastleSiege\CastleSiegeApiController;
+use Darkheim\Application\Donation\PaypalApiController;
 use Darkheim\Application\Profile\GuildmarkApiController;
 use Darkheim\Application\Website\EventsApiController;
+use Darkheim\Application\Website\ServerTimeApiController;
+use Darkheim\Application\Website\VersionApiController;
 use Darkheim\Infrastructure\Routing\Registries\ApiRouteRegistry;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -53,8 +57,12 @@ final class ApiRouteRegistryTest extends TestCase
     public static function configuredApiRoutesProvider(): array
     {
         return [
+            ['castlesiege', CastleSiegeApiController::class],
             ['events', EventsApiController::class],
             ['guildmark', GuildmarkApiController::class],
+            ['paypal', PaypalApiController::class],
+            ['servertime', ServerTimeApiController::class],
+            ['version', VersionApiController::class],
         ];
     }
 }

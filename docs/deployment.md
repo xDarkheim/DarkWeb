@@ -133,10 +133,11 @@ SSL → **Request a new SSL Certificate** (Let's Encrypt).
 When you run behind Nginx Proxy Manager, Cloudflare, or another TLS terminator:
 
 - set `config/config.json -> website_url` to the exact public origin players use
-- keep `trust_proxy_headers` disabled unless direct access to the Apache container is blocked
-- enable `trust_proxy_headers` only if the proxy is the component setting `CF-Connecting-IP` / `X-Forwarded-Proto`
+- enable `trust_proxy_headers` when the proxy is the component setting `CF-Connecting-IP` / `X-Forwarded-Proto`
+- leave `trust_proxy_headers` disabled when requests can also bypass the proxy and hit Apache directly
 
-This keeps generated password-reset / verification links canonical and lets the CMS mark session cookies as `secure` on HTTPS traffic.
+This keeps generated password-reset / verification links canonical, preserves `https://` in absolute
+form actions and redirects, and lets the CMS mark session cookies as `secure` on HTTPS traffic.
 
 ## Docker files
 

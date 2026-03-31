@@ -12,7 +12,7 @@ use Darkheim\Application\Website\VersionApiController;
 /**
  * API route registry.
  *
- * Key = endpoint name used by /api/{key}.php.
+ * Key = clean endpoint name used by /api/{key}.
  */
 return [
     'castlesiege' => [

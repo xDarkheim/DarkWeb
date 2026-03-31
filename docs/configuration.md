@@ -91,7 +91,11 @@ Copy `config.default.json` to `config.json` and fill in your values. The install
 | Key                   |  Type  | Description |
 |:----------------------|:------:|:------------|
 | `website_url`         | string | Preferred absolute site URL. When set, the CMS uses it for generated links in password recovery, registration verification, and other outbound URLs. |
-| `trust_proxy_headers` |  bool  | Trust `CF-Connecting-IP` and `X-Forwarded-Proto` from an upstream proxy. Leave `false` unless the app is only accessible through a trusted reverse proxy/CDN. |
+| `trust_proxy_headers` |  bool  | Trust `CF-Connecting-IP` and `X-Forwarded-Proto` from an upstream proxy. Enable it when public HTTPS traffic is terminated by a trusted reverse proxy/CDN in front of Apache, so generated absolute URLs and secure cookies keep the correct scheme. Leave `false` otherwise. |
+
+Frontend AJAX calls use the site-relative root in the browser, which keeps runtime API requests
+proxy-safe. `trust_proxy_headers` still matters for server-generated absolute links, form actions,
+redirects, and `secure` session cookies.
 
 ### Cron
 
@@ -170,4 +174,4 @@ cp docker/config.env.example docker/config.env
 - Password recovery and email verification now use server-side one-time action records stored under `var/cache/security/`
 - The website no longer emails plaintext passwords; recovery is completed through a reset link and on-site password form
 - Set `website_url` to your canonical public origin to avoid malformed or attacker-controlled links in emails and redirects
-- Enable `trust_proxy_headers` only when direct access to Apache is blocked and your proxy sanitizes forwarding headers
+- Enable `trust_proxy_headers` only when public traffic reaches Apache through a trusted proxy that sanitizes forwarding headers

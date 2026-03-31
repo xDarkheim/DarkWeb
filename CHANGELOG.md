@@ -10,6 +10,9 @@ The format is based on Keep a Changelog.
 - Documented `website_url` and `trust_proxy_headers` as deployment-critical settings for canonical links and trusted proxy setups.
 - Clarified that `SQL_PASSWORD_ENCRYPTION=none` remains supported for emulator compatibility and must match the existing account table format.
 
+### Fixed
+- Switched browser-side API calls to clean `/api/{endpoint}` routes and the site-relative root, fixing homepage widgets behind HTTPS reverse proxies that were failing due to mixed-content requests.
+
 ### Security
 - Documented the move to one-time server-side password recovery / verification actions and the removal of plaintext passwords from recovery emails.
 - Updated privacy-facing copy to avoid false claims about password storage on legacy plaintext-compatible deployments.

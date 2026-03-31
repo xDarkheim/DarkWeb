@@ -50,7 +50,7 @@ var csTime = {
 	minutes_module: null,
 	init: function() {
 		var a = this;
-		$.getJSON(baseUrl + "api/castlesiege.php", function(c) {
+		$.getJSON(baseUrl + "api/castlesiege", function(c) {
 			a.csTimeLeft = c.TimeLeft;
 			a.csNextStageTimeLeft = c.NextStageTimeLeft;
 			setInterval(function() {
@@ -121,7 +121,7 @@ var serverTime = {
 		f.eleLocal = c;
 		f.eleServerDate = s;
 		f.eleLocalDate = l;
-		$.getJSON(baseUrl + "api/servertime.php", function(a) {
+		$.getJSON(baseUrl + "api/servertime", function(a) {
 			f.serverDate = new Date(a.ServerTime);
 			f.localDate = new Date();
 			f.dateOffset = f.serverDate - f.localDate;
@@ -168,4 +168,3 @@ var serverTime = {
 		return b
 	}
 };
-

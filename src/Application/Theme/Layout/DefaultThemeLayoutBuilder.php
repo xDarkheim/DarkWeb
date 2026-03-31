@@ -40,6 +40,7 @@ final class DefaultThemeLayoutBuilder
             'seoImage'               => htmlspecialchars(__PATH_IMG__ . 'brand.jpg', ENT_QUOTES, 'UTF-8'),
             'stylesheetHrefs'        => $this->stylesheetHrefs(),
             'baseUrl'                => __BASE_URL__,
+            'relativeRoot'           => __RELATIVE_ROOT__,
             'showLanguageSwitcher'   => (bool) ($cmsConfig['language_switch_active'] ?? false),
             'languageSwitcherHtml'   => $this->renderLanguageSwitcherHtml(),
             'topBarIsLoggedIn'       => $isLoggedIn,

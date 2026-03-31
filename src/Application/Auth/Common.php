@@ -386,7 +386,7 @@ class Common
         $query = match ($this->passwordEncryptionMode($mode)) {
             'none', 'wzmd5', 'phpmd5' => "INSERT INTO " . _TBL_MI_ . " (" . _CLMN_USERNM_ . ", " . _CLMN_PASSWD_ . ", " . _CLMN_MEMBNAME_ . ", " . _CLMN_SNONUMBER_ . ", " . _CLMN_EMAIL_ . ", " . _CLMN_BLOCCODE_ . ", " . _CLMN_CTLCODE_ . ") VALUES (:username, :password, :name, :serial, :email, 0, 0)",
             'sha256' => "INSERT INTO " . _TBL_MI_ . " (" . _CLMN_USERNM_ . ", " . _CLMN_PASSWD_ . ", " . _CLMN_MEMBNAME_ . ", " . _CLMN_SNONUMBER_ . ", " . _CLMN_EMAIL_ . ", " . _CLMN_BLOCCODE_ . ", " . _CLMN_CTLCODE_ . ") VALUES (:username, CONVERT(binary(32),:password,1), :name, :serial, :email, 0, 0)",
-            default => throw new \RuntimeException('Unsupported password encryption setting.'),
+            default  => throw new \RuntimeException('Unsupported password encryption setting.'),
         };
 
         return $this->muonline->query($query, $data);

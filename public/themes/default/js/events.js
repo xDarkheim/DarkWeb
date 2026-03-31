@@ -3,7 +3,7 @@ $(function() {
 });
 
 function loadEventSchedule() {
-	$.getJSON(baseUrl + "api/events.php", function(data) {
+	$.getJSON(baseUrl + "api/events", function(data) {
 		$.each(data, function(key, val) {
 			if($('#' + key).length) {
 				eventSchedule(key, val.opentime, val.duration, val.offset, val.timeleft);
@@ -26,7 +26,7 @@ function eventSchedule(eventId, openTime, duration, offset, timeLeft) {
 	}
 	
 	function reloadEventInfo() {
-		$.getJSON(baseUrl + "api/events.php?event=" + eventId, function(data) {
+		$.getJSON(baseUrl + "api/events?event=" + eventId, function(data) {
 			openTime = data.opentime;
 			duration = data.duration;
 			offset = data.offset;

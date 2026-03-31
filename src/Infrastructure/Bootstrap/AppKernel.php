@@ -155,7 +155,7 @@ final class AppKernel
         //   /index.php               -> /
         //   /cms/index.php           -> /cms/
         //   /cms/admincp/index.php   -> /cms/
-        //   /cms/api/version.php     -> /cms/
+        //   /cms/api/version         -> /cms/
         $relativeRoot = ! empty($_SERVER['SCRIPT_NAME'])
             ? rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'], $rootDepth)), '/') . '/'
             : '/';
