@@ -536,7 +536,7 @@ class Character
                 $query .= ", " . $masterNextExpColumn . " = 0";
             }
         }
-        if ($skillEnhancementTreeEnabled && $skillEnhancementPoints > 0 && is_string($skillEnhancementColumn)) {
+        if ($skillEnhancementTreeEnabled && $skillEnhancementPoints > 0) {
             $query .= ", " . $skillEnhancementColumn . " = :skillenhancementpoints";
         }
         $query .= " WHERE " . _CLMN_ML_NAME_ . " = :player";
