@@ -83,6 +83,13 @@ services:
 
 > The container name is what you enter as **Forward Hostname** in Nginx Proxy Manager.
 
+### Timezone note
+
+- `DOCKER_TIMEZONE` sets the container/OS timezone.
+- The PHP app timezone is currently applied by `config/timezone-config.php` through `TimezoneInitializer`, which reads the optional `docker_timezone` key from `config/config.json` and otherwise falls back to `UTC`.
+
+Until timezone handling is unified, keep `DOCKER_TIMEZONE` and `config/config.json -> docker_timezone` aligned if you need PHP-level date/time output to match the container timezone exactly.
+
 ## Quick start
 
 ```bash

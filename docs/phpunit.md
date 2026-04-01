@@ -17,12 +17,15 @@ A passing run prints `OK (N tests, N assertions)`.
 
 ## What's tested
 
-| Layer          | Classes                                                                                                  |             Tests             |
-|:---------------|:---------------------------------------------------------------------------------------------------------|:-----------------------------:|
-| Domain         | `Validator`                                                                                              |              24               |
-| Application    | `Account`, `Auth/*`, `News/*`, `Rankings/*`, `Vote/*`                                                    |              69               |
-| Infrastructure | `Cache/*`, `Config/*`, `Cron/*`, `Database/*`, `Email`, `Payment/*`, `Plugins`, `Routing/*`, `Runtime/*` |              114              |
-| **Total**      | 32 classes                                                                                               | **207 tests, 295 assertions** |
+The suite currently focuses on three main areas:
+
+| Layer          | Coverage focus                                                                                              |
+|:---------------|:------------------------------------------------------------------------------------------------------------|
+| Domain         | Pure validation and value-style helpers such as `Validator`                                                 |
+| Application    | Feature/services such as `Account`, `Auth/*`, `News/*`, `Rankings/*`, `Vote/*`                             |
+| Infrastructure | `Cache/*`, `Config/*`, `Cron/*`, `Database/*`, `Email`, `Payment/*`, `Plugins`, `Routing/*`, `Runtime/*`  |
+
+> Test and assertion counts change frequently. Use the PHPUnit output as the source of truth instead of hard-coded numbers in this document.
 
 ## Writing tests
 

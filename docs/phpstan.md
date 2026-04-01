@@ -37,7 +37,7 @@ without a live database.
 
 ## Runtime-boundary pattern
 
-`src/` now routes environment access through runtime contracts in `src/Infrastructure/Runtime/Contracts/` and native adapters in `src/Infrastructure/Runtime/Native/` instead of reading PHP superglobals inside services. When refactoring namespaced code, prefer injecting `SessionStore`, `QueryStore`, `RequestStore`, `PostStore`, or `ServerContext` rather than introducing new direct `$_SESSION` / `$_GET` / `$_POST` reads.
+The intended direction is for `src/` to route environment access through runtime contracts in `src/Infrastructure/Runtime/Contracts/` and native adapters in `src/Infrastructure/Runtime/Native/` instead of reading PHP superglobals inside services. When refactoring namespaced code, prefer injecting `SessionStore`, `QueryStore`, `RequestStore`, `PostStore`, or `ServerContext` rather than introducing new direct `$_SESSION` / `$_GET` / `$_POST` reads. Remaining legacy usages are being tracked separately in `docs/backlog-legacy-eradication.md`.
 
 ## What it catches
 

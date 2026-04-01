@@ -21,8 +21,10 @@ This map shows where the main CMS components live and which paths are safe to mo
 │   │   │   │   ├── AdmincpLayoutDataProvider.php
 │   │   │   │   └── AdmincpUrlGenerator.php
 │   │   │   ├── Support/
-│   │   │   │   └── AdmincpConfigurationChecker.php
-│   │   │   └── DownloadLinkService.php
+│   │   │   │   ├── AdmincpConfigurationChecker.php
+│   │   │   │   ├── DownloadLinkService.php
+│   │   │   │   ├── ModuleConfigCatalog.php
+│   │   │   │   └── XmlModuleConfigSaver.php
 │   │   ├── Auth/
 │   │   │   ├── AdminGuard.php      # AdminCP access check (canAccess)
 │   │   │   ├── AuthService.php     # Core authentication logic
@@ -112,6 +114,7 @@ This map shows where the main CMS components live and which paths are safe to mo
 │       │   ├── JsonConfigReader.php
 │       │   └── XmlConfigReader.php
 │       ├── Cron/
+│       │   ├── CronExecutor.php    # CLI/runtime cron execution wrapper
 │       │   └── CronManager.php     # Cron CRUD, enable/disable, updateLastRun()
 │       ├── Database/
 │       │   ├── Connection.php      # Factory: Connection::Database('MuOnline')
@@ -315,7 +318,7 @@ page works correctly behind HTTPS-terminating reverse proxies.
 
 ## Runtime boundary
 
-Classes under `src/` avoid reading PHP superglobals directly. Runtime state is funneled through small adapters in `src/Infrastructure/Runtime/`:
+The intended direction is for classes under `src/` to avoid reading PHP superglobals directly. Runtime state is funneled through small adapters in `src/Infrastructure/Runtime/`:
 
 | Adapter         | Wraps       | Used by                                         |
 |:----------------|:------------|:------------------------------------------------|
@@ -325,7 +328,7 @@ Classes under `src/` avoid reading PHP superglobals directly. Runtime state is f
 | `Contracts\PostStore`    | `$_POST`    | `PaypalIPN`                                     |
 | `Support\ServerContext`  | `$_SERVER`  | `Login`, `Account`, `CreditSystem`              |
 
-This keeps the composition root inside `src/Infrastructure/Bootstrap/` explicit while making namespaced services easier to test in isolation.
+This keeps the composition root inside `src/Infrastructure/Bootstrap/` explicit while making namespaced services easier to test in isolation. Some direct superglobal usages still remain in `src/` and are tracked in `docs/backlog-legacy-eradication.md`.
 
 ## Namespace map
 
@@ -357,7 +360,7 @@ All classes under `src/` are autoloaded via Composer PSR-4 with the root namespa
 | `Darkheim\Infrastructure\Bootstrap\*` | `src/Infrastructure/Bootstrap/` | AppKernel, ConfigProvider, RuntimeState, BootstrapContext               |
 | `Darkheim\Infrastructure\Cache\*`     | `src/Infrastructure/Cache/`     | CacheBuilder, CacheRepository, CacheManager                             |
 | `Darkheim\Infrastructure\Config\*`    | `src/Infrastructure/Config/`    | JSON/XML config readers                                                 |
-| `Darkheim\Infrastructure\Cron\*`      | `src/Infrastructure/Cron/`      | CronManager                                                             |
+| `Darkheim\Infrastructure\Cron\*`      | `src/Infrastructure/Cron/`      | CronManager, CronExecutor                                               |
 | `Darkheim\Infrastructure\Database\*`  | `src/Infrastructure/Database/`  | PDO wrapper + connection factory                                        |
 | `Darkheim\Infrastructure\Email\*`     | `src/Infrastructure/Email/`     | PHPMailer wrapper                                                       |
 | `Darkheim\Infrastructure\Helpers\*`   | `src/Infrastructure/Helpers/`   | FileHelper (JSON, directories, file size)                               |
@@ -407,7 +410,7 @@ Global bootstrap helper wrappers were removed. Runtime code now calls namespaced
 | `config/routes.subpages.php`              |   ✅   | Sub-page route table — add new sub-page routes here                  |
 | `config/routing-migration.json`           |   ✅   | Machine-readable migration status — keep in sync with route tables   |
 | `views/admincp/`                          |   ✅   | AdminCP layout + controller-backed module templates                  |
-| `views/admincp/mconfig/`                  |   ✅   | Transitional AdminCP module-config partials                          |
+| `views/admincp/mconfig/`                  |   ✅   | Transitional AdminCP module-config partials — prefer promoting screens instead of adding new ones |
 | `public/assets/css/*.css`                 |   ✅   | Global page/component styles                                         |
 | `public/themes/default/css/*.css`         |   ✅   | Template layout styles                                               |
 | `public/themes/default/js/*.js`           |   ✅   | Template JS                                                          |
@@ -418,7 +421,7 @@ Global bootstrap helper wrappers were removed. Runtime code now calls namespaced
 
 ## Controller-backed views and pure templates
 
-DarkCore now treats controllers as the only place where request handling, config access, cache reads,
+DarkCore's target architecture treats controllers as the only place where request handling, config access, cache reads,
 service orchestration, redirects, and messages are prepared.
 
 **View / theme rule:** templates should contain only markup plus simple `echo`, `if`, and `foreach`
@@ -436,7 +439,11 @@ Examples already following this rule:
 - `Darkheim\Application\Rankings\RankingsSectionController` → `views/ranking.php`
 - `Darkheim\Application\Usercp\Subpage\AbstractCharacterActionTableSubpageController` → `views/subpages/usercp/actiontables.php`
 - `Darkheim\Application\Theme\Layout\DefaultThemeLayoutBuilder` → `public/themes/default/index.php` + `inc/modules/*.php`
-- `Darkheim\Application\Admincp\*Controller` → `views/admincp/*.php`
+
+Known transitional exceptions still tracked in `docs/backlog-legacy-eradication.md`:
+
+- `views/admincp/layout.php` still reads `$_SESSION['username']`
+- `views/admincp/modulesmanager.php` still includes `views/admincp/mconfig/*.php` dynamically
 
 ## AdminCP MVC notes
 
@@ -444,7 +451,7 @@ Examples already following this rule:
 - `AdmincpModuleDispatcher` does **not** fall back to include-based legacy AdminCP modules.
 - AdminCP shell metadata lives in `config/admincp-layout.php` and is normalized by `AdmincpLayoutDataProvider`.
 - The canonical AdminCP shell template is `views/admincp/layout.php`.
-- Transitional module-config partials now live in `views/admincp/mconfig/`.
+- Transitional module-config partials now live in `views/admincp/mconfig/` and are still dynamically included by `views/admincp/modulesmanager.php`.
 
 ## Adding a new controller-backed view
 

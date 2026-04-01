@@ -1,6 +1,6 @@
 # DarkCore — Developer Docs
 
-> **Emulator compatibility:** X-Team, MuEmu, Louis, Darkheim Emulator.
+> **Emulator compatibility:** X-Team, MuEmu, Louis.
 > IGCN and other emulators are not yet supported.
 
 ## Index
@@ -13,6 +13,7 @@
 | [Frontend Assets](build.md)                             | CSS/JS load order, cache busting, adding new files                   |
 | [CSS Architecture](css-architecture.md)                 | `dh-*` class naming, dark mode, mobile breakpoints                   |
 | [Routing Migration Matrix](routing-migration-matrix.md) | Web/subpage route flow, controller-backed subpages, shared templates |
+| [Legacy Eradication Backlog](backlog-legacy-eradication.md) | Internal roadmap for removing legacy runtime/data/config patterns |
 | [PHPUnit](phpunit.md)                                   | Running tests, writing tests, IDE setup, Xdebug                      |
 | [PHPStan](phpstan.md)                                   | Static analysis, suppression rules, common errors                    |
 

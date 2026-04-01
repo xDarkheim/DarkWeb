@@ -1,5 +1,3 @@
-<div align="center">
-
 # DarkCore CMS
 
 **Open-source CMS for MU Online private servers**
@@ -11,7 +9,6 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-</div>
 
 ---
 
@@ -81,6 +78,7 @@ After installation, review three security-sensitive settings in `config/config.j
 | [`docs/build.md`](docs/build.md)                                       | Frontend assets, CSS/JS load order, cache busting        |
 | [`docs/css-architecture.md`](docs/css-architecture.md)                 | CSS naming conventions, dark mode, mobile breakpoints    |
 | [`docs/routing-migration-matrix.md`](docs/routing-migration-matrix.md) | Route flow, controller-backed subpages, shared templates |
+| [`docs/backlog-legacy-eradication.md`](docs/backlog-legacy-eradication.md) | Internal roadmap for removing legacy runtime/data/config patterns |
 | [`docs/README.md`](docs/README.md)                                     | Developer docs index and common tasks                    |
 | [`docs/phpunit.md`](docs/phpunit.md)                                   | Running tests, writing tests, IDE setup, Xdebug          |
 | [`docs/phpstan.md`](docs/phpstan.md)                                   | Static analysis, suppression rules, common errors        |
@@ -91,7 +89,7 @@ After installation, review three security-sensitive settings in `config/config.j
 
 - `src/Infrastructure/Bootstrap/` owns the composition-root logic through `EntrypointBootstrapper`, `AppKernel`, `ConfigProvider`, `RuntimeState`, and `TimezoneInitializer`.
 - `src/Infrastructure/Runtime/` contains runtime boundary contracts (`Contracts/*Store`), native superglobal adapters (`Native/*`), and support helpers (`Support/ServerContext`).
-- Classes in `src/` depend on these adapters instead of reading PHP superglobals directly.
+- The target pattern is for classes in `src/` to depend on these adapters instead of reading PHP superglobals directly; some legacy usages still remain and are tracked in `docs/backlog-legacy-eradication.md`.
 - Front controllers (`public/index.php`, `public/admincp/index.php`) and CLI entrypoint (`bin/cron.php`) load Composer autoloader and call `EntrypointBootstrapper::boot()`.
 - Legacy bootstrap shims under `includes/bootstrap/` have been removed; runtime code now uses namespaced classes directly.
 - AdminCP now uses `config/routes.admincp.php` + controller-backed modules under `src/Application/Admincp/`, with shell helpers split between `src/Application/Admincp/Layout/` and `src/Application/Admincp/Support/`.

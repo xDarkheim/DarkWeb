@@ -47,6 +47,7 @@ Copy `config.default.json` to `config.json` and fill in your values. The install
 | `SQL_DB_USER`             | string | Database user                                                 |
 | `SQL_DB_PASS`             | string | Database password                                             |
 | `SQL_DB_PORT`             | string | Port (default: `"1433"`)                                      |
+| `SQL_PDO_DRIVER`          | string | Legacy installer-generated key. The current runtime uses `pdo_dblib`; keep for compatibility unless installer/config handling is cleaned up. |
 | `SQL_PASSWORD_ENCRYPTION` | string | Account password format: `"none"`, `"wzmd5"`, `"phpmd5"`, `"sha256"` |
 | `SQL_SHA256_SALT`         | string | Salt used when `SQL_PASSWORD_ENCRYPTION = "sha256"`           |
 
@@ -58,13 +59,13 @@ Copy `config.default.json` to `config.json` and fill in your values. The install
 
 | Key                      |  Type  | Description                                                                      |
 |:-------------------------|:------:|:---------------------------------------------------------------------------------|
-| `language_default`       | string | Default language code. Supported: `"en"`, `"ru"`, `"cn"`, `"es"`, `"pt"`, `"ro"` |
+| `language_default`       | string | Default language code. Must match an installed language pack under `includes/languages/` |
 | `language_switch_active` |  bool  | Show language switcher in the top bar                                            |
 | `language_debug`         |  bool  | Highlight missing phrases (dev only)                                             |
 
-> **Active languages:** EN, RU, CN, ES, PT, RO.
 > Language phrase files live in `includes/languages/<code>/language.php`.
-> To add a new language: create the directory and phrase file, then update the language list in `src/Application/Theme/Layout/DefaultThemeLayoutBuilder.php`.
+> The repository currently ships multiple language packs under `includes/languages/`; use the filesystem as the source of truth.
+> To add a new language: create the directory and phrase file, then keep the language-switcher metadata in `src/Application/Theme/Layout/DefaultThemeLayoutBuilder::renderLanguageSwitcherHtml()` in sync (display name, code, and flag mapping).
 
 ### Authentication & registration
 
@@ -85,6 +86,7 @@ Copy `config.default.json` to `config.json` and fill in your values. The install
 | `plugins_system_enable`  |  bool  | Enable the plugin system                               |
 | `ip_block_system_enable` |  bool  | Enable IP blocking                                     |
 | `season_1_support`       |  bool  | Enable Season 1 compatibility mode                     |
+| `docker_timezone`        | string | Optional PHP app timezone used by `TimezoneInitializer`; if omitted, the app falls back to `UTC` |
 
 ### Reverse proxy / canonical URL
 
@@ -162,7 +164,7 @@ cp docker/config.env.example docker/config.env
 | `usercp-menu.json`    | UserCP menu items — controls which pages appear in the sidebar                    |
 | `navigation.json`     | Navigation bar items configuration                                                |
 | `email-templates.xml` | Email template definitions (subject, body for registration, password reset, etc.) |
-| `timezone-config.php` | Sets `date_default_timezone_set()`. Defaults to `Europe/Kiev`                     |
+| `timezone-config.php` | Applies the PHP app timezone via `TimezoneInitializer` using `config.json` (`docker_timezone`, fallback `UTC`) |
 | `writable.json`       | List of paths the installer checks for write permissions                          |
 
 ## Security notes
